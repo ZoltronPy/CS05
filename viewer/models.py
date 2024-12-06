@@ -143,3 +143,44 @@ class TravelInfo(Model):
         return (f"{self.departure_city or self.departure_airport} -> "
                 f"{self.destination_city or self.destination_hotel or self.destination_airport} "
                 f"({self.departure_date} - {self.return_date})")
+
+
+class TourPurchase(Model):
+    # Odkaz na zájezd
+    travel_info = ForeignKey(TravelInfo, on_delete=CASCADE, related_name="purchases",
+                             verbose_name="Zájezd"
+                             )
+    # Počet dospělých a dětí
+    adult_count = IntegerField(verbose_name="Počet dospělých", default=0)
+    child_count = IntegerField(verbose_name="Počet dětí", default=0)
+
+    # Celkový počet cestujících
+    total_quantity = IntegerField(verbose_name="Celkové množství", editable=False, default=0)
+
+    # Celková cena
+    total_price = models.DecimalField(
+        max_digits=12, decimal_places=2, verbose_name="Celková cena (CZK)", editable=False, default=0.00
+    )
+
+    # Datum vytvoření nákupu
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Datum vytvoření")
+
+    class Meta:
+        verbose_name = "Nákup zájezdu"
+        verbose_name_plural = "Nákupy zájezdů"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return (f"Nákup: {self.travel_info.tour_name} | "
+                f"Dospělí: {self.adult_count}, Děti: {self.child_count}")
+
+    def save(self, *args, **kwargs):
+        # Automatický výpočet celkového množství
+        self.total_quantity = self.adult_count + self.child_count
+
+        # Výpočet celkové ceny
+        adult_price = self.travel_info.price_per_adult or 0
+        child_price = self.travel_info.price_per_child or 0
+        self.total_price = (self.adult_count * adult_price) + (self.child_count * child_price)
+
+        super().save(*args, **kwargs)
