@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, IntegerField, DateField
+from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, IntegerField, DateField, DateTimeField
 
 
 #'vytvoření kontinetu'
@@ -143,3 +143,47 @@ class TravelInfo(Model):
         return (f"{self.departure_city or self.departure_airport} -> "
                 f"{self.destination_city or self.destination_hotel or self.destination_airport} "
                 f"({self.departure_date} - {self.return_date})")
+
+
+class TourPurchase(Model):
+    # Odkaz na zájezd
+    travel_info = ForeignKey(TravelInfo, on_delete=CASCADE, related_name="purchases",
+        verbose_name="Zájezd"    )
+    # Počet dospělých a dětí
+    adult_count = IntegerField(verbose_name="Počet dospělých", default=0)
+    child_count = IntegerField(verbose_name="Počet dětí", default=0)
+    # Celkový počet cestujících
+    total_quantity = IntegerField(verbose_name="Celkové množství", editable=False, default=0)
+    # Datum vytvoření nákupu
+    created_at = DateTimeField(auto_now_add=True, verbose_name="Datum vytvoření")
+    class Meta:
+        verbose_name = "Nákup zájezdu"
+        verbose_name_plural = "Nákupy zájezdů"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return (f"Nákup: {self.travel_info.tour_name} | "
+                f"Dospělí: {self.adult_count}, Děti: {self.child_count}")
+
+    def save(self, *args, **kwargs):
+        # Automatický výpočet celkového množství
+        self.total_quantity = self.adult_count + self.child_count
+        super().save(*args, **kwargs)
+
+
+class Traveler(Model):
+    PURCHASE_TYPE_CHOICES = [('adult', 'Dospělý'),('child', 'Dítě'),]
+    # Odkaz na nákup zájezdu
+    tour_purchase = ForeignKey(TourPurchase, on_delete=CASCADE, related_name="travelers",
+        verbose_name="Nákup zájezdu" )
+    name = CharField(max_length=100, verbose_name="Jméno")
+    age = IntegerField(verbose_name="Věk")
+    type = CharField(max_length=5, choices=PURCHASE_TYPE_CHOICES, verbose_name="Typ cestujícího")
+
+    class Meta:
+        verbose_name = "Cestující"
+        verbose_name_plural = "Cestující"
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.get_type_display()}, {self.age} let)"
