@@ -60,7 +60,6 @@ class TravelInfoModelTest(TestCase):
             departure_city=city,
             departure_airport=airport,
             destination_city=city,
-            destination_hotel=hotel,
             destination_airport=airport,
             departure_date=timezone.now().date(),
             return_date=timezone.now().date() + timedelta(days=7),
@@ -71,9 +70,12 @@ class TravelInfoModelTest(TestCase):
             adult_seats=50,
             child_seats=25,
         )
+        # Přiřadíme hotely pomocí set()
+        travel_info.destination_hotels.set([hotel])  # Použití metody set()
+
         self.assertEqual(travel_info.tour_name, 'Spring Holiday')
         self.assertEqual(travel_info.departure_city.name, 'Prague')
-        self.assertEqual(travel_info.destination_hotel.name, 'Hotel Prague')
+        self.assertEqual(travel_info.destination_hotels.first().name, 'Hotel Prague')
         self.assertEqual(travel_info.price_per_adult, 5000)
 
 
@@ -89,7 +91,6 @@ class TourPurchaseModelTest(TestCase):
             departure_city=city,
             departure_airport=airport,
             destination_city=city,
-            destination_hotel=hotel,
             destination_airport=airport,
             departure_date=timezone.now().date(),
             return_date=timezone.now().date() + timedelta(days=7),
@@ -100,6 +101,9 @@ class TourPurchaseModelTest(TestCase):
             adult_seats=50,
             child_seats=25,
         )
+        # Přiřadíme hotely pomocí set()
+        travel_info.destination_hotels.set([hotel])  # Použití metody set()
+
         tour_purchase = TourPurchase.objects.create(
             travel_info=travel_info,
             adult_count=2,
