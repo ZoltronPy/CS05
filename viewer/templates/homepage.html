@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Welcome to Our Travel Agency</h1>
+<h2>Promoted Trips</h2>
+<ul>
+    {% for trip in promoted_trips %}
+        <li>
+            <a href="{% url 'trip_detail' trip.id %}">{{ trip.tour_name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -9,14 +9,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <ul class="navbar-nav ml-auto">
+
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'home' %}">Home</a>
+              <a class="nav-link" href="{% url 'homepage' %}">Home</a>
             </li>
-          <li class="nav-item active">
-              <a class="nav-link" href="{% url 'all_trips'%}">ALL TRIPS</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'trip_list'%}">Trip list</a>
             </li>
+
             <li class="nav-item">
-              <a class="nav-link" href="/about/">About Us</a>
+              <a class="nav-link" href="{% url 'purchase_trip' %}">purchase_trip</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/contact/">Contact</a>
