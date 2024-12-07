@@ -6,7 +6,7 @@ from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, I
 
 #'vytvoření kontinetu'
 class Continent(Model):
-    name = CharField(max_length=32, unique=False, null=False, blank=False)
+    name = CharField(max_length=32, unique=True, null=False, blank=False)
 
     class Meta:
         ordering = ['name']
@@ -43,6 +43,8 @@ class City(Model):
                          related_name="cities")
     description = TextField(null=True, blank=True)
 
+    hotels = models.ManyToManyField('Hotel', related_name='cities_set', blank=True)
+
     class Meta:
         ordering = ['name']
         verbose_name_plural = 'Cities'
@@ -58,7 +60,8 @@ class Hotel(Model):
     name = CharField(max_length=32, null=False, blank=False, unique=True)
     Stars = IntegerField(null=True, blank=True, default=0)
     Description = TextField(null=True, blank=True)
-    City = ForeignKey(City, on_delete=CASCADE, related_name="hotels")
+
+    City = ForeignKey(City, on_delete=CASCADE, related_name="city_hotels", blank=True, null=True)
 
     class Meta:
         ordering = ['name']
@@ -93,6 +96,8 @@ class TravelInfo(Model):
 
     departure_city = ForeignKey(City, on_delete=CASCADE, related_name="departures", null=True, blank=True,
                                 verbose_name="Departure (city)")
+    destination_hotels = models.ManyToManyField(Hotel, related_name='travel_infos', blank=True)
+
     departure_airport = ForeignKey(Airport, on_delete=CASCADE, related_name="departures_airport", null=True, blank=True,
                                    verbose_name="Departure (airport)")
     destination_city = ForeignKey(City, on_delete=CASCADE, related_name="arrivals", null=True, blank=True,
