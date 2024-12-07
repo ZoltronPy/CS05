@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ trip.tour_name }}</h1>
+<p><strong>Departure:</strong> {{ trip.departure_city.name }}</p>
+<p><strong>Destination:</strong> {{ trip.destination_city.name }}</p>
+<p><strong>Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
+<p><strong>Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
+<p><strong>Description:</strong> {{ trip.description }}</p>
+<p><strong>Meal Type:</strong> {{ trip.get_meal_type_display }}</p>
+
+<form action="{% url 'purchase_trip' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="trip_id" value="{{ trip.id }}">
+    <label for="adults">Number of Adults:</label>
+    <input type="number" name="adults" id="adults" min="0" required>
+    <label for="kids">Number of Kids:</label>
+    <input type="number" name="kids" id="kids" min="0" required>
+    <button type="submit">Purchase</button>
+</form>
+{% endblock %}

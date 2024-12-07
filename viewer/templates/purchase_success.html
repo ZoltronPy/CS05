@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Purchase Successful!</h1>
+<p>Thank you for purchasing the trip: {{ purchase.get_tour_name }}</p>
+<p><strong>Adults:</strong> {{ purchase.adult_count }}</p>
+<p><strong>Kids:</strong> {{ purchase.child_count }}</p>
+<p><strong>Total Price:</strong> {{ purchase.total_price }} CZK</p>
+<a href="{% url 'homepage' %}">Back to Homepage</a>
+{% endblock %}

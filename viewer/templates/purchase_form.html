@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Purchase a Trip</h1>
+<form action="{% url 'purchase_trip' %}" method="post">
+    {% csrf_token %}
+    <label for="trip_id">Select a Trip:</label>
+    <select name="trip_id" id="trip_id">
+        {% for trip in trips %}
+            <option value="{{ trip.id }}">{{ trip.tour_name }}</option>
+        {% endfor %}
+    </select>
+    <label for="adults">Number of Adults:</label>
+    <input type="number" name="adults" id="adults" min="0" required>
+    <label for="kids">Number of Kids:</label>
+    <input type="number" name="kids" id="kids" min="0" required>
+
+    <button type="submit">Purchase</button>
+
+</form>
+{% endblock %}
