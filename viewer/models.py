@@ -1,3 +1,5 @@
+from django.utils.timezone import now
+
 from django.db import models
 from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, IntegerField, DateField
 
@@ -20,6 +22,8 @@ class Continent(Model):
 class Country(Model):
     name = CharField(max_length=50, blank=False, unique=True, null=False)
     continent = ForeignKey(Continent, on_delete=CASCADE, related_name="countries")
+    international_code = CharField(max_length=10, blank=True, unique=True, null=True,
+                                   verbose_name="International Code")
 
     class Meta:
         ordering = ['name']
@@ -148,31 +152,32 @@ class TravelInfo(Model):
 class TourPurchase(Model):
     # Odkaz na zájezd
     travel_info = ForeignKey(TravelInfo, on_delete=CASCADE, related_name="purchases",
-                             verbose_name="Zájezd"
+                             verbose_name="Trip"
                              )
     # Počet dospělých a dětí
-    adult_count = IntegerField(verbose_name="Počet dospělých", default=0)
-    child_count = IntegerField(verbose_name="Počet dětí", default=0)
+    adult_count = IntegerField(verbose_name="Number of Adult", default=0)
+    child_count = IntegerField(verbose_name="Number od kids", default=0)
 
     # Celkový počet cestujících
-    total_quantity = IntegerField(verbose_name="Celkové množství", editable=False, default=0)
+    total_quantity = IntegerField(verbose_name="Total quantity", editable=False, default=0)
 
     # Celková cena
     total_price = models.DecimalField(
-        max_digits=12, decimal_places=2, verbose_name="Celková cena (CZK)", editable=False, default=0.00
+        max_digits=12, decimal_places=2, verbose_name="Total Price (CZK)", editable=False, default=0.00
     )
 
     # Datum vytvoření nákupu
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Datum vytvoření")
+    created_at = models.DateTimeField(default=now)  #(auto_now_add=True, (default=timezone.now) verbose_name="create date ")
+    updated_at = models.DateTimeField(auto_now=True, null=True,  verbose_name="update date ")
 
     class Meta:
-        verbose_name = "Nákup zájezdu"
-        verbose_name_plural = "Nákupy zájezdů"
+        verbose_name = "Tour Purchase"
+        verbose_name_plural = "Tour Purchases"
         ordering = ["-created_at"]
 
     def __str__(self):
-        return (f"Nákup: {self.travel_info.tour_name} | "
-                f"Dospělí: {self.adult_count}, Děti: {self.child_count}")
+        return (f"Purchase: {self.travel_info.tour_name} | "
+                f"Adult: {self.adult_count}, Kids: {self.child_count}")
 
     def save(self, *args, **kwargs):
         # Automatický výpočet celkového množství
@@ -184,3 +189,5 @@ class TourPurchase(Model):
         self.total_price = (self.adult_count * adult_price) + (self.child_count * child_price)
 
         super().save(*args, **kwargs)
+
+
