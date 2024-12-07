@@ -2,6 +2,10 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.timezone import now
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 from django.db import models
 from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, IntegerField, DateField
 
@@ -156,18 +160,18 @@ class TravelInfo(Model):
 
     # Pricing
     price_per_adult = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Price per adult (CZK)"
+        max_digits=10, decimal_places=2, verbose_name="Price per passenger (czk)"
     )
     price_per_child = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Price per child (CZK)"
+        max_digits=10, decimal_places=2, verbose_name="Price per Kid (czk)"
     )
 
     # Promotion
     is_promoted = models.BooleanField(default=False, verbose_name="Is promoted")
 
     # Number of seats
-    adult_seats = IntegerField(verbose_name="Number of seats for adults")
-    child_seats = IntegerField(verbose_name="Number of seats for children")
+    adult_seats = IntegerField(verbose_name="Number of seats")
+    child_seats = IntegerField(verbose_name="Number of seats for Kids")
 
     class Meta:
         verbose_name = "Travel Information"
@@ -175,12 +179,9 @@ class TravelInfo(Model):
         ordering = ["tour_name"]
 
     def __str__(self):
-        departure = self.departure_city or self.departure_airport or "Unknown departure"
-        destination = (self.destination_city or self.destination_hotel or
-                       self.destination_airport or "Unknown destination")
-        return (f"{self.departure_city or self.departure_airport} -> "
-                f"{self.destination_city or self.destination_hotel or self.destination_airport} "
-                f"({self.departure_date} - {self.return_date})")
+        departure_city = self.departure_city.name if self.departure_city else "Unknown Departure City"
+        destination_city = self.destination_city.name if self.destination_city else "Unknown Destination City"
+        return f"Trip: {self.tour_name} | Departure: {departure_city} -> {destination_city}"
 
     def clean(self):
         if self.departure_date and self.return_date and self.departure_date > self.return_date:
@@ -188,47 +189,61 @@ class TravelInfo(Model):
 
 
 class TourPurchase(Model):
-    travel_info = ForeignKey(TravelInfo, on_delete=CASCADE, related_name="purchases",
-                             verbose_name="Trip")
-    adult_count = IntegerField(verbose_name="passengers", default=0)
-    child_count = IntegerField(verbose_name="KIDS", default=0)
+    travel_info = ForeignKey(
+        TravelInfo,
+        on_delete=CASCADE,
+        related_name="purchases",
+        verbose_name="Trip"
+    )
+    adult_count = IntegerField(verbose_name="Passengers", default=0)
+    child_count = IntegerField(verbose_name="Kids", default=0)
     total_quantity = IntegerField(verbose_name="Total Travelers", editable=False, default=0)
-    total_price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Total Cost (czk)",
-                                      editable=False, default=0.00)
-    created_at = models.DateTimeField(default=timezone.now, verbose_name="created at")
-    updated_at = models.DateTimeField(default=timezone.now, verbose_name="updated at ")
+    total_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="Total Cost (czk)",
+        editable=False,
+        default=0.00
+    )
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Created At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
 
+    # Metoda pro získání názvu zájezdu
+    def get_tour_name(self):
+        return self.travel_info.tour_name if self.travel_info else "No Tour Name"
+    get_tour_name.short_description = "Tour Name"
+
+    # Formátované datumy pro administraci
     def formatted_created_at(self):
-        if self.created_at:
-            return self.created_at.strftime('%d.%m.%Y')  # Den.Měsíc.Rok
-        return '-'
+        return self.created_at.strftime('%d.%m.%Y') if self.created_at else '-'
+    formatted_created_at.short_description = 'Created At'
 
     def formatted_updated_at(self):
-        if self.updated_at:
-            return self.updated_at.strftime('%d.%m.%Y')  # Den.Měsíc.Rok
-        return '-'
+        return self.updated_at.strftime('%d.%m.%Y') if self.updated_at else '-'
+    formatted_updated_at.short_description = 'Updated At'
 
-    formatted_created_at.short_description = 'created at'
-    formatted_updated_at.short_description = 'updated_at'
+    # Reprezentace objektu
+    def __str__(self):
+        if self.travel_info:
+            return f"Trip: {self.travel_info.tour_name} | Adults: {self.adult_count}, Kids: {self.child_count}"
+        return "No tour information"
+
+    # Uložení objektu se spočítáním celkových hodnot
+    def save(self, *args, **kwargs):
+        # Výpočet celkového množství cestujících
+        self.total_quantity = self.adult_count + self.child_count
+
+        # Výpočet celkové ceny
+        if self.travel_info:
+            adult_price = self.travel_info.price_per_adult or 0
+            child_price = self.travel_info.price_per_child or 0
+            self.total_price = (self.adult_count * adult_price) + (self.child_count * child_price)
+
+        logger.debug(f"Saving TourPurchase: {self.total_quantity} travelers, total price {self.total_price}")
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Tour Purchase"
         verbose_name_plural = "Tour Purchases"
         ordering = ["-created_at"]
-
-    def __str__(self):
-        return (f"Purchase: {self.travel_info.tour_name} | "
-                f"Adult: {self.adult_count}, Kids: {self.child_count}")
-
-
-def save(self, *args, **kwargs):
-    # Automatický výpočet celkového množství
-    self.total_quantity = self.adult_count + self.child_count
-
-    # Výpočet celkové ceny
-    adult_price = self.travel_info.price_per_adult or 0
-    child_price = self.travel_info.price_per_child or 0
-    self.total_price = (self.adult_count * adult_price) + (self.child_count * child_price)
-
-    super().save(*args, **kwargs)
-
