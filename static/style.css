@@ -1,0 +1,80 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 960px;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: #0066cc;
+}
+
+.navbar a {
+    color: white !important;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #ffcc00 !important;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #ffffff;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #0066cc;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+}
+
+.btn-primary:hover {
+    background-color: #004d99;
+}
+
+.btn-secondary {
+    background-color: #ffcc00;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+}
+
+.btn-secondary:hover {
+    background-color: #e6b800;
+}
+
+/* Form Styling */
+.form-group label {
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+    background-color: #fff;
+}
+
+.form-control:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
+}

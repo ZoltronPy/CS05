@@ -1,21 +1,41 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Purchase a Trip{% endblock %}
 
 {% block content %}
-<h1>Purchase a Trip</h1>
-<form action="{% url 'purchase_trip' %}" method="post">
-    {% csrf_token %}
-    <label for="trip_id">Select a Trip:</label>
-    <select name="trip_id" id="trip_id">
-        {% for trip in trips %}
-            <option value="{{ trip.id }}">{{ trip.tour_name }}</option>
-        {% endfor %}
-    </select>
-    <label for="adults">Number of Adults:</label>
-    <input type="number" name="adults" id="adults" min="0" required>
-    <label for="kids">Number of Kids:</label>
-    <input type="number" name="kids" id="kids" min="0" required>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <h1 class="purchase-header text-center">Purchase a Trip</h1>
 
-    <button type="submit">Purchase</button>
+    <div class="purchase-form-container mx-auto">
+        <form action="{% url 'purchase_trip' %}" method="post" class="purchase-form">
+            {% csrf_token %}
 
-</form>
+            <div class="form-group">
+                <label for="trip_id">Select a Trip:</label>
+                <select name="trip_id" id="trip_id" class="form-control">
+                    {% for trip in trips %}
+                        <option value="{{ trip.id }}">{{ trip.tour_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="adults">Number of Adults:</label>
+                <input type="number" name="adults" id="adults" class="form-control" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="kids">Number of Kids:</label>
+                <input type="number" name="kids" id="kids" class="form-control" min="0" required>
+            </div>
+
+            <div class="form-actions d-flex justify-content-between">
+                <button type="submit" class="btn btn-success submit-btn">Purchase</button>
+                <button type="reset" class="btn btn-danger reset-btn">Reset</button>
+            </div>
+        </form>
+    </div>
+
 {% endblock %}
+
