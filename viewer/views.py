@@ -1,3 +1,11 @@
 from django.shortcuts import render
+from viewer.models import TravelInfo
 
-# Create your views here.
+
+def all_trips(request):
+    trips = TravelInfo.objects.all()  # Předpokládáme, že načítáš všechny zájezdy
+    context = {
+        "trips": trips,
+    }
+    return render(request, "Trips.html", context)
+
