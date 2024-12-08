@@ -1,40 +1,106 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Purchase a Trip{% endblock %}
+{% block title %}Zakoupit zájezd{% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'css.css' %}">
-    <h1 class="purchase-header text-center mb-4">Purchase a Trip</h1>
+    <h1 class="purchase-header text-center mb-4">Zakoupit zájezd</h1>
 
     <div class="purchase-form-container mx-auto">
         <form action="{% url 'purchase_trip' %}" method="post" class="purchase-form">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="trip_id">Select a Trip:</label>
+                <label for="trip_id">Vyberte zájezd:</label>
                 <select name="trip_id" id="trip_id" class="form-control">
                     {% for trip in trips %}
-                        <option value="{{ trip.id }}">{{ trip.tour_name }}</option>
+                        <option
+                            value="{{ trip.id }}"
+                            data-price-adult="{{ trip.price_per_adult }}"
+                            data-price-child="{{ trip.price_per_child }}">
+                            {{ trip.tour_name }} - Dospělý: {{ trip.price_per_adult }} Kč, Dítě: {{ trip.price_per_child }} Kč
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="adults">Number of Adults:</label>
-                <input type="number" name="adults" id="adults" class="form-control" min="0" required>
+                <label for="adults">Počet dospělých (cena: <span id="price-per-adult">0</span> Kč):</label>
+                <input type="number" name="adults" id="adults" class="form-control" min="0" value="0" required>
             </div>
 
             <div class="form-group">
-                <label for="kids">Number of Kids:</label>
-                <input type="number" name="kids" id="kids" class="form-control" min="0" required>
+                <label for="kids">Počet dětí (cena: <span id="price-per-child">0</span> Kč):</label>
+                <input type="number" name="kids" id="kids" class="form-control" min="0" value="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="extras">Doplňkové služby:</label>
+                <select name="extras" id="extras" class="form-control">
+                    <option value="" data-extra-price="0">Bez doplňkových služeb</option>
+                    <option value="guide" data-extra-price="1200">Průvodce - 1200 Kč</option>
+                    <option value="insurance" data-extra-price="800">Cestovní pojištění - 800 Kč</option>
+                </select>
+            </div>
+
+            <div class="total-price mt-3">
+                <h5>Celková cena: <span id="total-price">0</span> Kč</h5>
             </div>
 
             <div class="form-actions d-flex justify-content-between">
-                <button type="submit" class="btn btn-success submit-btn">Purchase</button>
-                <button type="reset" class="btn btn-danger reset-btn">Reset</button>
+                <button type="submit" class="btn btn-success submit-btn">Zakoupit</button>
+                <button type="reset" class="btn btn-danger reset-btn">Resetovat</button>
             </div>
         </form>
     </div>
+
+    <!-- JavaScript pro dynamický výpočet ceny -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tripSelect = document.getElementById('trip_id');
+            const adultsInput = document.getElementById('adults');
+            const kidsInput = document.getElementById('kids');
+            const extrasSelect = document.getElementById('extras');
+            const totalPriceDisplay = document.getElementById('total-price');
+            const pricePerAdultDisplay = document.getElementById('price-per-adult');
+            const pricePerChildDisplay = document.getElementById('price-per-child');
+
+            // Funkce pro aktualizaci cen v popiscích
+            function updatePrices() {
+                const pricePerAdult = parseFloat(tripSelect.options[tripSelect.selectedIndex].dataset.priceAdult) || 0;
+                const pricePerChild = parseFloat(tripSelect.options[tripSelect.selectedIndex].dataset.priceChild) || 0;
+
+                pricePerAdultDisplay.textContent = pricePerAdult.toLocaleString('cs-CZ');
+                pricePerChildDisplay.textContent = pricePerChild.toLocaleString('cs-CZ');
+            }
+
+            // Funkce pro výpočet ceny
+            function calculatePrice() {
+                const pricePerAdult = parseFloat(tripSelect.options[tripSelect.selectedIndex].dataset.priceAdult) || 0;
+                const pricePerChild = parseFloat(tripSelect.options[tripSelect.selectedIndex].dataset.priceChild) || 0;
+                const adults = parseInt(adultsInput.value) || 0;
+                const kids = parseInt(kidsInput.value) || 0;
+                const extraPrice = parseFloat(extrasSelect.options[extrasSelect.selectedIndex].dataset.extraPrice) || 0;
+
+                const totalPrice = (adults * pricePerAdult) + (kids * pricePerChild) + extraPrice;
+
+                totalPriceDisplay.textContent = totalPrice.toLocaleString('cs-CZ');
+            }
+
+            // Přidání událostí pro přepočítání cen
+            tripSelect.addEventListener('change', function () {
+                updatePrices();
+                calculatePrice();
+            });
+            adultsInput.addEventListener('input', calculatePrice);
+            kidsInput.addEventListener('input', calculatePrice);
+            extrasSelect.addEventListener('change', calculatePrice);
+
+            // Aktualizace při načtení stránky
+            updatePrices();
+            calculatePrice();
+        });
+    </script>
 
 {% endblock %}

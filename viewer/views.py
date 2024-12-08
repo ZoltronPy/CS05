@@ -20,7 +20,7 @@ def trip_list(request):
 
 
 def trip_detail(request, trip_id):
-    trip = get_object_or_404(TravelInfo, pk=trip_id)
+    trip = TravelInfo.objects.get(id=trip_id)
     return render(request, 'trip_detail.html', {'trip': trip})
 
 

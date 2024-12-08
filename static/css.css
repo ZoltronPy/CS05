@@ -17,7 +17,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    max-width: 600px;
+    max-width: 650px;
     margin-top: 50px;
     margin-bottom: 50px;
 }
@@ -36,7 +36,7 @@ label {
     color: #555;
 }
 
-input[type="number"], select {
+input[type="number"], input[type="date"], select {
     padding: 12px;
     font-size: 1rem;
     border-radius: 5px;
@@ -44,9 +44,18 @@ input[type="number"], select {
     width: 100%;
 }
 
-input[type="number"]:focus, select:focus {
+input[type="number"]:focus, input[type="date"]:focus, select:focus {
     border-color: #007bff;
     outline: none;
+}
+
+/* Total price section */
+.total-price {
+    background-color: #f0f8ff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
 }
 
 /* Button styling */
