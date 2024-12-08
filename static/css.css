@@ -1,46 +1,89 @@
-/* static/css/styles.css */
-
-/* Body and general layout */
+/* Base styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f7f7f7;
+}
+
+/* Purchase form header */
+.purchase-header {
+    font-size: 2.5rem;
     color: #333;
+    font-weight: bold;
 }
 
-/* Navbar */
-.navbar {
-    background-color: #007bff;
-}
-
-.navbar a {
-    color: white !important;
-}
-
-/* Footer */
-footer {
-    background-color: #343a40;
-    color: #f8f9fa;
-    padding: 20px;
-}
-
-/* Form Styling (Optional for your forms) */
-form {
+/* Form container */
+.purchase-form-container {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
-/* Buttons */
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
+.purchase-form {
+    width: 100%;
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+input[type="number"], select {
+    padding: 12px;
+    font-size: 1rem;
     border-radius: 5px;
-    cursor: pointer;
+    border: 1px solid #ccc;
+    width: 100%;
 }
 
-button:hover {
-    background-color: #0056b3;
+input[type="number"]:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Button styling */
+.btn {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+.submit-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+
+.reset-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+}
+
+.reset-btn:hover {
+    background-color: #c82333;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .purchase-form-container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    .purchase-header {
+        font-size: 2rem;
+    }
 }
