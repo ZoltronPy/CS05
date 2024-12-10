@@ -255,9 +255,6 @@ class TravelInfo(Model):
     formatted_updated_at.short_description = 'Updated At'
 
 
-
-
-
 class TourPurchase(Model):
     travel_info = ForeignKey(
         TravelInfo,

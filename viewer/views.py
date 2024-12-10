@@ -7,12 +7,15 @@ from viewer.models import TourPurchase
 def homepage(request):
     promoted_trips = TravelInfo.objects.filter(is_promoted=True).order_by('-created_at')[:5]
     return render(request, 'homepage.html', {'promoted_trips': promoted_trips})
+
+
 def all_trips(request):
-    trips = TravelInfo.objects.all()  # Předpokládáme, že načítáš všechny zájezdy
+    trips = TravelInfo.objects.all()
     context = {
         "trips": trips,
     }
     return render(request, "Trips.html", context)
+
 
 def trip_list(request):
     trips = TravelInfo.objects.all()
@@ -42,4 +45,3 @@ def purchase_trip(request):
     else:
         trips = TravelInfo.objects.all()
         return render(request, 'purchase_form.html', {'trips': trips})
-
