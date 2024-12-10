@@ -255,16 +255,16 @@ class TravelInfo(Model):
     formatted_updated_at.short_description = 'Updated At'
 
 
-class TourPurchase(Model):
-    travel_info = ForeignKey(
+class TourPurchase(models.Model):
+    travel_info = models.ForeignKey(
         TravelInfo,
-        on_delete=CASCADE,
+        on_delete=models.CASCADE,
         related_name="purchases",
         verbose_name="Trip"
     )
-    adult_count = IntegerField(verbose_name="Passengers", default=0)
-    child_count = IntegerField(verbose_name="Kids", default=0)
-    total_quantity = IntegerField(verbose_name="Total Travelers", editable=False, default=0)
+    adult_count = models.IntegerField(verbose_name="Passengers", default=0)
+    child_count = models.IntegerField(verbose_name="Kids", default=0)
+    total_quantity = models.IntegerField(verbose_name="Total Travelers", editable=False, default=0)
     total_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -272,51 +272,25 @@ class TourPurchase(Model):
         editable=False,
         default=0.00
     )
+    customer_name = models.CharField(max_length=255, verbose_name="Customer Name", blank=True, null=True)
+    customer_email = models.EmailField(verbose_name="Customer Email", blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Created At")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
 
-    # Metoda pro získání názvu zájezdu
-    def get_tour_name(self):
-        return self.travel_info.tour_name if self.travel_info else "No Tour Name"
-
-    get_tour_name.short_description = "Tour Name"
-
-    # Formátované datumy pro administraci
-    def formatted_created_at(self):
-        return self.created_at.strftime('%d.%m.%Y') if self.created_at else '-'
-
-    formatted_created_at.short_description = 'Created At'
-
-    def formatted_updated_at(self):
-        return self.updated_at.strftime('%d.%m.%Y') if self.updated_at else '-'
-
-    formatted_updated_at.short_description = 'Updated At'
-
-    # Reprezentace objektu
-    def __str__(self):
-        if self.travel_info:
-            return f"Trip: {self.travel_info.tour_name} | Adults: {self.adult_count}, Kids: {self.child_count}"
-        return "No tour information"
-
-    # Uložení objektu se spočítáním celkových hodnot
     def save(self, *args, **kwargs):
-        # Výpočet celkového množství cestujících
         self.total_quantity = self.adult_count + self.child_count
-
-        # Výpočet celkové ceny
         if self.travel_info:
             adult_price = self.travel_info.price_per_adult or 0
             child_price = self.travel_info.price_per_child or 0
             self.total_price = (self.adult_count * adult_price) + (self.child_count * child_price)
-
-        logger.debug(f"Saving TourPurchase: {self.total_quantity} travelers, total price {self.total_price}")
-
         super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Tour Purchase"
         verbose_name_plural = "Tour Purchases"
         ordering = ["-created_at"]
+
+
 
 
 class ContinentCountryCity(models.Model):

@@ -15,7 +15,7 @@
                     <p><strong>🏨 Hotel:</strong> {{ trip.Hotel.name }}</p>  <!-- Zobrazení hotelu -->
                     <p><strong>🍽️ Meal Type:</strong> {{ trip.get_meal_type_display }}</p>
                 </div>
-                <div
+                <div>
                     <p><strong>📜 Description:</strong> {{ trip.description }}</p>
                 </div>
 
@@ -28,29 +28,28 @@
             <p><strong>📅 Departure Date:</strong> {{ trip.formatted_departure_date }}</p>
             <p><strong>📅 Return Date:</strong> {{ trip.formatted_return_date }}</p>
 
-        </div>
         <div class="card-footer bg-light">
-            <h4 class="text-center mb-4">Purchase Your Trip</h4>
-            <form action="{% url 'purchase_trip' %}" method="post" class="d-flex flex-column align-items-center">
-                {% csrf_token %}
-                <input type="hidden" name="trip_id" value="{{ trip.id }}">
+    <h4 class="text-center mb-4">Purchase Your Trip</h4>
+    <form action="{% url 'purchase_trip' trip.id %}" method="post" class="d-flex flex-column align-items-center">
+        {% csrf_token %}
+        <input type="hidden" name="trip_id" value="{{ trip.id }}">
 
-                <div class="form-group w-50 mb-3">
-                    <label for="adults" class="form-label">Number of Adults ({{ trip.price_per_adult }} CZK each):</label>
-                    <input type="number" name="adults" id="adults" class="form-control" min="0" value="0" required>
-                </div>
-                <div class="form-group w-50 mb-3">
-                    <label for="kids" class="form-label">Number of Kids ({{ trip.price_per_child }} CZK each):</label>
-                    <input type="number" name="kids" id="kids" class="form-control" min="0" value="0" required>
-                </div>
-
-                <div class="total-price w-50 mb-3">
-                    <h5>💰 Total Price: <span id="total-price">0</span> CZK</h5>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-50">Purchase</button>
-            </form>
+        <div class="form-group w-50 mb-3">
+            <label for="adults" class="form-label">Number of Adults ({{ trip.price_per_adult }} CZK each):</label>
+            <input type="number" name="adults" id="adults" class="form-control" min="0" value="0" required>
         </div>
+        <div class="form-group w-50 mb-3">
+            <label for="kids" class="form-label">Number of Kids ({{ trip.price_per_child }} CZK each):</label>
+            <input type="number" name="kids" id="kids" class="form-control" min="0" value="0" required>
+        </div>
+
+        <div class="total-price w-50 mb-3">
+            <h5>💰 Total Price: <span id="total-price">0</span> CZK</h5>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-50">Purchase</button>
+    </form>
+</div>
     </div>
 </div>
 

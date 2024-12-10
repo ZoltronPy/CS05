@@ -7,7 +7,18 @@
     {% for trip in promoted_trips %}
         <li>
             <a href="{% url 'trip_detail' trip.id %}">{{ trip.tour_name }}</a>
+            <a href="{% url 'purchase_trip' trip.id %}" class="btn btn-primary">Zakoupit</a>
         </li>
     {% endfor %}
 </ul>
+        {% if promoted_trips %}
+    <ul>
+        {% for trip in promoted_trips %}
+            <li>{{ trip.tour_name }}</li>
+        {% endfor %}
+    <ul>
+        {% else %}
+             <p>Aktuálně nejsou žádné propagované zájezdy.</p>
+        {% endif %}
+    </ul>
 {% endblock %}

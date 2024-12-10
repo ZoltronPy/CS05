@@ -1,47 +1,64 @@
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="/">Travel Agency</a>
-        <button
-          class="navbar-toggler" type="button"
-          data-toggle="collapse" data-target="#navbarNavAltMarkup"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <ul class="navbar-nav ml-auto">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Travel Agency</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNavAltMarkup"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'homepage' %}">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'trip_list' %}">Trip list</a>
+        </li>
 
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'homepage' %}">Home</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'trip_list'%}">Trip list</a>
-            </li>
+        <!-- Toto vyžaduje dynamické ID -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'purchase_trip' trip_id=1 %}">Purchase Trip</a>
+        </li>
 
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'purchase_trip' %}">purchase_trip</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/contact/">Contact</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Destinations
+        <li class="nav-item">
+          <a class="nav-link" href="/contact/">Contact</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Destinations
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for continent in continents %}
+              <a class="dropdown-item" href="/continent/{{ continent.id }}/">
+                {{ continent.name }}
               </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                {% for continent in continents %}
-                  <a class="dropdown-item" href="/continent/{{ continent.id }}/">{{ continent.name }}</a>
-                  <div class="dropdown-divider"></div>
-                  {% for country in continent.countries.all %}
-                    <a class="dropdown-item" href="/country/{{ country.id }}/">{{ country.name }}</a>
-                    <div class="dropdown-divider"></div>
-                    {% for city in country.cities.all %}
-                      <a class="dropdown-item" href="/city/{{ city.id }}/">{{ city.name }}</a>
-                    {% endfor %}
-                  {% endfor %}
+              <div class="dropdown-divider"></div>
+              {% for country in continent.countries.all %}
+                <a class="dropdown-item" href="/country/{{ country.id }}/">
+                  {{ country.name }}
+                </a>
+                <div class="dropdown-divider"></div>
+                {% for city in country.cities.all %}
+                  <a class="dropdown-item" href="/city/{{ city.id }}/">
+                    {{ city.name }}
+                  </a>
                 {% endfor %}
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

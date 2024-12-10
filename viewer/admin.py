@@ -120,16 +120,51 @@ class TravelInfoAdmin(admin.ModelAdmin):
 # Admin pro TourPurchase
 class TourPurchaseAdmin(admin.ModelAdmin):
     list_display = (
-        'get_tour_name', 'adult_count', 'child_count', 'total_quantity', 'total_price', 'formatted_created_at',
-        'formatted_updated_at'
+        'get_tour_name', 'get_destination_city', 'adult_count',
+        'child_count', 'total_quantity', 'total_price', 'customer_name',
+        'customer_email', 'formatted_created_at'
     )
-    search_fields = ('travel_info__tour_name',)
-    list_filter = ('travel_info__tour_name',)
+    search_fields = ('travel_info__tour_name', 'customer_name', 'customer_email')
+    list_filter = ('travel_info__destination_city__name', 'travel_info__departure_date')
 
+    # Název zájezdu
     def get_tour_name(self, obj):
-        return obj.travel_info.tour_name if obj.travel_info else 'No Tour Name Available'
+        return obj.travel_info.tour_name if obj.travel_info else "No Tour Name Available"
 
     get_tour_name.short_description = 'Tour Name'
+
+    # Město destinace
+    def get_destination_city(self, obj):
+        if obj.travel_info and obj.travel_info.destination_city:
+            return obj.travel_info.destination_city.name
+        return "Unknown Destination City"
+
+    get_destination_city.short_description = 'Destination City'
+
+    # Zákaznické údaje
+    def customer_name(self, obj):
+        # Předpokládáme, že jméno zákazníka bylo přidáno do objednávky jako součást
+        # dat v TourPurchase modelu
+        return getattr(obj, 'customer_name', 'Not Provided')
+
+    customer_name.short_description = 'Customer Name'
+
+    def customer_email(self, obj):
+        # Předpokládáme, že email zákazníka byl přidán do objednávky jako součást
+        # dat v TourPurchase modelu
+        return getattr(obj, 'customer_email', 'Not Provided')
+
+    customer_email.short_description = 'Customer Email'
+
+    # Formátované datum vytvoření
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime('%d.%m.%Y %H:%M:%S') if obj.created_at else "-"
+
+    formatted_created_at.short_description = 'Created At'
+
+    readonly_fields = ('total_quantity', 'total_price', 'created_at', 'updated_at')
+
+
 
 # Vlastní Admin Site
 class CustomAdminSite(AdminSite):
@@ -148,3 +183,5 @@ custom_admin_site.register(Hotel, HotelAdmin)
 custom_admin_site.register(Airport, AirportAdmin)
 custom_admin_site.register(TravelInfo, TravelInfoAdmin)
 custom_admin_site.register(TourPurchase, TourPurchaseAdmin)
+
+

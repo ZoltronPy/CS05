@@ -1,10 +1,13 @@
 {% extends "base.html" %}
+{% block title %}Objednávka dokončena{% endblock %}
 
 {% block content %}
-<h1>Purchase Successful!</h1>
-<p>Thank you for purchasing the trip: {{ purchase.get_tour_name }}</p>
-<p><strong>Adults:</strong> {{ purchase.adult_count }}</p>
-<p><strong>Kids:</strong> {{ purchase.child_count }}</p>
-<p><strong>Total Price:</strong> {{ purchase.total_price }} CZK</p>
-<a href="{% url 'homepage' %}">Back to Homepage</a>
+<div class="text-center mt-5">
+    <h1>Vaše objednávka byla úspěšně dokončena!</h1>
+    <p>Výlet: {{ purchase.travel_info.tour_name }}</p>
+    <p>Počet dospělých: {{ purchase.adult_count }}</p>
+    <p>Počet dětí: {{ purchase.child_count }}</p>
+    <p>Celková cena: {{ purchase.total_price }} Kč</p>
+    <a href="{% url 'homepage' %}" class="btn btn-primary mt-4">Zpět na úvodní stránku</a>
+</div>
 {% endblock %}
