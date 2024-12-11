@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.forms import forms
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.timezone import now
@@ -291,8 +292,6 @@ class TourPurchase(models.Model):
         ordering = ["-created_at"]
 
 
-
-
 class ContinentCountryCity(models.Model):
     continent_name = models.CharField(max_length=32, unique=True)
     country_name = models.CharField(max_length=50)
@@ -302,3 +301,15 @@ class ContinentCountryCity(models.Model):
 
     def __str__(self):
         return f"{self.city_name}, {self.country_name}, {self.continent_name}"
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message from {self.name} at {self.created_at}"
+
+

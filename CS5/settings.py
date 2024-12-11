@@ -64,6 +64,9 @@ TEMPLATES = [
     },
 ]
 
+
+
+
 WSGI_APPLICATION = 'CS5.wsgi.application'
 
 

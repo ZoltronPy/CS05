@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from viewer.models import TravelInfo, Continent
+from viewer.models import TravelInfo, Continent, ContactMessage
 from viewer.models import TourPurchase
+
+from django import forms
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def homepage(request):
@@ -30,6 +35,7 @@ def trip_detail(request, trip_id):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from viewer.models import TravelInfo, TourPurchase
+
 
 def purchase_trip(request, trip_id=None):
     # Pokud je metoda GET, zobrazí formulář
@@ -63,3 +69,24 @@ def purchase_trip(request, trip_id=None):
         return render(request, 'purchase_success.html', {'purchase': purchase})
 
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'message']
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Uloží data do databáze
+            form.save()
+            return redirect('thank_you')  # Přesměrování na stránku poděkování
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact.html', {'form': form})
+
+
+def thank_you(request):
+    return render(request, 'thank_you.html')
