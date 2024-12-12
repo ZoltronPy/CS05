@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block title %}Zakoupit zájezd{% endblock %}
 
 {% block content %}
@@ -9,11 +10,15 @@
         {% csrf_token %}
 
         <!-- Zobrazení detailů výletu -->
-        <div class="mb-4">
-            <h4>Výlet: {{ trip.tour_name }}</h4>
-            <p>Destinace: {{ trip.destination_city }}</p>
-            <p>Cena za dospělého: {{ trip.price_per_adult }} Kč</p>
-            <p>Cena za dítě: {{ trip.price_per_child }} Kč</p>
+        <div class="text-center mb-5">
+            <h4>Výlet: {{ trip.tour_name }}</h4>  <!-- Nadpis uprostřed -->
+            <p class="text-center">Destinace: {{ trip.destination_city }}</p>  <!-- Destinace uprostřed -->
+        </div>
+
+        <!-- Ceny za dospělé a děti -->
+        <div class="text-left mb-5">
+            <p>Cena za dospělého: {{ trip.price_per_adult }} Kč</p>  <!-- Cena vlevo -->
+            <p>Cena za dítě: {{ trip.price_per_child }} Kč</p>  <!-- Cena vlevo -->
         </div>
 
         <!-- Skryté pole s ID výletu -->

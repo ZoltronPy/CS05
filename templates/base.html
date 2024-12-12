@@ -11,19 +11,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Travel Agency offering affordable and luxurious tours worldwide.">
+    <meta name="keywords" content="travel, tours, holidays, vacation, travel agency">
     <title>{% block title %}Travel Agency{% endblock %}</title>
 
     <!-- Bootstrap 4 for grid and responsive layout -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-
     <!-- Custom CSS for styling -->
     <link rel="stylesheet" href="{% static 'css.css' %}">
 
-
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
 
     <!-- Optional: jQuery and Bootstrap JS for interactivity -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -39,6 +42,27 @@
     <!-- Navbar Section -->
     {% include "navbar.html" %}
 
+    <!-- Breadcrumb Section -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% block breadcrumb %}
+            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+            {% endblock %}
+        </ol>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- Main Content Section with a nice container -->
     <div class="container mt-4">
         {% block content %}
@@ -49,7 +73,12 @@
     <!-- Footer Section with custom styling -->
     <footer class="footer mt-5 py-4 bg-dark text-white text-center">
         <div class="container">
-            <p>© 2024 Travel Agency. All rights reserved.</p>
+            <p>© 2024 Zoltan Travel Agency. All rights reserved.</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="{% url 'contact' %}">Contact Us</a></li>
+                <li class="list-inline-item"><a href="{% url 'trip_list' %}">Our Trips</a></li>
+                <li class="list-inline-item"><a href="{% url 'thank_you' %}">About Us</a></li>
+            </ul>
         </div>
     </footer>
 

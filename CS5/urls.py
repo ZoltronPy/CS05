@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from viewer import views
 from viewer.admin import custom_admin_site
+from viewer.views import HotelsViewTemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('trip/<int:trip_id>/purchase/', views.purchase_trip, name='purchase_trip'),
     path('contact/', views.contact, name='contact'),
     path('thank_you/', views.thank_you, name='thank_you'),
+    path('hotels/', HotelsViewTemplateView.as_view(), name='hotels'),
 ]
