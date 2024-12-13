@@ -1,8 +1,14 @@
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path
+
+from accounts.views import SubmittableLoginView, user_logout
+from accounts.views import SignUpView
 from viewer import views
 from viewer.admin import custom_admin_site
 from viewer.views import HotelsViewTemplateView
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,4 +21,11 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('thank_you/', views.thank_you, name='thank_you'),
     path('hotels/', HotelsViewTemplateView.as_view(), name='hotels'),
+
+    path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
+
+    path('accounts/signup/', SignUpView.as_view(), name='signup'),
+    path('accounts/logout/', user_logout, name='logout'),
+
+
 ]

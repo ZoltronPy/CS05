@@ -1,64 +1,80 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="/">Travel Agency</a>
+    <a class="navbar-brand" href="/"></a>
     <button
       class="navbar-toggler"
       type="button"
       data-toggle="collapse"
       data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'homepage' %}">Home</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'trip_list' %}">Trip list</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'hotels' %}">Hotels</a>
-        </li>
 
-        <!-- Toto vyžaduje dynamické ID -->
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <ul class="navbar-nav">
+        <!-- Home and Trip List on the left -->
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'homepage' %}active{% endif %}" href="{% url 'homepage' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'trip_list' %}active{% endif %}" href="{% url 'trip_list' %}">Trip List</a>
+        </li>
+      </ul>
+
+      <!-- Centered items -->
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'hotels' %}active{% endif %}" href="{% url 'hotels' %}">Hotels</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'purchase_trip' trip_id=1 %}">Purchase Trip</a>
         </li>
+      </ul>
 
+      <!-- Contact and Login/Signup dropdown on the right -->
+      <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/contact/">Contact</a>
+          <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="/contact/">Contact</a>
         </li>
+
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
             href="#"
-            id="navbarDropdown"
+            id="userDropdown"
             role="button"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
           >
-            Destinations
+            Account /
+              {% if user.is_authenticated %}
+                  {{ user.username }}
+                   </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
+                </div>
+
+
+              {% else %}
+                 </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                     <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+                     <a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a>
+                </div>
+
+              {% endif %}
+
+
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            {% for continent in continents %}
-              <a class="dropdown-item" href="/continent/{{ continent.id }}/">
-                {{ continent.name }}
-              </a>
-              <div class="dropdown-divider"></div>
-              {% for country in continent.countries.all %}
-                <a class="dropdown-item" href="/country/{{ country.id }}/">
-                  {{ country.name }}
-                </a>
-                <div class="dropdown-divider"></div>
-                {% for city in country.cities.all %}
-                  <a class="dropdown-item" href="/city/{{ city.id }}/">
-                    {{ city.name }}
-                  </a>
-                {% endfor %}
-              {% endfor %}
-            {% endfor %}
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+            <a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a>
           </div>
         </li>
       </ul>
