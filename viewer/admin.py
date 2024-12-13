@@ -60,7 +60,7 @@ class HotelAdmin(admin.ModelAdmin):
     list_display = ('name', 'get_city')
 
     def get_city(self, obj):
-        return obj.city.name if obj.city else 'No City Assigned'
+        return obj.City.name if obj.City else 'No City Assigned'
 
     get_city.short_description = 'City'
 
@@ -72,11 +72,12 @@ class AirportAdmin(admin.ModelAdmin):
     list_display = ('name', 'get_city')
 
     def get_city(self, obj):
-        return obj.city.name if obj.city else 'No City Assigned'
+        return obj.City.name if obj.City else 'No City Assigned'
 
     get_city.short_description = 'City'
 
     search_fields = ('name', 'city__name')
+
 
 
 # Admin pro TravelInfo

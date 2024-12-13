@@ -385,3 +385,6 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} at {self.created_at}"
+
+
+
