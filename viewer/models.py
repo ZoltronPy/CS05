@@ -269,12 +269,42 @@ class TourPurchase(models.Model):
     total_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
-        verbose_name="Total Cost (czk)",
+        verbose_name="Total Cost (CZK)",
         editable=False,
         default=0.00
     )
-    customer_name = models.CharField(max_length=255, verbose_name="Customer Name", blank=True, null=True)
-    customer_email = models.EmailField(verbose_name="Customer Email", blank=True, null=True)
+    customer_name = models.CharField(max_length=255, verbose_name="Customer Name", blank=False, null=False)
+    customer_email = models.EmailField(verbose_name="Customer Email", blank=False, null=False)
+    customer_phone = models.CharField(max_length=20, verbose_name="Customer Phone", blank=False, null=False)
+    customer_address = models.TextField(verbose_name="Customer Address", blank=True, null=True)
+    special_requests = models.TextField(verbose_name="Special Requests", blank=True, null=True)
+
+    # New fields
+    PAYMENT_CHOICES = [
+        ('card', 'Credit/Debit Card'),
+        ('paypal', 'PayPal'),
+        ('bank_transfer', 'Bank Transfer'),
+    ]
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_CHOICES,
+        verbose_name="Payment Method",
+        default='card'
+    )
+
+    ORDER_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    order_status = models.CharField(
+        max_length=20,
+        choices=ORDER_STATUS_CHOICES,
+        verbose_name="Order Status",
+        default='pending'
+    )
+    travel_preferences = models.TextField(verbose_name="Travel Preferences", blank=True, null=True)
+
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Created At")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
 
@@ -291,25 +321,67 @@ class TourPurchase(models.Model):
         verbose_name_plural = "Tour Purchases"
         ordering = ["-created_at"]
 
+    def __str__(self):
+        return f"Purchase for {self.customer_name} | Total Price: {self.total_price} CZK | Status: {self.get_order_status_display()}"
 
-class ContinentCountryCity(models.Model):
-    continent_name = models.CharField(max_length=32, unique=True)
-    country_name = models.CharField(max_length=50)
-    international_code = models.CharField(max_length=10, blank=True, null=True)
-    city_name = models.CharField(max_length=32)
-    description = models.TextField(null=True, blank=True)
+
+class Payment(models.Model):
+    tour_purchase = models.OneToOneField(
+        TourPurchase,
+        on_delete=models.CASCADE,
+        related_name="payment",
+        verbose_name="Tour Purchase"
+    )
+    payment_date = models.DateTimeField(verbose_name="Payment Date", default=timezone.now)
+    payment_amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="Payment Amount",
+        editable=False
+    )
+    payment_method = models.CharField(
+        max_length=20,
+        choices=TourPurchase.PAYMENT_CHOICES,
+        verbose_name="Payment Method"
+    )
+    payment_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('completed', 'Completed'),
+            ('failed', 'Failed'),
+        ],
+        verbose_name="Payment Status",
+        default='pending'
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.payment_amount:
+            self.payment_amount = self.tour_purchase.total_price
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Payment"
+        verbose_name_plural = "Payments"
+        ordering = ["-payment_date"]
 
     def __str__(self):
-        return f"{self.city_name}, {self.country_name}, {self.continent_name}"
+        return f"Payment for {self.tour_purchase.customer_name} | Status: {self.get_payment_status_display()}"
 
 
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)  # Přidáme telefonní číslo
     message = models.TextField()
+    address = models.TextField(blank=True, null=True)  # Volitelná adresa
+    preferred_contact = models.CharField(
+        max_length=20,
+        choices=[('email', 'Email'), ('phone', 'Phone')],
+        default='email',
+        verbose_name="Preferred Contact Method"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Message from {self.name} at {self.created_at}"
-
-

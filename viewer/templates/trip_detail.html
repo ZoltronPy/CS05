@@ -1,55 +1,61 @@
 {% extends "base.html" %}
 
 {% block content %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <div class="container my-4">
-    <div class="card shadow-lg">
-        <div class="card-header text-center bg-primary text-white">
-            <h2><strong>{{ trip.tour_name }}</strong> /  <strong>City: {{ trip.city.name }}</strong></h2>
+    <div class="card shadow-lg border-0">
+        <div class="card-header text-center bg-dark text-white">
+            <h2><strong>{{ trip.tour_name }}</strong> / <strong>City: {{ trip.city.name }}</strong></h2>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-5">
-                     <p><strong>🏝️ Destination City:</strong> {{ trip.destination_city.name }}</p>
-                    <p><strong>🏨 Hotel:</strong> {{ trip.Hotel.name }}</p>  <!-- Zobrazení hotelu -->
+                    <p><strong>🏝️ Destination City:</strong> {{ trip.destination_city.name }}</p>
+                    <p><strong>🏨 Hotel:</strong> {{ trip.Hotel.name }}</p>
                     <p><strong>🍽️ Meal Type:</strong> {{ trip.get_meal_type_display }}</p>
                 </div>
-                <div>
+                <div class="col-md-7">
+                    <p><strong>💵 Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
+                    <p><strong>👶 Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
+                    <p><strong>🧳 Duration:</strong> {{ trip.stay_duration }} days</p>
+                </div>
+                <div class="col-md-6">
                     <p><strong>📜 Description:</strong> {{ trip.description }}</p>
                 </div>
 
+            </div>
+            <div class="row mt-4">
                 <div class="col-md-6">
-                    <p><strong>💵 Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
-                    <p><strong>👶 Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
+                    <p><strong>Departure City:</strong> {{ trip.departure_city.name }}</p>
+                    <p><strong>Departure Date:</strong> {{ trip.formatted_departure_date }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Return Date:</strong> {{ trip.formatted_return_date }}</p>
+                    <p><strong>Destination Airport:</strong> {{ trip.destination_airport.name }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-light">
+            <h4 class="text-center mb-4">Purchase Your Trip</h4>
+            <form action="{% url 'purchase_trip' trip.id %}" method="post" class="d-flex flex-column align-items-center">
+                {% csrf_token %}
+                <input type="hidden" name="trip_id" value="{{ trip.id }}">
+
+                <div class="form-group w-75 mb-3">
+                    <label for="adults" class="form-label">Number of Adults ({{ trip.price_per_adult }} CZK each):</label>
+                    <input type="number" name="adults" id="adults" class="form-control" min="0" value="0" required>
+                </div>
+                <div class="form-group w-75 mb-3">
+                    <label for="kids" class="form-label">Number of Kids ({{ trip.price_per_child }} CZK each):</label>
+                    <input type="number" name="kids" id="kids" class="form-control" min="0" value="0" required>
                 </div>
 
-            <p><strong>🛫 Departure City:</strong> {{ trip.departure_city.name }}</p>
-            <p><strong>📅 Departure Date:</strong> {{ trip.formatted_departure_date }}</p>
-            <p><strong>📅 Return Date:</strong> {{ trip.formatted_return_date }}</p>
+                <div class="total-price w-75 mb-3 p-3 bg-secondary text-white text-center rounded">
+                    <h5>💰 Total Price: <span id="total-price">0</span> CZK</h5>
+                </div>
 
-        <div class="card-footer bg-light">
-    <h4 class="text-center mb-4">Purchase Your Trip</h4>
-    <form action="{% url 'purchase_trip' trip.id %}" method="post" class="d-flex flex-column align-items-center">
-        {% csrf_token %}
-        <input type="hidden" name="trip_id" value="{{ trip.id }}">
-
-        <div class="form-group w-50 mb-3">
-            <label for="adults" class="form-label">Number of Adults ({{ trip.price_per_adult }} CZK each):</label>
-            <input type="number" name="adults" id="adults" class="form-control" min="0" value="0" required>
+                <button type="submit" class="btn btn-dark w-50">Purchase</button>
+            </form>
         </div>
-        <div class="form-group w-50 mb-3">
-            <label for="kids" class="form-label">Number of Kids ({{ trip.price_per_child }} CZK each):</label>
-            <input type="number" name="kids" id="kids" class="form-control" min="0" value="0" required>
-        </div>
-
-        <div class="total-price w-50 mb-3">
-            <h5>💰 Total Price: <span id="total-price">0</span> CZK</h5>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-50">Purchase</button>
-    </form>
-</div>
     </div>
 </div>
 

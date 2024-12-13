@@ -1,6 +1,22 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
-from viewer.models import Continent, Country, City, Hotel, Airport, TravelInfo, TourPurchase, ContactMessage
+from viewer.models import Continent, Country, City, Hotel, Airport, TravelInfo, TourPurchase, ContactMessage, Payment
+
+# Custom Admin Site
+from django.contrib import admin
+from django.contrib.admin import AdminSite
+from viewer.models import Continent, Country, City, Hotel, Airport, TravelInfo, TourPurchase, ContactMessage, Payment
+
+
+# Vlastní Admin Site
+class CustomAdminSite(AdminSite):
+    site_header = "Admin - Custom"
+    site_title = "Admin Panel"
+    index_title = "Welcome to the Admin Panel"
+
+
+# Vytvoření instance pro nový Admin Site
+custom_admin_site = CustomAdminSite(name='Admin SITE')
 
 
 # Inline pro státy
@@ -53,21 +69,23 @@ class HotelAdmin(admin.ModelAdmin):
 
 # Admin pro Airport
 class AirportAdmin(admin.ModelAdmin):
-    list_display = ('name', 'get_city')  # Použijeme metodu pro získání města
+    list_display = ('name', 'get_city')
 
     def get_city(self, obj):
-        return obj.city.name if obj.city else 'No City Assigned'  # Přístup k názvu města přes ForeignKey
+        return obj.city.name if obj.city else 'No City Assigned'
 
-    get_city.short_description = 'City'  # Zobrazí se v administraci jako 'City'
+    get_city.short_description = 'City'
 
-    search_fields = ('name', 'city__name')  # Umožní vyhledávání podle názvu města
+    search_fields = ('name', 'city__name')
 
 
 # Admin pro TravelInfo
 class TravelInfoAdmin(admin.ModelAdmin):
     list_display = (
-    "tour_name", "departure_city", "destination_city", "formatted_departure_date", "formatted_return_date",
-    "price_per_adult", "price_per_child", "formatted_created_at", "formatted_updated_at")
+        "tour_name", "departure_city", "destination_city",
+        "formatted_departure_date", "formatted_return_date",
+        "price_per_adult", "price_per_child", "formatted_created_at", "formatted_updated_at"
+    )
     search_fields = ("tour_name", "departure_city__name", "destination_city__name")
     list_filter = ("departure_date", "return_date", "meal_type", "is_promoted")
 
@@ -75,30 +93,22 @@ class TravelInfoAdmin(admin.ModelAdmin):
 # Admin pro TourPurchase
 class TourPurchaseAdmin(admin.ModelAdmin):
     list_display = (
-    'get_tour_name', 'get_destination_city', 'adult_count', 'child_count', 'total_quantity', 'total_price',
-    'customer_name', 'customer_email', 'formatted_created_at')
-    search_fields = ('travel_info__tour_name', 'customer_name', 'customer_email')
-    list_filter = ('travel_info__destination_city__name', 'travel_info__departure_date')
+        'get_tour_name', 'get_customer_name', 'adult_count', 'child_count',
+        'total_quantity', 'total_price', 'customer_email', 'customer_phone', 'customer_address', 'special_requests',
+        'formatted_created_at'
+    )
+    search_fields = ('travel_info__tour_name', 'customer_name', 'customer_email', 'customer_phone')
+    list_filter = ('travel_info__destination_city__name', 'travel_info__departure_date', 'created_at')
 
     def get_tour_name(self, obj):
         return obj.travel_info.tour_name if obj.travel_info else "No Tour Name Available"
 
     get_tour_name.short_description = 'Tour Name'
 
-    def get_destination_city(self, obj):
-        return obj.travel_info.destination_city.name if obj.travel_info and obj.travel_info.destination_city else "Unknown Destination City"
+    def get_customer_name(self, obj):
+        return obj.customer_name or "Not Provided"
 
-    get_destination_city.short_description = 'Destination City'
-
-    def customer_name(self, obj):
-        return getattr(obj, 'customer_name', 'Not Provided')
-
-    customer_name.short_description = 'Customer Name'
-
-    def customer_email(self, obj):
-        return getattr(obj, 'customer_email', 'Not Provided')
-
-    customer_email.short_description = 'Customer Email'
+    get_customer_name.short_description = 'Customer Name'
 
     def formatted_created_at(self, obj):
         return obj.created_at.strftime('%d.%m.%Y %H:%M:%S') if obj.created_at else "-"
@@ -116,15 +126,13 @@ class ContactMessageAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
-# Vlastní Admin Site
-class CustomAdminSite(AdminSite):
-    site_header = "Admin - Custom"
-    site_title = "Admin Panel"
-    index_title = "Welcome to the Admin Panel"
+# Admin pro Payment
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('tour_purchase', 'payment_amount', 'payment_status', 'payment_method')
+    list_filter = ('payment_status', 'payment_method')
+    search_fields = ('tour_purchase__customer_name',)
 
-
-# Vytvoření instance pro nový Admin Site
-custom_admin_site = CustomAdminSite(name='Admin SITE')
 
 # Registrace adminů pro modely
 custom_admin_site.register(Continent, ContinentAdmin)

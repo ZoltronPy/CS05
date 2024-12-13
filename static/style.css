@@ -27,7 +27,7 @@ body {
 footer {
     background-color: #343a40;
     color: #fff;
-    padding: 20px 0;
+    padding: 10px 0;
     text-align: center;
 }
 
@@ -44,7 +44,7 @@ footer a:hover {
 .btn-primary {
     background-color: #0066cc;
     border: none;
-    padding: 12px 30px;
+    padding: 10px 10px;
     border-radius: 25px;
 }
 
