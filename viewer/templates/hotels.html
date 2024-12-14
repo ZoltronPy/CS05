@@ -8,7 +8,14 @@
         {% for hotel in hotels %}
         <div class="col-md-4 mb-4">
             <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Hotel Image">
+                <!-- Obrázek hotelu -->
+                {% if hotel.image %}
+                    <img src="{{ hotel.image.url }}" class="card-img-top" alt="{{ hotel.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Default Hotel Image">
+                {% endif %}
+
+                <!-- Detaily hotelu -->
                 <div class="card-body">
                     <h5 class="card-title">{{ hotel.name }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ hotel.Stars }} Stars</h6>

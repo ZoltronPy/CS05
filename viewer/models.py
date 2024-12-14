@@ -78,6 +78,7 @@ class Hotel(Model):
 
     City = ForeignKey(City, on_delete=CASCADE, related_name="city_hotels",
                       null=False, blank=False, )
+    image = models.ImageField(upload_to="hotels", blank=True, null=True, verbose_name="Hotel Image")
 
     def clean(self):
         if not self.City:
@@ -387,6 +388,3 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} at {self.created_at}"
-
-
-
