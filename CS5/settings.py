@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
+import os
 
+from django.template.context_processors import media
 from django.views import static
 from dotenv import load_dotenv
 
@@ -15,6 +17,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", default="")
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TIME_ZONE = 'Europe/Prague'
 
@@ -116,7 +121,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 LOGIN_REDIRECT_URL = 'homepage'
 LOGOUT_REDIRECT_URL = 'homepage'

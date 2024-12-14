@@ -165,6 +165,8 @@ class TravelInfo(Model):
     updated_at = models.DateTimeField(auto_now=True, null=True,
                                       verbose_name="Updated At")
 
+    image = models.ImageField(upload_to="trip_images/", null=True, blank=True, verbose_name="Trip Image")
+
     # Meal type
     MEAL_TYPE_CHOICES = [
         ('BB', 'Bed & Breakfast'),

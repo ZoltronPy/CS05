@@ -1,24 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="text-center mb-4">Welcome to Our Travel Agency</h1>
+<div class="container mt-5">
+    <!-- Welcome Section -->
+    <div class="text-center mb-5">
+        <h1>Welcome to Our Travel Agency</h1>
+        <p class="lead">Objevte ty nejlepší destinace za skvělé ceny. Vyberte si svůj vysněný výlet!</p>
+    </div>
 
     <!-- Promoted Trips Section -->
     <div class="row">
         {% if promoted_trips %}
             {% for trip in promoted_trips %}
-            <div class="col-md-4 text-center border p-4 mb-4" style="height: auto; display: flex; flex-direction: column; justify-content: space-between;">
-                <h2 style="font-size: 1.5rem; font-weight: bold;">{{ trip.tour_name }}</h2>
-                <div>
-                    <a href="{% url 'trip_detail' trip.id %}" class="btn btn-link mb-3">View Details</a>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <!-- Trip Image -->
+                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}" style="height: 200px; object-fit: cover;">
+
+                    <!-- Card Body -->
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ trip.tour_name }}</h5>
+                        <p class="card-text">
+                            <strong>Destinace:</strong> {{ trip.destination_city.name }}<br>
+                            <strong>Cena za dospělého:</strong> {{ trip.price_per_adult }} Kč<br>
+                            <strong>Cena za dítě:</strong> {{ trip.price_per_child }} Kč
+                        </p>
+                        <div class="mt-auto">
+                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-outline-primary w-100 mb-2">View Details</a>
+                            <a href="{% url 'purchase_trip' trip.id %}" class="btn btn-primary w-100">Zakoupit</a>
+                        </div>
+                    </div>
                 </div>
-                <a href="{% url 'purchase_trip' trip.id %}" class="btn btn-primary mt-auto" style="align-self: center;">Zakoupit</a>
             </div>
             {% endfor %}
         {% else %}
             <div class="col-12 text-center">
-                <p>Aktuálně nejsou žádné propagované zájezdy.</p>
+                <p class="text-muted">Aktuálně nejsou žádné propagované zájezdy.</p>
             </div>
         {% endif %}
     </div>
