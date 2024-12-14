@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
+from django.db.models import Sum, Avg, F, Count, Min, Max
 
 from viewer.models import TravelInfo, Continent, TourPurchase, ContactMessage, Hotel
 from django import forms
+import logging
+logger = logging.getLogger(__name__)
 
 
 def homepage(request):
@@ -25,28 +28,62 @@ def trip_list(request):
 
 
 def trip_detail(request, trip_id):
-    trip = get_object_or_404(TravelInfo, id=trip_id)
-    return render(request, 'trip_detail.html', {'trip': trip})
+    trip = get_object_or_404(TravelInfo, pk=trip_id)
+
+    # Výpočet zbývajících míst (příklad: pokud existují rezervace)
+    reserved_adults = trip.purchases.aggregate(Sum('adult_count'))['adult_count__sum'] or 0
+    reserved_kids = trip.purchases.aggregate(Sum('child_count'))['child_count__sum'] or 0
+
+    remaining_adult_seats = max(trip.adult_seats - reserved_adults, 0)
+    remaining_child_seats = max(trip.child_seats - reserved_kids, 0)
+
+    context = {
+        'trip': trip,
+        'remaining_adult_seats': remaining_adult_seats,
+        'remaining_child_seats': remaining_child_seats,
+    }
+
+    return render(request, 'trip_detail.html', context)
 
 
 def purchase_trip(request, trip_id):
     trip = get_object_or_404(TravelInfo, pk=trip_id)
+    total_price = 0
 
     if request.method == 'POST':
-        # Retrieve data from the form
         name = request.POST.get('name', '').strip()
         email = request.POST.get('email', '').strip()
-        adults = int(request.POST.get('adults', 0))
-        kids = int(request.POST.get('kids', 0))
+        try:
+            adults = int(request.POST.get('adults', 0))
+            kids = int(request.POST.get('kids', 0))
+        except ValueError:
+            adults, kids = 0, 0
 
-        # Validation for required fields
-        if not name or not email:
+        errors = []
+        if not name:
+            errors.append("Jméno je povinné.")
+        if not email:
+            errors.append("E-mail je povinný.")
+        if adults <= 0 and kids <= 0:
+            errors.append("Musíte zadat alespoň jednoho účastníka.")
+
+        # Spočítat celkovou cenu na backendu
+        total_price = (trip.price_per_adult * adults) + (trip.price_per_child * kids)
+
+        if errors:
             return render(request, 'purchase_form.html', {
                 'trip': trip,
-                'error': 'Name and Email are required.',
+                'errors': errors,
+                'form_data': {
+                    'name': name,
+                    'email': email,
+                    'adults': adults,
+                    'kids': kids,
+                },
+                'total_price': total_price,
             })
 
-        # Create the purchase object
+        # Uložení rezervace
         purchase = TourPurchase(
             travel_info=trip,
             adult_count=adults,
@@ -56,10 +93,23 @@ def purchase_trip(request, trip_id):
         )
         purchase.save()
 
-        return render(request, 'purchase_success.html', {'purchase': purchase})
+        return render(request, 'purchase_success.html', {
+            'purchase': purchase,
+            'trip': trip,
+            'total_price': total_price,
+        })
 
-    # If GET request, render the purchase form
-    return render(request, 'purchase_form.html', {'trip': trip})
+    return render(request, 'purchase_form.html', {
+        'trip': trip,
+        'form_data': {
+            'name': '',
+            'email': '',
+            'adults': 0,
+            'kids': 0,
+        },
+        'errors': [],
+        'total_price': total_price,
+    })
 
 
 class ContactForm(forms.ModelForm):

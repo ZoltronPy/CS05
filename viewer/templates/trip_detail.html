@@ -1,59 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container my-4">
+<div class="container my-5">
     <div class="card shadow-lg border-0">
-        <div class="card-header text-center bg-dark text-white">
-            <h2><strong>{{ trip.tour_name }}</strong> / <strong>City: {{ trip.city.name }}</strong></h2>
+        <!-- Header -->
+        <div class="card-header text-center">
+            <h2 class="mb-0">{{ trip.tour_name }}</h2>
+            <small class="d-block">{{ trip.city.name }}</small>
         </div>
+
+        <!-- Body -->
         <div class="card-body">
             <div class="row">
-                <div class="col-md-5">
-                    <p><strong>🏝️ Destination City:</strong> {{ trip.destination_city.name }}</p>
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <p><strong>🏝️ Destination:</strong> {{ trip.destination_city.name }}</p>
                     <p><strong>🏨 Hotel:</strong> {{ trip.Hotel.name }}</p>
                     <p><strong>🍽️ Meal Type:</strong> {{ trip.get_meal_type_display }}</p>
-                </div>
-                <div class="col-md-7">
-                    <p><strong>💵 Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
-                    <p><strong>👶 Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
-                    <p><strong>🧳 Duration:</strong> {{ trip.stay_duration }} days</p>
-                </div>
-                <div class="col-md-6">
                     <p><strong>📜 Description:</strong> {{ trip.description }}</p>
                 </div>
 
-            </div>
-            <div class="row mt-4">
+                <!-- Right Column -->
                 <div class="col-md-6">
-                    <p><strong>Departure City:</strong> {{ trip.departure_city.name }}</p>
-                    <p><strong>Departure Date:</strong> {{ trip.formatted_departure_date }}</p>
+                    <p><strong>💵 Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
+                    <p><strong>👶 Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
+                    <p><strong>🧳 Duration:</strong> {{ trip.stay_duration }} days</p>
+                    <p><strong>📅 Departure:</strong> {{ trip.formatted_departure_date }}</p>
+                    <p><strong>📅 Return:</strong> {{ trip.formatted_return_date }}</p>
+                </div>
+            </div>
+
+            <!-- Remaining Seats -->
+            <div class="row my-4">
+                <div class="col-md-6">
+                    <p><strong>Available Adult Seats:</strong>
+                        <span class="badge bg-light text-dark">{{ remaining_adult_seats }}</span>
+                    </p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Return Date:</strong> {{ trip.formatted_return_date }}</p>
-                    <p><strong>Destination Airport:</strong> {{ trip.destination_airport.name }}</p>
+                    <p><strong>Available Child Seats:</strong>
+                        <span class="badge bg-light text-dark">{{ remaining_child_seats }}</span>
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="card-footer bg-light">
+
+        <!-- Footer -->
+        <div class="card-footer">
             <h4 class="text-center mb-4">Purchase Your Trip</h4>
             <form action="{% url 'purchase_trip' trip.id %}" method="post" class="d-flex flex-column align-items-center">
                 {% csrf_token %}
-                <input type="hidden" name="trip_id" value="{{ trip.id }}">
 
                 <div class="form-group w-75 mb-3">
                     <label for="adults" class="form-label">Number of Adults ({{ trip.price_per_adult }} CZK each):</label>
-                    <input type="number" name="adults" id="adults" class="form-control" min="0" value="0" required>
-                </div>
-                <div class="form-group w-75 mb-3">
-                    <label for="kids" class="form-label">Number of Kids ({{ trip.price_per_child }} CZK each):</label>
-                    <input type="number" name="kids" id="kids" class="form-control" min="0" value="0" required>
+                    <input type="number" name="adults" id="adults" class="form-control" min="0" max="{{ remaining_adult_seats }}" required>
                 </div>
 
-                <div class="total-price w-75 mb-3 p-3 bg-secondary text-white text-center rounded">
+                <div class="form-group w-75 mb-3">
+                    <label for="kids" class="form-label">Number of Kids ({{ trip.price_per_child }} CZK each):</label>
+                    <input type="number" name="kids" id="kids" class="form-control" min="0" max="{{ remaining_child_seats }}" required>
+                </div>
+
+                <!-- Total Price -->
+                <div class="total-price w-75 mb-3 p-3 bg-light text-center rounded">
                     <h5>💰 Total Price: <span id="total-price">0</span> CZK</h5>
                 </div>
 
-                <button type="submit" class="btn btn-dark w-50">Purchase</button>
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-secondary w-50">Purchase</button>
             </form>
         </div>
     </div>
@@ -75,7 +89,7 @@
             const kids = parseInt(kidsInput.value) || 0;
 
             const totalPrice = (adults * pricePerAdult) + (kids * pricePerChild);
-            totalPriceDisplay.textContent = totalPrice.toLocaleString('cs-CZ');
+            totalPriceDisplay.textContent = totalPrice.toLocaleString('cs-CZ'); // Format for CZK
         }
 
         // Attach event listeners

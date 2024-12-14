@@ -1,24 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Welcome to Our Travel Agency</h1>
-<h2>Promoted Trips</h2>
-<ul>
-    {% for trip in promoted_trips %}
-        <li>
-            <a href="{% url 'trip_detail' trip.id %}">{{ trip.tour_name }}</a>
-            <a href="{% url 'purchase_trip' trip.id %}" class="btn btn-primary">Zakoupit</a>
-        </li>
-    {% endfor %}
-</ul>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Welcome to Our Travel Agency</h1>
+
+    <!-- Promoted Trips Section -->
+    <div class="row">
         {% if promoted_trips %}
-    <ul>
-        {% for trip in promoted_trips %}
-            <li>{{ trip.tour_name }}</li>
-        {% endfor %}
-    <ul>
+            {% for trip in promoted_trips %}
+            <div class="col-md-4 text-center border p-4 mb-4" style="height: auto; display: flex; flex-direction: column; justify-content: space-between;">
+                <h2 style="font-size: 1.5rem; font-weight: bold;">{{ trip.tour_name }}</h2>
+                <div>
+                    <a href="{% url 'trip_detail' trip.id %}" class="btn btn-link mb-3">View Details</a>
+                </div>
+                <a href="{% url 'purchase_trip' trip.id %}" class="btn btn-primary mt-auto" style="align-self: center;">Zakoupit</a>
+            </div>
+            {% endfor %}
         {% else %}
-             <p>Aktuálně nejsou žádné propagované zájezdy.</p>
+            <div class="col-12 text-center">
+                <p>Aktuálně nejsou žádné propagované zájezdy.</p>
+            </div>
         {% endif %}
-    </ul>
+    </div>
+</div>
 {% endblock %}

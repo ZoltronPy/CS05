@@ -1,12 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>All Trips</h1>
-<ul>
-    {% for trip in trips %}
-        <li>
-            <a href="{% url 'trip_detail' trip.id %}">{{ trip.tour_name }}</a>
-        </li>
-    {% endfor %}
-</ul>
+<div class="container mt-4">
+    <div class="row">
+        <!-- First Box -->
+        <div class="col-md-4 text-center border p-3">
+            <h2>All Trips</h2>
+            <ul style="font-size: large; font-weight: bold; text-align: left;">
+                {% for trip in trips %}
+                    <li>
+                        <a href="{% url 'trip_detail' trip.id %}">{{ trip.tour_name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Second Box -->
+        <div class="col-md-4 text-center border p-3">
+            <h2>SALES</h2>
+            <p>Don't miss out on our special discounts and exclusive offers. Plan your trip now!</p>
+        </div>
+
+        <!-- Third Box -->
+        <div class="col-md-4 text-center border p-3">
+            <h2>LAST MINUTE</h2>
+            <p>Spontaneous trips at unbeatable prices. Book your last-minute getaway today!</p>
+        </div>
+    </div>
+</div>
 {% endblock %}

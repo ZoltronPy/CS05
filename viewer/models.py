@@ -113,7 +113,7 @@ class Airport(Model):
 class TravelInfo(Model):
     #'Departure and destination (city, airport, hotel'
 
-    tour_name = CharField(max_length=32, null=False,
+    tour_name = CharField(max_length=200, null=False,
                           blank=False,
                           unique=True,
                           default='Tour name ')
