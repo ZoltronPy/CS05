@@ -3,8 +3,25 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f4f4f4;
+    color: #333;
 }
+
+.card {
+    height: 400px; /* Stejná výška pro všechny karty */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.row .p-3 {
+    min-height: 150px; /* Zajištění minimální výšky */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 
 /* Carousel Styling */
 #promotedTripsCarousel img {
@@ -14,7 +31,7 @@ body {
 }
 
 .carousel-caption {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     border-radius: 4px;
     padding: 10px;
 }
@@ -27,13 +44,13 @@ body {
 
 .carousel-caption p {
     font-size: 1rem;
-    color: #ddd;
+    color: #ccc;
 }
 
 /* Static Boxes */
 .container .row .p-3 {
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
@@ -46,7 +63,7 @@ body {
 
 /* Card Styling */
 .card {
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -65,16 +82,17 @@ body {
 .card .card-title {
     font-size: 1.25rem;
     font-weight: bold;
+    color: #333;
 }
 
 .card .btn-primary {
-    background-color: #007bff;
+    background-color: #0056b3;
     border: none;
     transition: background-color 0.3s;
 }
 
 .card .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #003d80;
 }
 
 /* Bars Styling */
@@ -86,15 +104,15 @@ section.text-center .p-3 {
 }
 
 .bg-primary {
-    background-color: #007bff;
+    background-color: #0056b3;
 }
 
 .bg-warning {
-    background-color: #ffc107;
+    background-color: #ff9800;
 }
 
 .bg-success {
-    background-color: #28a745;
+    background-color: #4caf50;
 }
 
 .bg-secondary {
@@ -103,7 +121,7 @@ section.text-center .p-3 {
 
 /* Forms */
 form input {
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 4px;
     padding: 10px;
     width: 70%;
@@ -115,12 +133,12 @@ form button {
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
-    background-color: #007bff;
+    background-color: #0056b3;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 form button:hover {
-    background-color: #0056b3;
+    background-color: #003d80;
 }

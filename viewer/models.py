@@ -258,6 +258,40 @@ class TravelInfo(Model):
     formatted_created_at.short_description = 'Created At'
     formatted_updated_at.short_description = 'Updated At'
 
+    @property
+    def remaining_seats(self):
+        return self.adult_seats + self.child_seats
+
+    @property
+    def is_last_minute(self):
+        if self.departure_date:
+            return (self.departure_date - timezone.now().date()).days <= 5
+        return False
+
+    @property
+    def is_departing_soon(self):
+        if self.departure_date:
+            return (self.departure_date - timezone.now().date()).days > 5
+        return False
+
+    @staticmethod
+    def get_top_selling_trips():
+        return TravelInfo.objects.annotate(total_sales=models.Sum('purchases__adult_count') + models.Sum('purchases__child_count'))\
+                                 .order_by('-total_sales')[:10]
+
+    @staticmethod
+    def get_trips_with_low_seats():
+        trips = TravelInfo.objects.all()
+        return [trip for trip in trips if trip.remaining_seats < 40]
+
+    @staticmethod
+    def get_last_minute_trips():
+        return TravelInfo.objects.filter(departure_date__lte=timezone.now().date() + timezone.timedelta(days=5))
+
+    @staticmethod
+    def get_upcoming_trips():
+        return TravelInfo.objects.filter(departure_date__gt=timezone.now().date() + timezone.timedelta(days=5))
+
 
 class TourPurchase(models.Model):
     travel_info = models.ForeignKey(

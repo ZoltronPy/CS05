@@ -20,25 +20,30 @@ def homepage(request):
     # Current date
     today = now().date()
 
-    # Next month's start and end dates
-    next_month_start = (today.replace(day=1) + timedelta(days=31)).replace(day=1)
-    next_month_end = (next_month_start + timedelta(days=31)).replace(day=1) - timedelta(days=1)
-
     # Get promoted trips for the carousel
     promoted_trips = TravelInfo.objects.filter(is_promoted=True).order_by('-created_at')[:5]
 
     # Get last minute trips (departure within 5 days)
-    last_minute_trips = TravelInfo.objects.filter(departure_date__lte=today + timedelta(days=5)).order_by(
-        'departure_date')
+    last_minute_trips = TravelInfo.get_last_minute_trips()
 
-    # Get trips for the next month
-    next_month_trips = TravelInfo.objects.filter(departure_date__range=(next_month_start, next_month_end))
+    # Get trips with fewer than 40 seats remaining
+    trips_with_low_seats = TravelInfo.get_trips_with_low_seats()
+
+    # Get top-selling trips
+    top_selling_trips = TravelInfo.get_top_selling_trips()
+
+    # Get trips departing in more than 5 days
+    upcoming_trips = TravelInfo.get_upcoming_trips()
 
     # Render the template with context
     return render(request, 'homepage.html', {
         'promoted_trips': promoted_trips,
         'last_minute_trips': last_minute_trips,
-        'next_month_trips': next_month_trips, })
+        'trips_with_low_seats': trips_with_low_seats,
+        'top_selling_trips': top_selling_trips,
+        'upcoming_trips': upcoming_trips,
+    })
+
 
 
 def all_trips(request):
