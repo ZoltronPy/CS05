@@ -3,6 +3,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls.conf import include
 
 from accounts.views import SubmittableLoginView, user_logout
 from accounts.views import SignUpView
@@ -28,6 +29,7 @@ urlpatterns = [
 
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/logout/', user_logout, name='logout'),
+    path('accounts/', include('django.contrib.auth.urls')), #defaultní cesty a views z Djanga
 
 
 ]

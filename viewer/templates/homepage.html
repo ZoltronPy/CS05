@@ -1,43 +1,161 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% block content %}
-<div class="container mt-5">
-    <!-- Welcome Section -->
-    <div class="text-center mb-5">
-        <h1>Welcome to Our Travel Agency</h1>
-        <p class="lead">Objevte ty nejlepší destinace za skvělé ceny. Vyberte si svůj vysněný výlet!</p>
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'homepage.css' %}">
+
+<!-- Carousel for Promoted Trips -->
+<div id="promotedTripsCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for trip in promoted_trips %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ trip.image.url }}" class="d-block w-100" style="height: 300px; object-fit: cover;" alt="{{ trip.tour_name }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{ trip.tour_name }}</h5>
+                    <p>From {{ trip.departure_city.name }} to {{ trip.destination_city.name }}</p>
+                </div>
+            </div>
+        {% endfor %}
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#promotedTripsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#promotedTripsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
 
-    <!-- Promoted Trips Section -->
+<!-- Four Static Boxes -->
+<section class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Static Box 1</div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Static Box 2</div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Static Box 3</div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Static Box 4</div>
+        </div>
+    </div>
+</section>
+
+<!-- List of Trips -->
+<section class="container mt-5">
+    <h2>Available Trips</h2>
     <div class="row">
-        {% if promoted_trips %}
-            {% for trip in promoted_trips %}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <!-- Trip Image -->
-                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}" style="height: 200px; object-fit: cover;">
-
-                    <!-- Card Body -->
-                    <div class="card-body d-flex flex-column">
+        {% for trip in last_minute_trips %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
+                    <div class="card-body">
                         <h5 class="card-title">{{ trip.tour_name }}</h5>
-                        <p class="card-text">
-                            <strong>Destinace:</strong> {{ trip.destination_city.name }}<br>
-                            <strong>Cena za dospělého:</strong> {{ trip.price_per_adult }} Kč<br>
-                            <strong>Cena za dítě:</strong> {{ trip.price_per_child }} Kč
-                        </p>
-                        <div class="mt-auto">
-                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-outline-primary w-100 mb-2">View Details</a>
-                            <a href="{% url 'purchase_trip' trip.id %}" class="btn btn-primary w-100">Zakoupit</a>
-                        </div>
+                        <p class="card-text">Departure: {{ trip.formatted_departure_date }}</p>
+                        <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
+                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12 text-center">
-                <p class="text-muted">Aktuálně nejsou žádné propagované zájezdy.</p>
-            </div>
-        {% endif %}
+        {% endfor %}
     </div>
-</div>
+</section>
+
+<!-- Business Class Bar -->
+<section class="container mt-5 text-center">
+    <div class="p-3 bg-primary text-white">
+        <h3>Discover Our Business Class Services</h3>
+        <p>Enjoy premium travel experiences with comfort and luxury.</p>
+    </div>
+</section>
+
+<!-- Four Guarantee Boxes -->
+<section class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Guarantee 1</div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Guarantee 2</div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Guarantee 3</div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border bg-light">Guarantee 4</div>
+        </div>
+    </div>
+</section>
+
+<!-- Trips for Next Month -->
+<section class="container mt-5">
+    <h2>Trips for Next Month</h2>
+    <div class="row">
+        {% for trip in next_month_trips %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ trip.tour_name }}</h5>
+                        <p class="card-text">Departure: {{ trip.formatted_departure_date }}</p>
+                        <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
+                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Last Minute Bar -->
+<section class="container mt-5 text-center">
+    <div class="p-3 bg-warning">
+        <h3>Last Minute Deals!</h3>
+        <p>Don't miss out on these fantastic offers!</p>
+    </div>
+</section>
+
+<!-- Six Info Boxes -->
+<section class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-2">
+            <div class="p-3 border bg-light">FAQ</div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-3 border bg-light">Travel Services</div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-3 border bg-light">Client Info</div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-3 border bg-light">Destination Rules</div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-3 border bg-light">Mobile App</div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-3 border bg-light">Login</div>
+        </div>
+    </div>
+</section>
+
+<!-- Coupon Bar -->
+<section class="container mt-5 text-center">
+    <div class="p-3 bg-success text-white">
+        <h3>Get Your Discount Coupon</h3>
+        <form method="post" action="/coupon/">
+            {% csrf_token %}
+            <label>
+                <input type="email" name="email" placeholder="Enter your email" class="form-control d-inline w-50">
+            </label>
+            <button type="submit" class="btn btn-light mt-2">Submit</button>
+        </form>
+    </div>
+</section>
+
+
 {% endblock %}

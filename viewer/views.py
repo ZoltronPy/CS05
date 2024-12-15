@@ -5,16 +5,40 @@ from django.db.models import Sum, Avg, F, Count, Min, Max
 from viewer.models import TravelInfo, Continent, TourPurchase, ContactMessage, Hotel
 from django import forms
 import logging
+
 logger = logging.getLogger(__name__)
+from django.utils.timezone import now
+from datetime import timedelta
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.timezone import now
+from datetime import timedelta
+from viewer.models import TravelInfo
 
 
 def homepage(request):
+    # Current date
+    today = now().date()
+
+    # Next month's start and end dates
+    next_month_start = (today.replace(day=1) + timedelta(days=31)).replace(day=1)
+    next_month_end = (next_month_start + timedelta(days=31)).replace(day=1) - timedelta(days=1)
+
+    # Get promoted trips for the carousel
     promoted_trips = TravelInfo.objects.filter(is_promoted=True).order_by('-created_at')[:5]
-    continents = Continent.objects.prefetch_related('countries__cities')
+
+    # Get last minute trips (departure within 5 days)
+    last_minute_trips = TravelInfo.objects.filter(departure_date__lte=today + timedelta(days=5)).order_by(
+        'departure_date')
+
+    # Get trips for the next month
+    next_month_trips = TravelInfo.objects.filter(departure_date__range=(next_month_start, next_month_end))
+
+    # Render the template with context
     return render(request, 'homepage.html', {
         'promoted_trips': promoted_trips,
-        'continents': continents
-    })
+        'last_minute_trips': last_minute_trips,
+        'next_month_trips': next_month_trips, })
 
 
 def all_trips(request):

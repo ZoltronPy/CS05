@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -8,10 +9,17 @@ class SignUpForm(UserCreationForm):
                   'first_name': 'First Name',
                   'last_name': 'Last Name',
                   'email': 'Email',
-                  'password1': 'PASSWORD',
-                  'password2': 'PASSWORD CONFIRMATION'
 
                   }
+
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}),
+        label="Password"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}),
+        label="Password Confirmation"
+    )
 
 
 

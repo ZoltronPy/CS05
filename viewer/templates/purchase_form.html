@@ -47,17 +47,19 @@
             </div>
 
             <!-- Souhrn rezervace -->
-            <div class="mb-4">
+            <div class="mb-4 text-center">
                 <h4>Souhrn zájezdu</h4>
+                <div class="d-flex flex-column align-items-center">
                 <p><strong>Destinace:</strong> {{ trip.tour_name }}</p>
                 <p><strong>Cena za dospělého:</strong> {{ trip.price_per_adult }} Kč</p>
                 <p><strong>Cena za dítě:</strong> {{ trip.price_per_child }} Kč</p>
                 <p><strong>Celková cena:</strong> <span id="total-price">0</span> Kč</p>
             </div>
+</div>
 
             <!-- Tlačítko pro odeslání -->
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Potvrdit rezervaci</button>
+            <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Potvrdit rezervaci</button>
             </div>
         </form>
     </div>
