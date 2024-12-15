@@ -4,28 +4,40 @@
 
 <link rel="stylesheet" href="{% static 'homepage.css' %}">
 
-<!-- Carousel for Promoted Trips -->
-<div id="promotedTripsCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-    <div class="carousel-inner">
+<!-- Promoted Trips Horizontal Scroll Slider -->
+<section class="promoted-trips mb-5">
+    <h2 class="text-center mb-4">Promoted Trips</h2>
+    <button class="scroll-btn scroll-left" aria-label="Scroll Left">&lt;</button>
+    <div class="scroll-container">
         {% for trip in promoted_trips %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <img src="{{ trip.image.url }}" class="d-block w-100" style="height: 300px; object-fit: cover;" alt="{{ trip.tour_name }}">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>{{ trip.tour_name }}</h5>
-                    <p>From {{ trip.departure_city.name }} to {{ trip.destination_city.name }}</p>
-                </div>
+        <div class="trip-card">
+            <img src="{{ trip.image.url }}" alt="{{ trip.tour_name }}" class="trip-image">
+            <div class="trip-info">
+                <h3 class="trip-title">{{ trip.tour_name }}</h3>
+                <p>From <strong>{{ trip.departure_city.name }}</strong> to <strong>{{ trip.destination_city.name }}</strong></p>
+                <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
             </div>
+        </div>
         {% endfor %}
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#promotedTripsCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#promotedTripsCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
+    <button class="scroll-btn scroll-right" aria-label="Scroll Right">&gt;</button>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollContainer = document.querySelector('.scroll-container');
+        const scrollLeft = document.querySelector('.scroll-left');
+        const scrollRight = document.querySelector('.scroll-right');
+
+        scrollLeft.addEventListener('click', () => {
+            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        scrollRight.addEventListener('click', () => {
+            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    });
+</script>
 
 <!-- Four Static Boxes -->
 <section class="container mt-5">
@@ -55,22 +67,23 @@
 
 <!-- Section: Top-Selling Trips -->
 <section class="container mt-5">
-    <h2>Top-Selling Trips</h2>
-    <div class="row">
+    <h2 class="text-center mb-4">Top-Selling Trips</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {% for trip in top_selling_trips %}
-            <div class="col-md-4">
-                <div class="card mb-3" style="height: 400px;">
-                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <h5 class="card-title">{{ trip.tour_name }}</h5>
-                        <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
-                        <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
-                        <div class="text-center mt-auto">
-                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
-                        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-center mb-3">{{ trip.tour_name }}</h5>
+                    <p class="mb-1"><strong>Remaining Seats:</strong> {{ trip.remaining_seats }}</p>
+                    <p class="mb-1"><strong>Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
+                    <p class="mb-3"><strong>Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
+                    <div class="mt-auto text-center">
+                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </section>
@@ -88,19 +101,19 @@
     <h2>Last Minute Trips</h2>
     <div class="row">
         {% for trip in last_minute_trips %}
-            <div class="col-md-4">
-                <div class="card mb-3" style="height: 400px;">
-                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <h5 class="card-title">{{ trip.tour_name }}</h5>
-                        <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
-                        <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
-                        <div class="text-center mt-auto">
-                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
-                        </div>
+        <div class="col-md-4">
+            <div class="card mb-3" style="height: 400px;">
+                <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title">{{ trip.tour_name }}</h5>
+                    <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
+                    <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
+                    <div class="text-center mt-auto">
+                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </section>
@@ -118,19 +131,19 @@
     <h2>Trips with Less Than 40 Seats</h2>
     <div class="row">
         {% for trip in trips_with_low_seats %}
-            <div class="col-md-4">
-                <div class="card mb-3" style="height: 400px;">
-                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <h5 class="card-title">{{ trip.tour_name }}</h5>
-                        <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
-                        <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
-                        <div class="text-center mt-auto">
-                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
-                        </div>
+        <div class="col-md-4">
+            <div class="card mb-3" style="height: 400px;">
+                <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title">{{ trip.tour_name }}</h5>
+                    <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
+                    <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
+                    <div class="text-center mt-auto">
+                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </section>
@@ -140,19 +153,19 @@
     <h2>Upcoming Trips (Departing in More Than 5 Days)</h2>
     <div class="row">
         {% for trip in upcoming_trips %}
-            <div class="col-md-4">
-                <div class="card mb-3" style="height: 400px;">
-                    <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <h5 class="card-title">{{ trip.tour_name }}</h5>
-                        <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
-                        <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
-                        <div class="text-center mt-auto">
-                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
-                        </div>
+        <div class="col-md-4">
+            <div class="card mb-3" style="height: 400px;">
+                <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title">{{ trip.tour_name }}</h5>
+                    <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
+                    <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
+                    <div class="text-center mt-auto">
+                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </section>
@@ -160,9 +173,9 @@
 <!-- Newsletter Section -->
 <section class="container mt-5">
     <div class="row text-center">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="p-3 border bg-light" style="height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h4><a href="{% url 'contact' %}">Subscribe to Our Newsletter</a></h4>
+                <h4><a href="{% url 'contact' %}">Newsletter</a></h4>
                 <form method="post" action="/newsletter/">
                     {% csrf_token %}
                     <label>
@@ -196,25 +209,6 @@
 <!-- Footer Section -->
 <footer class="container mt-5">
     <div class="row text-center">
-        <div class="col-md-4">
-            <div class="p-3 border bg-light">
-                <h5>Follow Us</h5>
-                <p>
-                    <a href="#" class="me-3">Facebook</a>
-                    <a href="#" class="me-3">Twitter</a>
-                    <a href="#">Instagram</a>
-                </p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-3 border bg-light">
-                <h5>Our Policies</h5>
-                <p>
-                    <a href="#">Terms of Service</a><br>
-                    <a href="#">Privacy Policy</a>
-                </p>
-            </div>
-        </div>
         <div class="col-md-4">
             <div class="p-3 border bg-light">
                 <h5>Visit Us</h5>
