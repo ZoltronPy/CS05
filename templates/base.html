@@ -15,11 +15,10 @@
     <meta name="keywords" content="travel, tours, holidays, vacation, travel agency">
     <title>{% block title %}Travel Agency{% endblock %}</title>
 
-    <!-- Bootstrap 4 for grid and responsive layout -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <!-- Custom CSS for styling -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css.css' %}">
 
     <!-- FontAwesome for icons -->
@@ -27,14 +26,6 @@
 
     <!-- Favicon -->
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-
-    <!-- Optional: jQuery and Bootstrap JS for interactivity -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-light">
@@ -44,11 +35,21 @@
 
     <!-- Breadcrumb Section -->
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            {% block breadcrumb %}
-            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
-            {% endblock %}
-        </ol>
+    <ol class="breadcrumb">
+        {% block breadcrumb %}
+        <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+        {% if user.is_authenticated %}
+        <li class="breadcrumb-item"><a href="{% url 'trip_list' %}">Trips</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'all_offers' %}">Offers</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotels</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'contact' %}">Contact</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'logout' %}">Log out</a></li>
+        {% else %}
+        <li class="breadcrumb-item"><a href="{% url 'login' %}">Log in</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'signup' %}">Sign up</a></li>
+        {% endif %}
+        {% endblock %}
+    </ol>
     </nav>
 
     <!-- Flash Messages -->
@@ -57,20 +58,77 @@
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <!-- Main Content Section with a nice container -->
+    <!-- Main Content Section -->
     <div class="container mt-4">
         {% block content %}
         <!-- Content will be injected here -->
         {% endblock %}
     </div>
 
-    <!-- Footer Section with custom styling -->
+    <!-- Offers Section -->
+    {% block offers %}
+    <section class="offers-section container mt-5">
+        <h2 class="text-center">Best EXIM Tours Offers</h2>
+        <div class="text-center mb-4">
+            <label class="switch">
+                <input type="checkbox" id="offerToggle">
+                <span class="slider"></span>
+            </label>
+            <span id="offerType">Last Minute</span>
+        </div>
+        <div class="row">
+            <div class="col-md-6 last-minute">
+                <ul class="list-unstyled">
+                    {% for offer in last_minute_offers %}
+                    <li class="offer-item d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <strong>{{ offer.formatted_departure_date }}</strong> / {{ offer.stay_duration }} nights
+                            <br>
+                            <span>{{ offer.destination_city.name }} ({{ offer.destination_city.country.name }})</span>
+                            <br>
+                            <span>{{ offer.departure_city.name }}</span>
+                        </div>
+                        <div class="text-danger fw-bold">{{ offer.price_per_adult|floatformat:2 }} CZK</div>
+                    </li>
+                    {% empty %}
+                    <li>No last-minute offers available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6 first-minute" style="display: none;">
+                <ul class="list-unstyled">
+                    {% for offer in first_minute_offers %}
+                    <li class="offer-item d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <strong>{{ offer.formatted_departure_date }}</strong> / {{ offer.stay_duration }} nights
+                            <br>
+                            <span>{{ offer.destination_city.name }} ({{ offer.destination_city.country.name }})</span>
+                            <br>
+                            <span>{{ offer.departure_city.name }}</span>
+                        </div>
+                        <div class="text-danger fw-bold">{{ offer.price_per_adult|floatformat:2 }} CZK</div>
+                    </li>
+                    {% empty %}
+                    <li>No first-minute offers available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'all_offers' %}" class="btn btn-primary">More Last Minute Tours</a>
+        </div>
+    </section>
+    {% endblock %}
+
+    <!-- Footer Section -->
     <footer class="footer mt-5 py-4 bg-dark text-white text-center">
         <div class="container">
             <p>© 2024 Zoltan Travel Agency. All rights reserved.</p>
@@ -82,8 +140,28 @@
         </div>
     </footer>
 
-    <!-- Optional: Custom JavaScript -->
-    <script src="{% static 'js/custom.js' %}"></script>
+    <!-- Bootstrap 4 JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Optional: Custom JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const offerToggle = document.getElementById("offerToggle");
+            const offerType = document.getElementById("offerType");
+
+            offerToggle.addEventListener("change", function () {
+                if (offerToggle.checked) {
+                    offerType.textContent = "First Minute";
+                    document.querySelectorAll(".last-minute").forEach(el => el.style.display = "none");
+                    document.querySelectorAll(".first-minute").forEach(el => el.style.display = "block");
+                } else {
+                    offerType.textContent = "Last Minute";
+                    document.querySelectorAll(".first-minute").forEach(el => el.style.display = "none");
+                    document.querySelectorAll(".last-minute").forEach(el => el.style.display = "block");
+                }
+            });
+        });
+    </script>
 </body>
 </html>

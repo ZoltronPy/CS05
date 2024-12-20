@@ -14,25 +14,14 @@ from datetime import timedelta
 
 
 def homepage(request):
-    # Current date
     today = now().date()
 
-    # Get promoted trips for the carousel
     promoted_trips = TravelInfo.objects.filter(is_promoted=True).order_by('-created_at')[:5]
-
-    # Get last minute trips (departure within 5 days)
     last_minute_trips = TravelInfo.get_last_minute_trips()
-
-    # Get trips with fewer than 40 seats remaining
     trips_with_low_seats = TravelInfo.get_trips_with_low_seats()
-
-    # Get top-selling trips
     top_selling_trips = TravelInfo.get_top_selling_trips()
-
-    # Get trips departing in more than 5 days
     upcoming_trips = TravelInfo.get_upcoming_trips()
 
-    # Render the template with context
     return render(request, 'homepage.html', {
         'promoted_trips': promoted_trips,
         'last_minute_trips': last_minute_trips,
@@ -55,20 +44,17 @@ def trip_list(request):
 def trip_detail(request, trip_id):
     trip = get_object_or_404(TravelInfo, pk=trip_id)
 
-    # Výpočet zbývajících míst (příklad: pokud existují rezervace)
     reserved_adults = trip.purchases.aggregate(Sum('adult_count'))['adult_count__sum'] or 0
     reserved_kids = trip.purchases.aggregate(Sum('child_count'))['child_count__sum'] or 0
 
     remaining_adult_seats = max(trip.adult_seats - reserved_adults, 0)
     remaining_child_seats = max(trip.child_seats - reserved_kids, 0)
 
-    context = {
+    return render(request, 'trip_detail.html', {
         'trip': trip,
         'remaining_adult_seats': remaining_adult_seats,
         'remaining_child_seats': remaining_child_seats,
-    }
-
-    return render(request, 'trip_detail.html', context)
+    })
 
 
 def purchase_trip(request, trip_id):
@@ -92,7 +78,6 @@ def purchase_trip(request, trip_id):
         if adults <= 0 and kids <= 0:
             errors.append("Musíte zadat alespoň jednoho účastníka.")
 
-        # Spočítat celkovou cenu na backendu
         total_price = (trip.price_per_adult * adults) + (trip.price_per_child * kids)
 
         if errors:
@@ -108,7 +93,6 @@ def purchase_trip(request, trip_id):
                 'total_price': total_price,
             })
 
-        # Uložení rezervace
         purchase = TourPurchase(
             travel_info=trip,
             adult_count=adults,
@@ -142,7 +126,6 @@ class ContactForm(forms.ModelForm):
         model = ContactMessage
         fields = ['name', 'email', 'phone', 'message', 'preferred_contact']
 
-    # Optional: Add custom styling or validation rules
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
@@ -166,33 +149,27 @@ def thank_you(request):
 
 
 def hotels(request):
-    # Načtení všech hotelů a aplikace filtrů
-    hotels_list = Hotel.objects.all().order_by('name')  # Načti hotely
-    city_filter = request.GET.get('city')  # Získání filtru pro město
-    stars_filter = request.GET.get('stars')  # Získání filtru pro hvězdičky
-    search_query = request.GET.get('search')  # Získání filtru pro hledání
+    hotels_list = Hotel.objects.all().order_by('name')
+    city_filter = request.GET.get('city')
+    stars_filter = request.GET.get('stars')
+    search_query = request.GET.get('search')
 
-    # Filtr podle města
     if city_filter:
         hotels_list = hotels_list.filter(City__name__iexact=city_filter)
 
-    # Filtr podle hvězdiček
     if stars_filter:
         try:
             stars_filter = int(stars_filter)
             hotels_list = hotels_list.filter(Stars=stars_filter)
         except ValueError:
-            pass  # Pokud je hodnota filtru hvězdiček neplatná, ignorujeme ji
+            pass
 
-    # Filtr podle názvu hotelu
     if search_query:
         hotels_list = hotels_list.filter(name__icontains=search_query)
 
-    # Načtení všech měst pro výběr v šabloně
     cities = City.objects.all()
 
-    # Stránkování
-    paginator = Paginator(hotels_list, 6)  # 6 hotelů na stránku
+    paginator = Paginator(hotels_list, 6)
     page = request.GET.get('page')
     try:
         hotels = paginator.page(page)
@@ -201,36 +178,41 @@ def hotels(request):
     except EmptyPage:
         hotels = paginator.page(paginator.num_pages)
 
-    context = {
+    return render(request, 'hotels.html', {
         'hotels': hotels,
         'cities': cities,
         'city_filter': city_filter,
         'stars_filter': stars_filter,
         'search_query': search_query,
-    }
-    return render(request, 'hotels.html', context)
+    })
 
 
 def hotel_detail(request, hotel_id):
     hotel = get_object_or_404(Hotel, pk=hotel_id)
     cities = City.objects.all()
     travel_infos = TravelInfo.objects.filter(Hotel=hotel)
-    context = {
+
+    return render(request, 'hotel_detail.html', {
         'hotel': hotel,
         'cities': cities,
-        'travel_infos': travel_infos
-    }
-    return render(request, 'hotel_detail.html', context)
+        'travel_infos': travel_infos,
+    })
 
 
 @register.filter
 def generate_range(value):
-    """
-    Vytvoří range objekt pro iteraci v šabloně.
-    Pokud je hodnota neplatná nebo není číslo, vrací prázdný range.
-    """
     try:
         value = int(value)
-        return range(max(value, 0))  # Ujisti se, že hodnota není záporná
+        return range(max(value, 0))
     except (ValueError, TypeError):
         return range(0)
+
+
+def all_offers(request):
+    offers = TravelInfo.objects.all()
+    return render(request, 'all_offers.html', {'offers': offers})
+
+
+def offer_detail(request, pk):
+    offer = get_object_or_404(TravelInfo, pk=pk)
+    return render(request, 'all_offers.html', {'offer': offer})

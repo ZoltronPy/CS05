@@ -11,9 +11,6 @@ from viewer import views
 from viewer.admin import custom_admin_site
 from viewer.views import hotel_detail
 
-
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('custom-admin/', custom_admin_site.urls),
@@ -31,8 +28,10 @@ urlpatterns = [
 
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/logout/', user_logout, name='logout'),
-    path('accounts/', include('django.contrib.auth.urls')), #defaultní cesty a views z Djanga
-
+    path('accounts/', include('django.contrib.auth.urls')),  #defaultní cesty a views z Djanga
+    path('offers/', views.all_offers, name='offers'),
+    path('offers/', views.all_offers, name='all_offers'),
+    path('offers/<int:pk>/', views.offer_detail, name='offer_detail'),
 
 ]
 

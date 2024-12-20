@@ -276,8 +276,9 @@ class TravelInfo(Model):
 
     @staticmethod
     def get_top_selling_trips():
-        return TravelInfo.objects.annotate(total_sales=models.Sum('purchases__adult_count') + models.Sum('purchases__child_count'))\
-                                 .order_by('-total_sales')[:10]
+        return TravelInfo.objects.annotate(
+            total_sales=models.Sum('purchases__adult_count') + models.Sum('purchases__child_count')) \
+                   .order_by('-total_sales')[:10]
 
     @staticmethod
     def get_trips_with_low_seats():

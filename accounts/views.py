@@ -29,6 +29,7 @@ class SignUpView(CreateView):
 
 
 def user_logout(request):
+    print(f"HTTP_REFERER: {request.META.get('HTTP_REFERER')}")
     logout(request)
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
