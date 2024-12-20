@@ -1,19 +1,16 @@
+from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.db.models import Sum, Avg, F, Count, Min, Max
 
-from viewer.models import TravelInfo, Continent, TourPurchase, ContactMessage, Hotel
+from viewer.models import TravelInfo, Continent, TourPurchase, ContactMessage, Hotel, City
+from django.template.defaulttags import register
 from django import forms
 import logging
 
 logger = logging.getLogger(__name__)
 from django.utils.timezone import now
 from datetime import timedelta
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.timezone import now
-from datetime import timedelta
-from viewer.models import TravelInfo
 
 
 def homepage(request):
@@ -43,7 +40,6 @@ def homepage(request):
         'top_selling_trips': top_selling_trips,
         'upcoming_trips': upcoming_trips,
     })
-
 
 
 def all_trips(request):
@@ -169,11 +165,72 @@ def thank_you(request):
     return render(request, 'thank_you.html')
 
 
-class HotelsViewTemplateView(TemplateView):
-    template_name = "hotels.html"
-    extra_context = {'hotels': Hotel.objects.all(), }
+def hotels(request):
+    # Načtení všech hotelů a aplikace filtrů
+    hotels_list = Hotel.objects.all().order_by('name')  # Načti hotely
+    city_filter = request.GET.get('city')  # Získání filtru pro město
+    stars_filter = request.GET.get('stars')  # Získání filtru pro hvězdičky
+    search_query = request.GET.get('search')  # Získání filtru pro hledání
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['hotels'] = Hotel.objects.all()
-        return context
+    # Filtr podle města
+    if city_filter:
+        hotels_list = hotels_list.filter(City__name__iexact=city_filter)
+
+    # Filtr podle hvězdiček
+    if stars_filter:
+        try:
+            stars_filter = int(stars_filter)
+            hotels_list = hotels_list.filter(Stars=stars_filter)
+        except ValueError:
+            pass  # Pokud je hodnota filtru hvězdiček neplatná, ignorujeme ji
+
+    # Filtr podle názvu hotelu
+    if search_query:
+        hotels_list = hotels_list.filter(name__icontains=search_query)
+
+    # Načtení všech měst pro výběr v šabloně
+    cities = City.objects.all()
+
+    # Stránkování
+    paginator = Paginator(hotels_list, 6)  # 6 hotelů na stránku
+    page = request.GET.get('page')
+    try:
+        hotels = paginator.page(page)
+    except PageNotAnInteger:
+        hotels = paginator.page(1)
+    except EmptyPage:
+        hotels = paginator.page(paginator.num_pages)
+
+    context = {
+        'hotels': hotels,
+        'cities': cities,
+        'city_filter': city_filter,
+        'stars_filter': stars_filter,
+        'search_query': search_query,
+    }
+    return render(request, 'hotels.html', context)
+
+
+def hotel_detail(request, hotel_id):
+    hotel = get_object_or_404(Hotel, pk=hotel_id)
+    cities = City.objects.all()
+    travel_infos = TravelInfo.objects.filter(Hotel=hotel)
+    context = {
+        'hotel': hotel,
+        'cities': cities,
+        'travel_infos': travel_infos
+    }
+    return render(request, 'hotel_detail.html', context)
+
+
+@register.filter
+def generate_range(value):
+    """
+    Vytvoří range objekt pro iteraci v šabloně.
+    Pokud je hodnota neplatná nebo není číslo, vrací prázdný range.
+    """
+    try:
+        value = int(value)
+        return range(max(value, 0))  # Ujisti se, že hodnota není záporná
+    except (ValueError, TypeError):
+        return range(0)

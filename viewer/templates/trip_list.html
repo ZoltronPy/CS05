@@ -1,30 +1,37 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
 <div class="container mt-4">
-    <div class="row">
-        <!-- First Box -->
-        <div class="col-md-4 text-center border p-3">
-            <h2>All Trips</h2>
-            <ul style="font-size: large; font-weight: bold; text-align: left;">
-                {% for trip in trips %}
+    <div class="row info-boxes">
+        <div class="col-md-4">
+            <div class="info-box">
+                <h2 class="info-box-title"><a href="#" class="text-dark">All Trips</a></h2>
+                <ul class="trip-list">
+                    {% for trip in trips %}
                     <li>
-                        <a href="{% url 'trip_detail' trip.id %}">{{ trip.tour_name }}</a>
+                        <a href="{% url 'trip_detail' trip.id %}" class="trip-link">{{ trip.tour_name }}</a>
                     </li>
-                {% endfor %}
-            </ul>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
-        <!-- Second Box -->
-        <div class="col-md-4 text-center border p-3">
-            <h2>SALES</h2>
-            <p>Don't miss out on our special discounts and exclusive offers. Plan your trip now!</p>
+        <div class="col-md-4">
+            <div class="info-box">
+                <h3 class="info-box-title"><a href="#" class="text-dark">SALES</a></h3>
+                <p class="info-box-text">Don't miss out on our special discounts and exclusive offers. Plan your trip now!</p>
+            </div>
         </div>
 
-        <!-- Third Box -->
-        <div class="col-md-4 text-center border p-3">
-            <h2>LAST MINUTE</h2>
-            <p>Spontaneous trips at unbeatable prices. Book your last-minute getaway today!</p>
+        <div class="col-md-4">
+            <div class="info-box">
+                <h3 class="info-box-title"><a href="#" class="text-dark">LAST MINUTE</a></h3>
+                <p class="info-box-text">Spontaneous trips at unbeatable prices. Book your last-minute getaway today!</p>
+            </div>
         </div>
     </div>
 </div>

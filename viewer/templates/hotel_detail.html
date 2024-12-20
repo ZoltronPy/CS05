@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            {% if hotel.image %}
+            <img src="{{ hotel.image.url }}" class="img-fluid" alt="{{ hotel.name }}">
+            {% else %}
+            <img src="/media/hotels/hotel_default.jpg" class="img-fluid" alt="Default Hotel Image">
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h1>{{ hotel.name }}</h1>
+            <h6 class="mb-2 text-muted">
+                {% with hotel.Stars|default:0 as stars %}
+                <!-- Plné hvězdičky -->
+                {% for _ in stars|generate_range %}
+                    <i class="fas fa-star text-warning"></i>
+                {% endfor %}
+                <!-- Prázdné hvězdičky -->
+                {% for _ in 5|generate_range %}
+                    {% if forloop.counter > stars %}
+                        <i class="far fa-star text-warning"></i>
+                    {% endif %}
+                {% endfor %}
+                {% endwith %}
+            </h6>
+            <p><strong>City:</strong> {{ hotel.City.name }}</p>
+            <p><strong>Country:</strong> {{ hotel.City.country.name }}</p>
+            <p><strong>Continent:</strong> {{ hotel.City.country.continent.name }}</p>
+            <p>{{ hotel.Description|default:"No description available." }}</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            {% if hotel.City.description %}
+                <h3>About {{ hotel.City.name }}:</h3>
+                <p>{{ hotel.City.description }}</p>
+            {% endif %}
+            {% if travel_infos %}
+                <h3>Zájezdy:</h3>
+                <ul>
+                {% for travel_info in travel_infos %}
+                    <li>
+                        <a href="{% url 'trip_detail' travel_info.id %}">{{ travel_info.tour_name }}</a>
+                        ({{ travel_info.formatted_departure_date }} - {{ travel_info.formatted_return_date }})
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

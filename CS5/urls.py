@@ -9,7 +9,8 @@ from accounts.views import SubmittableLoginView, user_logout
 from accounts.views import SignUpView
 from viewer import views
 from viewer.admin import custom_admin_site
-from viewer.views import HotelsViewTemplateView
+from viewer.views import hotel_detail
+
 
 
 
@@ -23,7 +24,8 @@ urlpatterns = [
     path('trip/<int:trip_id>/purchase/', views.purchase_trip, name='purchase_trip'),
     path('contact/', views.contact, name='contact'),
     path('thank_you/', views.thank_you, name='thank_you'),
-    path('hotels/', HotelsViewTemplateView.as_view(), name='hotels'),
+    path('hotels/', views.hotels, name='hotels'),
+    path('hotels/<int:hotel_id>/', views.hotel_detail, name='hotel_detail'),
 
     path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
 
@@ -35,4 +37,5 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

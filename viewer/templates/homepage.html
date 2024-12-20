@@ -5,69 +5,60 @@
 <link rel="stylesheet" href="{% static 'homepage.css' %}">
 
 <!-- Promoted Trips Horizontal Scroll Slider -->
-<section class="promoted-trips mb-5">
-    <h2 class="text-center mb-4">Promoted Trips</h2>
-    <button class="scroll-btn scroll-left" aria-label="Scroll Left">&lt;</button>
-    <div class="scroll-container">
-        {% for trip in promoted_trips %}
-        <div class="trip-card">
-            <img src="{{ trip.image.url }}" alt="{{ trip.tour_name }}" class="trip-image">
-            <div class="trip-info">
-                <h3 class="trip-title">{{ trip.tour_name }}</h3>
-                <p>From <strong>{{ trip.departure_city.name }}</strong> to <strong>{{ trip.destination_city.name }}</strong></p>
-                <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <button class="scroll-btn scroll-right" aria-label="Scroll Right">&gt;</button>
-</section>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const scrollContainer = document.querySelector('.scroll-container');
-        const scrollLeft = document.querySelector('.scroll-left');
-        const scrollRight = document.querySelector('.scroll-right');
-
-        scrollLeft.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
-        });
-
-        scrollRight.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
-        });
-    });
-</script>
+<aside class="promoted-trips section-margin">
+  <h2 class="text-center mb-4">TRAVEL WITH US </h2>
+  <div class="trip-card">
+    {% if promoted_trips %}
+      <img src="{{ promoted_trips.0.image.url }}" alt="{{ promoted_trips.0.tour_name }}" class="trip-image">
+      <div class="trip-info">
+        <h3 class="trip-title">{{ promoted_trips.0.tour_name }}</h3>
+        <p>Z <strong>{{ promoted_trips.0.departure_city.name }}</strong> do <strong>{{ promoted_trips.0.destination_city.name }}</strong></p>
+        <a href="{% url 'trip_detail' promoted_trips.0.id %}" class="btn btn-primary">Více informací</a>
+      </div>
+    {% else %}
+      <p>Žádný zájezd k zobrazení.</p>
+    {% endif %}
+  </div>
+</aside>
 
 <!-- Four Static Boxes -->
 <section class="container mt-5">
+    <h2 class="text-center mb-4">Tipy pro vaši dovolenou</h2>
     <div class="row text-center">
-        <div class="col-md-3">
-            <div class="p-3 border bg-light" style="min-height: 75px;">Static Box 1</div>
+        <div class="col-md-4">
+            <div class="info-box p-3 border bg-white">
+                <i class="fas fa-sun fa-2x mb-3"></i>
+                <h4>Zimní dovolená u moře? V lednu jedině do exotiky!</h4>
+                <p>Objevte nejlepší destinace pro slunnou dovolenou v lednu a užijte si teplo, když u nás mrzne.</p>
+                <a href="/kam-v-lednu-k-mori" class="btn btn-primary">Zjistit více</a>
+            </div>
         </div>
-        <div class="col-md-3">
-            <div class="p-3 border bg-light" style="min-height: 75px;">Static Box 2</div>
+        <div class="col-md-4">
+            <div class="info-box p-3 border bg-light">
+                <i class="fas fa-umbrella-beach fa-2x mb-3"></i>
+                <h4>Dominikánská republika: Zažijte Karibik v jeho nejlepší sezóně!</h4>
+                <p>Právě teď je ideální čas navštívit Dominikánskou republiku. Nádherné pláže a skvělé počasí na vás čekají.</p>
+                <a href="/dominikanska-republika" class="btn btn-primary">Zjistit více</a>
+            </div>
         </div>
-        <div class="col-md-3">
-            <div class="p-3 border bg-light" style="min-height: 75px;">Static Box 3</div>
+        <div class="col-md-4">
+            <div class="info-box p-3 border bg-white">
+                <i class="fas fa-plane-departure fa-2x mb-3"></i>
+                <h4>First Minute: Nejlepší nabídky a termíny pro vaši dovolenou!</h4>
+                <p>Zarezervujte si dovolenou včas a získejte nejširší výběr hotelů a termínů za skvělé ceny.</p>
+                <a href="/first-minute" class="btn btn-primary">Zjistit více</a>
+            </div>
         </div>
-        <div class="col-md-3">
-            <div class="p-3 border bg-light" style="min-height: 75px;">Static Box 4</div>
-        </div>
-    </div>
-</section>
-
-<!-- Discover Services Section -->
-<section class="container mt-5 text-center">
-    <div class="p-3 bg-secondary text-white">
-        <h3>Discover Our Premium Services</h3>
-        <p>Explore exclusive deals and unparalleled comfort for your travels.</p>
     </div>
 </section>
 
 <!-- Section: Top-Selling Trips -->
-<section class="container mt-5">
-    <h2 class="text-center mb-4">Top-Selling Trips</h2>
+<section class="container mt-5 text-center">
+    <div class="p-3 bg-secondary text-white">
+        <h2 class="text-center mb-4">Top-Selling Trips</h2>
+        <p>Explore exclusive deals and unparalleled comfort for your travels.</p>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {% for trip in top_selling_trips %}
         <div class="col">
@@ -88,18 +79,13 @@
     </div>
 </section>
 
-<!-- Discover Services Section -->
+<!-- Section: Last Minute Trips -->
 <section class="container mt-5 text-center">
     <div class="p-3 bg-secondary text-white">
-        <h3>Plan Your Last Minute Escape</h3>
+        <h2>Last Minute Trips</h2>
         <p>Book your dream vacation today at incredible prices.</p>
     </div>
-</section>
-
-<!-- Section: Last Minute Trips -->
-<section class="container mt-5">
-    <h2>Last Minute Trips</h2>
-    <div class="row">
+        <div class="row">
         {% for trip in last_minute_trips %}
         <div class="col-md-4">
             <div class="card mb-3" style="height: 400px;">
@@ -117,40 +103,12 @@
         {% endfor %}
     </div>
 </section>
-
-<!-- Discover Services Section -->
+<!-- Section: Upcoming Trips -->
 <section class="container mt-5 text-center">
     <div class="p-3 bg-secondary text-white">
-        <h3>Upcoming Adventures Await</h3>
+        <<h2>Upcoming Trips (Departing in More Than 5 Days)</h2>
         <p>Find trips with plenty of time to prepare and plan.</p>
     </div>
-</section>
-
-<!-- Section: Trips with Low Seats -->
-<section class="container mt-5">
-    <h2>Trips with Less Than 40 Seats</h2>
-    <div class="row">
-        {% for trip in trips_with_low_seats %}
-        <div class="col-md-4">
-            <div class="card mb-3" style="height: 400px;">
-                <img src="{{ trip.image.url }}" class="card-img-top" alt="{{ trip.tour_name }}">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="card-title">{{ trip.tour_name }}</h5>
-                    <p class="card-text">Remaining Seats: {{ trip.remaining_seats }}</p>
-                    <p class="card-text">Price per Adult: {{ trip.price_per_adult }} CZK</p>
-                    <div class="text-center mt-auto">
-                        <a href="{% url 'trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</section>
-
-<!-- Section: Upcoming Trips -->
-<section class="container mt-5">
-    <h2>Upcoming Trips (Departing in More Than 5 Days)</h2>
     <div class="row">
         {% for trip in upcoming_trips %}
         <div class="col-md-4">
@@ -170,52 +128,41 @@
     </div>
 </section>
 
-<!-- Newsletter Section -->
-<section class="container mt-5">
+<section class="container mt-4">
     <div class="row text-center">
         <div class="col-md-3">
-            <div class="p-3 border bg-light" style="height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h4><a href="{% url 'contact' %}">Newsletter</a></h4>
-                <form method="post" action="/newsletter/">
+            <div class="info-box p-3 border bg-light">
+                <h4><a href="{% url 'contact' %}" class="text-dark"><strong>Newsletter</strong></a></h4>
+                <form method="post" action="/newsletter/" class="d-flex flex-column align-items-center">
                     {% csrf_token %}
                     <label>
-                        <input type="email" name="email" placeholder="Enter your email" class="form-control">
+                        <input type="email" name="email" placeholder="Enter your email" class="form-control mb-2">
                     </label>
-                    <button type="submit" class="btn btn-primary mt-2">Subscribe</button>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
                 </form>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="p-3 border bg-light" style="height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h4><a href="{% url 'contact' %}">Contact Us</a></h4>
-                <p>Email: info@travelagency.com</p>
-                <p>Phone: +420 123 456 789</p>
-                <p>Address: 123 Travel Street, Prague</p>
+            <div class="align-center info-box p-3 border bg-light">
+                <h4><a href="{% url 'contact' %}" class="text-dark"><strong>Contact Us</strong></a></h4>
+                <div class="contact-info">
+                    <p>Email: info@travelagency.com</p>
+                    <p>Phone: +420 123 456 789</p>
+                    <p>Address: 123 Travel Street, Prague</p>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="p-3 border bg-light" style="height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h4>Follow Us</h4>
-                <p>
-                    <a href="#" class="me-3">Facebook</a>
-                    <a href="#" class="me-3">Twitter</a>
-                    <a href="#">Instagram</a>
-                </p>
+            <div class="info-box p-3 border bg-light">
+                <h4><strong>Follow Us</strong></h4>
+                <div class="social-links">
+                    <a href="#" class="me-3 text-dark">Facebook</a>
+                    <a href="#" class="me-3 text-dark">Twitter</a>
+                    <a href="#" class="text-dark">Instagram</a>
+                </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Footer Section -->
-<footer class="container mt-5">
-    <div class="row text-center">
-        <div class="col-md-4">
-            <div class="p-3 border bg-light">
-                <h5>Visit Us</h5>
-                <p>123 Travel Street<br>Prague, Czech Republic</p>
-            </div>
-        </div>
-    </div>
-</footer>
 
 {% endblock %}

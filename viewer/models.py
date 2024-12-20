@@ -72,7 +72,7 @@ class City(Model):
 
 
 class Hotel(Model):
-    name = CharField(max_length=32, null=False, blank=False, unique=True)
+    name = CharField(max_length=120, null=False, blank=False, unique=True)
     Stars = IntegerField(null=True, blank=True, default=3)
     Description = TextField(null=True, blank=True)
 

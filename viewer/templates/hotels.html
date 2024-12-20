@@ -1,33 +1,137 @@
 {% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
 
 {% block content %}
 <h1 class="text-center my-4">Hotels</h1>
 
 <div class="container">
     <div class="row">
-        {% for hotel in hotels %}
         <div class="col-md-4 mb-4">
             <div class="card">
-                <!-- Obrázek hotelu -->
-                {% if hotel.image %}
-                    <img src="{{ hotel.image.url }}" class="card-img-top" alt="{{ hotel.name }}">
-                {% else %}
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Default Hotel Image">
-                {% endif %}
-
-                <!-- Detaily hotelu -->
                 <div class="card-body">
-                    <h5 class="card-title">{{ hotel.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ hotel.Stars }} Stars</h6>
-                    <p class="card-text">{{ hotel.Description|default:"No description available." }}</p>
-                    <p class="card-text"><strong>City:</strong> {{ hotel.City.name }}</p>
+                    <h5 class="card-title">Filter</h5>
+                    <form method="get">
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City:</label>
+                            <select name="city" id="city" class="form-select">
+                                <option value="">All Cities</option>
+                                {% for city in cities %}
+                                    <option value="{{ city.name }}" {% if city_filter == city.name %}selected{% endif %}>{{ city.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stars" class="form-label">Stars:</label>
+                            <select name="stars" id="stars" class="form-select">
+                                <option value="">All Stars</option>
+                                <option value="1" {% if stars_filter == '1' %}selected{% endif %}>1</option>
+                                <option value="2" {% if stars_filter == '2' %}selected{% endif %}>2</option>
+                                <option value="3" {% if stars_filter == '3' %}selected{% endif %}>3</option>
+                                <option value="4" {% if stars_filter == '4' %}selected{% endif %}>4</option>
+                                <option value="5" {% if stars_filter == '5' %}selected{% endif %}>5</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="search" class="form-label">Search:</label>
+                            <input type="text" name="search" id="search" class="form-control" value="{{ search_query }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="{% url 'hotels' %}" class="btn btn-secondary">Reset</a>
+                    </form>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <p>No hotels available at the moment.</p>
-        {% endfor %}
+
+        <div class="col-md-8">
+            <div class="row">
+                {% for hotel in hotels %}
+                <div class="col-12 col-sm-6 mb-4">
+                    <a href="{% url 'hotel_detail' hotel.id %}" class="text-decoration-none text-dark">
+                        <div class="card h-100">
+                            {% if hotel.image %}
+                                <img src="{{ hotel.image.url }}" class="card-img-top" alt="{{ hotel.name }}" onerror="this.onerror=null; this.src='/media/hotels/hotel_default.jpg'">
+                            {% else %}
+                                <img src="/media/hotels/hotel_default.jpg" class="img-fluid" alt="Default Hotel Image">
+                            {% endif %}
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ hotel.name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    {% with hotel.Stars|default:0 as stars %}
+                                    {% for _ in stars|generate_range %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% endfor %}
+                                    {% for _ in 5|generate_range %}
+                                        {% if forloop.counter > stars %}
+                                            <i class="far fa-star text-warning"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                </h6>
+                                <p class="card-text">
+                                    {% if hotel.Description %}
+                                        {% if hotel.Description|length > 100 %}
+                                            {{ hotel.Description|truncatechars:100 }}<span class="text-primary">...</span>
+                                        {% else %}
+                                            {{ hotel.Description }}
+                                        {% endif %}
+                                    {% else %}
+                                        No description available.
+                                    {% endif %}
+                                </p>
+                                <p class="card-text"><strong>City:</strong> {{ hotel.City.name }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p>No hotels found for your criteria.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if hotels.has_other_pages %}
+            <nav aria-label="Hotel pages" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if hotels.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if city_filter %}&city={{ city_filter }}{% endif %}{% if stars_filter %}&stars={{ stars_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ hotels.previous_page_number }}{% if city_filter %}&city={{ city_filter }}{% endif %}{% if stars_filter %}&stars={{ stars_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo; First</span></li>
+                        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    {% endif %}
+
+                    {% for i in hotels.paginator.page_range %}
+                        {% if hotels.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}{% if city_filter %}&city={{ city_filter }}{% endif %}{% if stars_filter %}&stars={{ stars_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if hotels.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ hotels.next_page_number }}{% if city_filter %}&city={{ city_filter }}{% endif %}{% if stars_filter %}&stars={{ stars_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ hotels.paginator.num_pages }}{% if city_filter %}&city={{ city_filter }}{% endif %}{% if stars_filter %}&stars={{ stars_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">Next</span></li>
+                        <li class="page-item disabled"><span class="page-link">Last &raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
     </div>
 </div>
-
 {% endblock %}
