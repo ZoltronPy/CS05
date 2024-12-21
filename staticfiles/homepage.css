@@ -1,0 +1,376 @@
+/* Reset basic margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* General Button Styling */
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Scroll-btn pro carousel sekci, nyni nepouzito */
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.5rem;
+    transition: background-color 0.3s;
+}
+
+.scroll-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.scroll-left {
+    left: 10px;
+}
+
+.scroll-right {
+    right: 10px;
+}
+
+/* Cards */
+.card,
+.trip-card {
+    background-color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover,
+.trip-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card img,
+.trip-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Card content */
+.card .card-title,
+.trip-card .trip-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    color: #222;
+}
+
+.card p,
+.trip-info p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Scroll Container */
+.scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+}
+
+.scroll-container::-webkit-scrollbar,
+.scroll-container {
+    display: none;
+}
+
+/* Promoted Trips Section */
+.promoted-trips {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.promoted-trips h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Top Selling Trips, Last Minute, Low Seats, Upcoming Trips - sekce*/
+.container h2{
+    font-weight: bold;
+}
+.container .card p{
+ text-align: left;
+}
+
+/* Row Responsiveness */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Space between cards */
+    justify-content: center;
+}
+
+.row-cols-1 .col {
+    flex: 1 1 100%; /* Single column on smaller screens */
+}
+
+.row-cols-md-2 .col {
+    flex: 1 1 48%; /* Two columns on medium screens */
+}
+
+.row-cols-lg-4 .col {
+    flex: 1 1 22%; /* Four columns on large screens */
+}
+
+/* Form Styling */
+form input,
+form button {
+    display: block;
+    width: 80%;
+    max-width: 300px;
+    margin: 8px auto;
+}
+
+form input {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+form input:focus {
+    border-color: #0056b3;
+    outline: none;
+}
+
+form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Footer Section */
+footer {
+    padding: 20px 0;
+    text-align: center;
+    background-color: #f8f9fa;
+    color: #555;
+}
+
+footer h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+/* Promoted Trip Card Styling -  zarovnání obsahu */
+.promoted-trips .trip-card {
+    width: 1000px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.promoted-trips .trip-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.promoted-trips .trip-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.promoted-trips .trip-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Styly pro sekci Tipy pro vaši dovolenou */
+.fa-sun,
+.fa-umbrella-beach,
+.fa-plane-departure {
+    color: #007bff;
+}
+.info-box {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Změna na flex-start */
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.info-box h4,
+.info-box h5 {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px; /* Upraveno z 5px na 10px */
+}
+
+.info-box form {
+    margin-top: 0; /* Odstranění auto */
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.info-box .contact-info,
+.info-box .social-links {
+    margin-top: 0; /* Odstranění auto */
+}
+
+.info-box .contact-info p,
+.info-box .social-links p {
+    margin-bottom: 0;
+    text-align: center; /* Přidáno centrování textu */
+}
+
+.info-box form input,
+.info-box form button {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Responsivita */
+@media (min-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 32%;
+        max-width: 32%;
+    }
+}
+
+@media (max-width: 767px) {
+    .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .col-md-4:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+
+    footer .col-md-4:first-child {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Styl pro patičku */
+footer .info-box {
+    min-height: 150px;
+}
+
+footer .info-box p {
+    margin-top: auto;
+}
+
+/* Responsivita patičky */
+@media (min-width: 768px) {
+  footer .col-md-4 {
+      flex: 0 0 32%;
+      max-width: 32%;
+  }
+
+  footer .col-md-4:nth-child(2) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.container .row.row-cols-1 { /* Cílíme na mřížku s kartami */
+    margin-top: 1rem; /* Upravte hodnotu dle potřeby */
+}
+
+section .row { /* Cílíme na mřížku s kartami v sekci */
+    margin-top: 1rem; /* Upravte hodnotu dle potřeby */
+}
+
+.animated-text {
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
+    animation: move-and-glow 4s infinite alternate ease-in-out;
+}
+
+@keyframes move-and-glow {
+    0% {
+        transform: translateX(0);
+        text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
+    }
+    50% {
+        transform: translateX(20px);
+        text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+    }
+    100% {
+        transform: translateX(-20px);
+        text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+    }
+}
