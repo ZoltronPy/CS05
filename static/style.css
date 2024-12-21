@@ -179,3 +179,120 @@ h1, h2, h3, h4, h5, h6 {
         width: 100%; /* Plná šířka tlačítek na mobilních zařízeních */
     }
 }
+.info-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.info-box h3 {
+    margin-top: 0;
+}
+.info-box p, .info-box ul {
+    margin-bottom: 0;
+}
+.info-box {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.info-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 15px;
+}
+
+.info-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.section-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.section-list {
+    list-style: none;
+    padding: 0;
+}
+
+.list-item {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.trip-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.trip-link:hover {
+    text-decoration: underline;
+}
+
+.trip-dates {
+    color: #777;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+/* Obdélníkový blok pro zájezdy */
+.travel-box {
+    background-color: #f8f9fa; /* Světle šedá barva pozadí */
+    border: 1px solid #dee2e6; /* Světle šedý okraj */
+    border-radius: 8px; /* Zaoblené rohy */
+    padding: 20px; /* Vnitřní mezera */
+    margin-top: 20px; /* Mezera nad boxem */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Jemný stín */
+}
+
+.travel-title {
+    font-size: 1.5rem; /* Velikost písma nadpisu */
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #343a40; /* Tmavší šedá barva */
+}
+
+.travel-list {
+    list-style: none; /* Bez odrážek */
+    padding: 0; /* Odstranění výchozího odsazení */
+}
+
+.travel-item {
+    margin-bottom: 10px; /* Mezery mezi položkami */
+    font-size: 1rem;
+}
+
+.travel-link {
+    color: #007bff; /* Modrá barva odkazu */
+    text-decoration: none; /* Odstranění podtržení */
+    font-weight: 600;
+}
+
+.travel-link:hover {
+    text-decoration: underline; /* Zvýraznění při přejetí */
+}
+
+.travel-dates {
+    color: #6c757d; /* Neutrální šedá barva pro data */
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
