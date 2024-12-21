@@ -29,7 +29,6 @@ urlpatterns = [
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/logout/', user_logout, name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),  #defaultní cesty a views z Djanga
-    path('offers/', views.all_offers, name='offers'),
     path('offers/', views.all_offers, name='all_offers'),
     path('offers/<int:pk>/', views.offer_detail, name='offer_detail'),
 

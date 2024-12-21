@@ -2,37 +2,39 @@
 {% load static %}
 
 {% block content %}
-
     <link rel="stylesheet" href="{% static 'css.css' %}">
 
-<div class="container mt-4">
-    <div class="row info-boxes">
-        <div class="col-md-4">
-            <div class="info-box">
-                <h2 class="info-box-title"><a href="#" class="text-dark">All Trips</a></h2>
-                <ul class="trip-list">
-                    {% for trip in trips %}
-                    <li>
-                        <a href="{% url 'trip_detail' trip.id %}" class="trip-link">{{ trip.tour_name }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+    <div class="container mt-4">
+        <div class="row info-boxes">
+            <!-- Sekce All Trips -->
+            <div class="col-md-4">
+                <div class="info-box">
+                    <h2 class="info-box-title"><a href="#" class="text-dark">All Trips</a></h2>
+                    <ul class="trip-list">
+                        {% for trip in trips %}
+                        <li>
+                            <a href="{% url 'trip_detail' trip.id %}" class="trip-link">{{ trip.tour_name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="info-box">
-                <h3 class="info-box-title"><a href="#" class="text-dark">SALES</a></h3>
-                <p class="info-box-text">Don't miss out on our special discounts and exclusive offers. Plan your trip now!</p>
+            <!-- Sekce Sales -->
+            <div class="col-md-4">
+                <div class="info-box">
+                    <h3 class="info-box-title"><a href="#" class="text-dark">SALES</a></h3>
+                    <p class="info-box-text">{{ sales_text }}</p>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="info-box">
-                <h3 class="info-box-title"><a href="#" class="text-dark">LAST MINUTE</a></h3>
-                <p class="info-box-text">Spontaneous trips at unbeatable prices. Book your last-minute getaway today!</p>
+            <!-- Sekce Last Minute -->
+            <div class="col-md-4">
+                <div class="info-box">
+                    <h3 class="info-box-title"><a href="#" class="text-dark">LAST MINUTE</a></h3>
+                    <p class="info-box-text">{{ last_minute_text }}</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

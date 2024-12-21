@@ -1,21 +1,18 @@
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
-from django.db.models import Sum, Avg, F, Count, Min, Max
-
-from viewer.models import TravelInfo, Continent, TourPurchase, ContactMessage, Hotel, City
-from django.template.defaulttags import register
+from django.db.models import Sum, Q
 from django import forms
-import logging
-
-logger = logging.getLogger(__name__)
 from django.utils.timezone import now
 from datetime import timedelta
+import logging
+
+from viewer.models import TravelInfo, Country, TourPurchase, ContactMessage, Hotel, City
+
+logger = logging.getLogger(__name__)
 
 
 def homepage(request):
-    today = now().date()
-
     promoted_trips = TravelInfo.objects.filter(is_promoted=True).order_by('-created_at')[:5]
     last_minute_trips = TravelInfo.get_last_minute_trips()
     trips_with_low_seats = TravelInfo.get_trips_with_low_seats()
@@ -38,7 +35,16 @@ def all_trips(request):
 
 def trip_list(request):
     trips = TravelInfo.objects.all()
-    return render(request, 'trip_list.html', {'trips': trips})
+
+    # Dynamický obsah boxů
+    sales_text = "Check out our current promotions and save big!"
+    last_minute_text = "Hurry up! Last-minute deals are waiting for you!"
+
+    return render(request, 'trip_list.html', {
+        'trips': trips,
+        'sales_text': sales_text,
+        'last_minute_text': last_minute_text,
+    })
 
 
 def trip_detail(request, trip_id):
@@ -72,11 +78,11 @@ def purchase_trip(request, trip_id):
 
         errors = []
         if not name:
-            errors.append("Jméno je povinné.")
+            errors.append("Name is required.")
         if not email:
-            errors.append("E-mail je povinný.")
+            errors.append("Email is required.")
         if adults <= 0 and kids <= 0:
-            errors.append("Musíte zadat alespoň jednoho účastníka.")
+            errors.append("At least one traveler must be specified.")
 
         total_price = (trip.price_per_adult * adults) + (trip.price_per_child * kids)
 
@@ -189,47 +195,63 @@ def hotels(request):
 
 def hotel_detail(request, hotel_id):
     hotel = get_object_or_404(Hotel, pk=hotel_id)
-    cities = City.objects.all()
     travel_infos = TravelInfo.objects.filter(Hotel=hotel)
 
     return render(request, 'hotel_detail.html', {
         'hotel': hotel,
-        'cities': cities,
         'travel_infos': travel_infos,
     })
 
 
-@register.filter
-def generate_range(value):
-    try:
-        value = int(value)
-        return range(max(value, 0))
-    except (ValueError, TypeError):
-        return range(0)
-
-
 def all_offers(request):
+    country_filter = request.GET.get('country')
+    price_filter = request.GET.get('price_range')
+    search_query = request.GET.get('search')
+
     offers = TravelInfo.objects.all()
-    return render(request, 'all_offers.html', {'offers': offers})
+
+    if country_filter:
+        offers = offers.filter(destination_city__country_id=country_filter)
+
+    if price_filter:
+        try:
+            min_price, max_price = map(int, price_filter.split('-'))
+            offers = offers.filter(price_per_adult__gte=min_price, price_per_adult__lte=max_price)
+        except (ValueError, TypeError):
+            pass
+
+    if search_query:
+        offers = offers.filter(
+            Q(tour_name__icontains=search_query) |
+            Q(destination_city__name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    countries = Country.objects.all()
+
+    return render(request, 'all_offers.html', {
+        'offers': offers,
+        'countries': countries,
+        'country_filter': country_filter,
+        'price_filter': price_filter,
+        'search_query': search_query,
+    })
 
 
 def offer_detail(request, pk):
     offer = get_object_or_404(TravelInfo, pk=pk)
-    return render(request, 'all_offers.html', {'offer': offer})
+    return render(request, 'trip_detail.html', {'offer': offer})
 
 
 def search_results(request):
-    query = request.GET.get('q')  # Získání vstupu z formuláře
+    query = request.GET.get('q')
+    results = TravelInfo.objects.none()
+
     if query:
         results = TravelInfo.objects.filter(
-            tour_name__icontains=query
-        ) | TravelInfo.objects.filter(
-            destination_city__name__icontains=query  # Filtrování podle cílového města
-        ) | TravelInfo.objects.filter(
-            Hotel__name__icontains=query  # Filtrování podle názvu hotelu
+            Q(tour_name__icontains=query) |
+            Q(destination_city__name__icontains=query) |
+            Q(Hotel__name__icontains=query)
         )
-    else:
-        results = TravelInfo.objects.none()  # Prázdná sada výsledků
 
     return render(request, 'search_results.html', {'results': results, 'query': query})
-

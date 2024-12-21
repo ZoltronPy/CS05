@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% load custom_filters %}
-
 {% block content %}
+
 <h1 class="text-center my-4">All Offers</h1>
 
 <div class="container">
@@ -18,20 +17,23 @@
                             <select name="country" id="country" class="form-select">
                                 <option value="">All Countries</option>
                                 {% for country in countries %}
-                                    <option value="{{ country.id }}" {% if country_filter == country.id %}selected{% endif %}>{{ country.name }}</option>
+                                    <option value="{{ country.id }}" {% if country_filter == country.id %}selected{% endif %}>
+                                        {{ country.name }}
+                                    </option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="price_range" class="form-label">Price Range:</label>
-                            <input type="text" name="price_range" id="price_range" class="form-control" placeholder="e.g. 1000-5000" value="{{ price_filter }}">
+                            <input type="text" name="price_range" id="price_range" class="form-control"
+                                   placeholder="e.g. 1000-5000" value="{{ price_filter }}">
                         </div>
                         <div class="mb-3">
                             <label for="search" class="form-label">Search:</label>
                             <input type="text" name="search" id="search" class="form-control" value="{{ search_query }}">
                         </div>
                         <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{% url 'offers' %}" class="btn btn-secondary">Reset</a>
+                        <a href="{% url 'homepage' %}" class="btn btn-secondary">Reset</a>
                     </form>
                 </div>
             </div>
@@ -42,25 +44,25 @@
             <div class="row">
                 {% for offer in offers %}
                 <div class="col-12 col-sm-6 mb-4">
-                    <<a href="{% url 'offer_detail' offer.id %}">{{ offer.tour_name }}</a>
-                        <div class="card h-100">
+                    <div class="card h-100">
+                        <a href="{% url 'trip_detail' offer.id %}">
                             {% if offer.image %}
-                                <img src="{{ offer.image.url }}" class="card-img-top" alt="{{ offer.tour_name }}" onerror="this.onerror=null; this.src='/media/trip_images/default.jpg'">
+                                <img src="{{ offer.image.url }}" class="card-img-top" alt="{{ offer.tour_name }}"
+                                     onerror="this.onerror=null; this.src='{% static 'default_trip_image.jpg' %}'">
                             {% else %}
-                                <img src="/media/trip_images/default.jpg" class="img-fluid" alt="Default Trip Image">
+                                <img src="{% static 'default_trip_image.jpg' %}" class="card-img-top" alt="Default Image">
                             {% endif %}
-
-                            <div class="card-body">
-                                <h5 class="card-title">{{ offer.tour_name }}</h5>
-                                <p class="card-text">
-                                    {{ offer.stay_duration }} nights - {{ offer.price_per_adult }} CZK per adult
-                                </p>
-                                <p class="card-text"><strong>Country:</strong> {{ offer.city.country.name }}</p>
-                                <p class="card-text"><strong>Departure:</strong> {{ offer.departure_city.name }}</p>
-                                <p class="card-text"><strong>Meal Type:</strong> {{ offer.get_meal_type_display }}</p>
-                            </div>
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ offer.tour_name }}</h5>
+                            <p class="card-text">
+                                {{ offer.stay_duration }} nights - {{ offer.price_per_adult|floatformat:2 }} CZK per adult
+                            </p>
+                            <p class="card-text"><strong>Country:</strong> {{ offer.destination_city.country.name }}</p>
+                            <p class="card-text"><strong>Departure:</strong> {{ offer.departure_city.name }}</p>
+                            <p class="card-text"><strong>Meal Type:</strong> {{ offer.get_meal_type_display }}</p>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 {% empty %}
                 <div class="col-12">
@@ -68,48 +70,8 @@
                 </div>
                 {% endfor %}
             </div>
-
-            <!-- Stránkování -->
-            {% if offers.has_other_pages %}
-            <nav aria-label="Offer pages" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if offers.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1{% if country_filter %}&country={{ country_filter }}{% endif %}{% if price_filter %}&price_range={{ price_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ offers.previous_page_number }}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if price_filter %}&price_range={{ price_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled"><span class="page-link">&laquo; First</span></li>
-                        <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                    {% endif %}
-
-                    {% for i in offers.paginator.page_range %}
-                        {% if offers.number == i %}
-                            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
-                        {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ i }}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if price_filter %}&price_range={{ price_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ i }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if offers.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ offers.next_page_number }}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if price_filter %}&price_range={{ price_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ offers.paginator.num_pages }}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if price_filter %}&price_range={{ price_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled"><span class="page-link">Next</span></li>
-                        <li class="page-item disabled"><span class="page-link">Last &raquo;</span></li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
         </div>
     </div>
 </div>
+
 {% endblock %}
