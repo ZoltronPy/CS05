@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Výsledky hledání</h1>
+    {% if results %}
+        <p>Vaše hledání: <strong>{{ query }}</strong></p>
+        <ul>
+            {% for result in results %}
+                <li>
+                    <a href="{% url 'trip_detail' result.id %}">
+                        {{ result.tour_name }}
+                    </a> - {{ result.destination }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Pro dotaz <strong>{{ query }}</strong> nebyly nalezeny žádné výsledky.</p>
+    {% endif %}
+</div>
+{% endblock %}

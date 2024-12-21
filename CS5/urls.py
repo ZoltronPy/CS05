@@ -33,6 +33,8 @@ urlpatterns = [
     path('offers/', views.all_offers, name='all_offers'),
     path('offers/<int:pk>/', views.offer_detail, name='offer_detail'),
 
+    path('search/', views.search_results, name='search_results'),
+
 ]
 
 if settings.DEBUG:

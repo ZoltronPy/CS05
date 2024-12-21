@@ -216,3 +216,20 @@ def all_offers(request):
 def offer_detail(request, pk):
     offer = get_object_or_404(TravelInfo, pk=pk)
     return render(request, 'all_offers.html', {'offer': offer})
+
+
+def search_results(request):
+    query = request.GET.get('q')  # Získání vstupu z formuláře
+    if query:
+        results = TravelInfo.objects.filter(
+            tour_name__icontains=query
+        ) | TravelInfo.objects.filter(
+            destination_city__name__icontains=query  # Filtrování podle cílového města
+        ) | TravelInfo.objects.filter(
+            Hotel__name__icontains=query  # Filtrování podle názvu hotelu
+        )
+    else:
+        results = TravelInfo.objects.none()  # Prázdná sada výsledků
+
+    return render(request, 'search_results.html', {'results': results, 'query': query})
+

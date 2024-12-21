@@ -28,7 +28,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             {% block breadcrumb %}
-            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">🏠Home</a></li>
             {% if user.is_authenticated %}
                 <li class="breadcrumb-item"><a href="{% url 'trip_list' %}">Trips</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'all_offers' %}">Offers</a></li>
@@ -42,6 +42,18 @@
             {% endblock %}
         </ol>
     </nav>
+
+    <div class="search-container">
+    <form action="{% url 'search_results' %}" method="get" class="search-form">
+        <input
+            type="text"
+            name="q"
+            placeholder="Vyhledat zájezd, město nebo hotel..."
+            class="search-input"
+            required>
+        <button type="submit" class="search-button">Hledat</button>
+    </form>
+</div>
 
     <!-- Flash Messages -->
     {% if messages %}
