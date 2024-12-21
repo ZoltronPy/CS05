@@ -3,32 +3,42 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: #f8f9fa;
     color: #333;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
     max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 /* Navbar Styling */
 .navbar {
     background-color: #0066cc;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .navbar a {
     color: white !important;
     font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 10px;
 }
 
 .navbar a:hover {
     color: #ffcc00 !important;
+    text-decoration: none;
 }
 
 /* Footer Styling */
 footer {
     background-color: #343a40;
     color: #fff;
-    padding: 10px 0;
+    padding: 20px 0;
     text-align: center;
+    font-size: 0.9rem;
 }
 
 footer a {
@@ -42,14 +52,20 @@ footer a:hover {
 
 /* Buttons */
 .btn-primary {
-    background-color: #0066cc;
+    background-color: #0066cc !important; /* Modrá barva pro tlačítka */
     border: none;
-    padding: 10px 10px;
+    padding: 10px 20px;
     border-radius: 25px;
+    text-transform: uppercase;
+    font-size: 1rem;
+    color: white; /* Bílý text */
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #004d99;
+    background-color: #004d99 !important; /* Tmavší modrá při hoveru */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
@@ -57,207 +73,109 @@ footer a:hover {
     border: none;
     padding: 12px 30px;
     border-radius: 25px;
+    font-size: 1rem;
+    color: black; /* Text černý */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-secondary:hover {
     background-color: #e6b800;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* Form Styling */
 .form-group label {
     font-weight: bold;
+    font-size: 1rem;
+    color: #333;
 }
 
 .form-control {
     border-radius: 10px;
     padding: 12px;
     background-color: #fff;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
 }
 
 .form-control:focus {
     border-color: #0066cc;
     box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
-
-
-    <style>
-  .promoted-trips .trips-container {
-    display: flex;
-    flex-wrap: wrap; /* Zalamování karet na více řádků */
-    justify-content: center; /* Zarovnání karet na střed */
-    gap: 20px; /* Mezera mezi kartami */
-  }
-
-  .promoted-trips .trip-card {
-    width: 300px; /* Šířka karty, upravte dle potřeby */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-
-  .promoted-trips .trip-image {
-    width: 100%;
-    height: 200px; /* Pevná výška obrázku, upravte dle potřeby */
-    object-fit: cover; /* Zachování poměru stran obrázku */
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-  }
-
-  .promoted-trips .trip-info {
-    padding: 15px;
-  }
-
-  .promoted-trips .trip-title {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-</style>,
-
-
-<style>
-  .promoted-trips .trip-card {
-    width: 600px; /* Šířka karty, upravte dle potřeby */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 0 auto; /* Vycentrování karty */
-  }
-
-  .promoted-trips .trip-image {
-    width: 100%;
-    height: 300px; /* Pevná výška obrázku, upravte dle potřeby */
-    object-fit: cover; /* Zachování poměru stran obrázku */
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-  }
-
-  .promoted-trips .trip-info {
-    padding: 15px;
-  }
-
-  .promoted-trips .trip-title {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-</style>
+    outline: none;
 }
 
-/* Zvýraznění nadpisů */
+/* Promoted Trips */
+.promoted-trips .trips-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.promoted-trips .trip-card {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promoted-trips .trip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Highlighted Headers */
 h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
-}
-
-/* Styly pro hlavní obrázek */
-.main-image {
-    max-height: 400px;
-    object-fit: cover;
-}
-
-/* Styly pro sekce s informacemi */
-.info-section {
-    margin-bottom: 20px;
-}
-
-.info-section h4 {
-    margin-bottom: 10px;
-    color: #007bff; /* Modrá barva pro nadpisy sekcí */
-}
-
-.info-section p {
-    margin-bottom: 5px;
-}
-
-.info-section .fa-fw { /* Ikony v info sekci */
-    margin-right: 8px;
-    color: #007bff; /* Modrá barva pro ikony */
-}
-
-/* Styly pro nákupní formulář */
-.purchase-form .form-label {
-    font-weight: bold;
-}
-
-.purchase-form input[type="number"] {
-    text-align: center;
-}
-
-.price-display {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.price-display h4 {
-    color: #28a745; /* Zelená barva pro celkovou cenu */
-}
-
-/* Zvýraznění a zvětšení tlačítka Purchase */
-.btn-secondary.btn-lg {
-    padding: 15px 30px;
-    font-size: 1.2rem;
-}
-.badge {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-}
-
-.info-boxes .col-md-4{
-    padding: 0;
-}
-
-.info-box {
-    border: 1px solid #ccc;
-    padding: 20px;
-    height: 100%;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.info-box-title {
-    text-align: center;
     margin-bottom: 15px;
+    color: #333;
+}
+
+/* Offers Section */
+.offers-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.offers-section .row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+.offers-section .offer-item {
+    max-width: 400px;
+    margin: 0 auto 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.offer-item:last-child {
+    margin-bottom: 0;
+}
+
+.offer-item .text-danger {
+    font-size: 1.2rem;
     font-weight: bold;
-    text-decoration: none;
+    color: #d9534f;
+    text-align: right;
 }
 
-.info-box-text{
-    text-align: center;
-}
-
-.info-box-title a{
-    text-decoration: none;
-}
-
-.trip-list {
-    list-style: none;
-    padding: 0;
-}
-
-.trip-list li {
-    margin-bottom: 10px;
-    text-decoration: none;
-}
-
-.trip-link {
-    display: block;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #007bff;
-    transition: background-color 0.2s;
-    text-align: center;
-}
-
-.trip-link:hover {
-    background-color: #f0f0f0;
-}
-
-/* Responsivita */
+/* Responsive Design */
 @media (max-width: 767px) {
-    .info-box {
-        margin-bottom: 20px;
+    .offers-section .offer-item {
+        max-width: 100%;
     }
-    .info-boxes .col-md-4{
-        padding: 0 15px;
+
+    .btn-primary, .btn-secondary {
+        width: 100%; /* Plná šířka tlačítek na mobilních zařízeních */
     }
 }

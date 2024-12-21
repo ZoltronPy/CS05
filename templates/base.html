@@ -1,13 +1,6 @@
-<!DOCTYPE html>
 {% load static %}
-
-<html
-    {% if LANGUAGE_CODE %}
-        lang="{{ LANGUAGE_CODE }}"
-    {% else %}
-        lang="en"
-    {% endif %}
->
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,108 +18,140 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Favicon -->
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon" alt="Favicon">
 </head>
-
 <body class="bg-light">
-
     <!-- Navbar Section -->
     {% include "navbar.html" %}
 
     <!-- Breadcrumb Section -->
     <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        {% block breadcrumb %}
-        <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
-        {% if user.is_authenticated %}
-        <li class="breadcrumb-item"><a href="{% url 'trip_list' %}">Trips</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'all_offers' %}">Offers</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotels</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'contact' %}">Contact</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'logout' %}">Log out</a></li>
-        {% else %}
-        <li class="breadcrumb-item"><a href="{% url 'login' %}">Log in</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'signup' %}">Sign up</a></li>
-        {% endif %}
-        {% endblock %}
-    </ol>
+        <ol class="breadcrumb">
+            {% block breadcrumb %}
+            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                <li class="breadcrumb-item"><a href="{% url 'trip_list' %}">Trips</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'all_offers' %}">Offers</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotels</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'contact' %}">Contact</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'logout' %}">Log out</a></li>
+            {% else %}
+                <li class="breadcrumb-item"><a href="{% url 'login' %}">Log in</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'signup' %}">Sign up</a></li>
+            {% endif %}
+            {% endblock %}
+        </ol>
     </nav>
 
     <!-- Flash Messages -->
     {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        {% endfor %}
+    </div>
     {% endif %}
 
     <!-- Main Content Section -->
     <div class="container mt-4">
         {% block content %}
-        <!-- Content will be injected here -->
         {% endblock %}
     </div>
 
-    <!-- Offers Section -->
-    {% block offers %}
-    <section class="offers-section container mt-5">
-        <h2 class="text-center">Best EXIM Tours Offers</h2>
-        <div class="text-center mb-4">
-            <label class="switch">
-                <input type="checkbox" id="offerToggle">
-                <span class="slider"></span>
-            </label>
-            <span id="offerType">Last Minute</span>
-        </div>
-        <div class="row">
-            <div class="col-md-6 last-minute">
-                <ul class="list-unstyled">
+   <!-- Offers Section -->
+{% block offers %}
+<section class="container my-3 offers">
+    <h2 class="text-center mb-4">Top Travel Offers</h2>
+
+    <!-- Toggle Switch -->
+    <div class="d-flex justify-content-center align-items-center mb-4">
+        <span class="me-3">Last Minute</span>
+        <label class="switch">
+            <input type="checkbox" id="offerToggle">
+            <span class="slider round"></span>
+        </label>
+        <span class="ms-1">First Minute</span>
+    </div>
+
+    <!-- Offers Lists -->
+    <div class="row justify-content-center">
+        <!-- Last Minute Offers -->
+        <div class="col-lg-5 col-md-6 last-minute">
+            <div class="offer-box">
+                <h4 class="text-center">Last Minute Offers</h4>
+                <ul class="list-group">
                     {% for offer in last_minute_offers %}
-                    <li class="offer-item d-flex justify-content-between align-items-center mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <strong>{{ offer.formatted_departure_date }}</strong> / {{ offer.stay_duration }} nights
                             <br>
                             <span>{{ offer.destination_city.name }} ({{ offer.destination_city.country.name }})</span>
                             <br>
-                            <span>{{ offer.departure_city.name }}</span>
+                            <small>Departure: {{ offer.departure_city.name }}</small>
                         </div>
                         <div class="text-danger fw-bold">{{ offer.price_per_adult|floatformat:2 }} CZK</div>
                     </li>
                     {% empty %}
-                    <li>No last-minute offers available.</li>
+                    <li class="list-group-item text-center">No last-minute offers available.</li>
                     {% endfor %}
                 </ul>
             </div>
-            <div class="col-md-6 first-minute" style="display: none;">
-                <ul class="list-unstyled">
+        </div>
+
+        <!-- First Minute Offers -->
+        <div class="col-lg-5 col-md-6 first-minute" style="display: none;">
+            <div class="offer-box">
+                <h4 class="text-center">First Minute Offers</h4>
+                <ul class="list-group">
                     {% for offer in first_minute_offers %}
-                    <li class="offer-item d-flex justify-content-between align-items-center mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <strong>{{ offer.formatted_departure_date }}</strong> / {{ offer.stay_duration }} nights
                             <br>
                             <span>{{ offer.destination_city.name }} ({{ offer.destination_city.country.name }})</span>
                             <br>
-                            <span>{{ offer.departure_city.name }}</span>
+                            <small>Departure: {{ offer.departure_city.name }}</small>
                         </div>
                         <div class="text-danger fw-bold">{{ offer.price_per_adult|floatformat:2 }} CZK</div>
                     </li>
                     {% empty %}
-                    <li>No first-minute offers available.</li>
+                    <li class="list-group-item text-center">No first-minute offers available.</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'all_offers' %}" class="btn btn-primary">More Last Minute Tours</a>
-        </div>
-    </section>
-    {% endblock %}
+    </div>
+
+    <!-- More Offers Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'all_offers' %}" class="btn btn-primary">View All Offers</a>
+    </div>
+</section>
+{% endblock %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.getElementById("offerToggle");
+        const lastMinute = document.querySelector(".last-minute");
+        const firstMinute = document.querySelector(".first-minute");
+
+        toggle.addEventListener("change", function () {
+            if (toggle.checked) {
+                lastMinute.style.display = "none";
+                firstMinute.style.display = "block";
+            } else {
+                lastMinute.style.display = "block";
+                firstMinute.style.display = "none";
+            }
+        });
+    });
+</script>
+
 
     <!-- Footer Section -->
     <footer class="footer mt-5 py-4 bg-dark text-white text-center">
@@ -143,25 +168,5 @@
     <!-- Bootstrap 4 JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Optional: Custom JavaScript -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const offerToggle = document.getElementById("offerToggle");
-            const offerType = document.getElementById("offerType");
-
-            offerToggle.addEventListener("change", function () {
-                if (offerToggle.checked) {
-                    offerType.textContent = "First Minute";
-                    document.querySelectorAll(".last-minute").forEach(el => el.style.display = "none");
-                    document.querySelectorAll(".first-minute").forEach(el => el.style.display = "block");
-                } else {
-                    offerType.textContent = "Last Minute";
-                    document.querySelectorAll(".first-minute").forEach(el => el.style.display = "none");
-                    document.querySelectorAll(".last-minute").forEach(el => el.style.display = "block");
-                }
-            });
-        });
-    </script>
 </body>
 </html>

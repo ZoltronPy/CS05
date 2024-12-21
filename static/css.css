@@ -10,7 +10,7 @@ body {
 /* Purchase form header */
 .purchase-header {
     font-size: 2.5rem;
-    color: #0066cc; /* Stejný odstín jako navbar */
+    color: #708090; /* Nahrazeno novým odstínem */
     font-weight: bold;
     text-align: center;
     margin-bottom: 30px;
@@ -49,21 +49,21 @@ input[type="number"], input[type="date"], select {
 }
 
 input[type="number"]:focus, input[type="date"]:focus, select:focus {
-    border-color: #0066cc; /* Barva focus odpovídá navbaru */
-    box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+    border-color: #708090; /* Barva focus odpovídá novému odstínu */
+    box-shadow: 0 0 5px rgba(112, 128, 144, 0.3);
     outline: none;
 }
 
 /* Total price section */
 .total-price {
-    background-color: #e9f5ff; /* Jemná světle modrá, odpovídající stylu webu */
+    background-color: #e9f5ff; /* Jemná světle šedá */
     padding: 10px;
     border-radius: 5px;
     margin-top: 20px;
     text-align: center;
     font-size: 1.5rem; /* Zvýrazněná cena */
     font-weight: bold;
-    color: #0066cc;
+    color: #708090; /* Nahrazeno novým odstínem */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,6 +76,22 @@ input[type="number"]:focus, input[type="date"]:focus, select:focus {
     font-size: 1rem;
     border-radius: 25px; /* Zakulacení pro konzistentní vzhled */
     text-align: center;
+}
+
+.btn-primary {
+    background-color: #708090 !important; /* Modrá barva pro tlačítka */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #5a6a77 !important; /* Tmavší odstín */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .submit-btn {
@@ -103,7 +119,7 @@ input[type="number"]:focus, input[type="date"]:focus, select:focus {
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 200px) {
     .purchase-form-container {
         padding: 15px;
         width: 90%;
@@ -111,6 +127,10 @@ input[type="number"]:focus, input[type="date"]:focus, select:focus {
 
     .purchase-header {
         font-size: 2rem;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%; /* Plná šířka tlačítek na mobilních zařízeních */
     }
 }
 
@@ -139,19 +159,122 @@ input[type="number"]:focus, input[type="date"]:focus, select:focus {
     font-size: 1.2rem;
 }
 
-.btn-primary {
-    background-color: #007bff;
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #708090; /* Nahrazeno novým odstínem */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Responsive improvements for offers section */
+@media (max-width: 200px) {
+    .offer-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .text-danger {
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+.offers-section .row {
+    justify-content: center; /* Flexbox centrování */
+    text-align: center;      /* Zarovnání textu na střed */
+}
+.offers-section {
+    padding: 20px 20px;
+    background-color: #f9f9f9;
+    border-radius: 2px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.offer-box {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.offer-box h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.list-group-item {
     border: none;
+    padding: 15px 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+
+.btn-primary {
+    background-color: #0066cc;
     color: white;
     padding: 10px 20px;
     font-size: 1rem;
-    border-radius: 5px;
-    text-decoration: none;
+    border-radius: 25px;
+    text-transform: uppercase;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #004d99;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -191,26 +314,9 @@ input[type="number"]:focus, input[type="date"]:focus, select:focus {
 }
 
 input:checked + .slider {
-    background-color: #007bff;
+    background-color: #0066cc;
 }
 
 input:checked + .slider:before {
     transform: translateX(26px);
-}
-
-/* Responsive improvements for offers section */
-@media (max-width: 768px) {
-    .offer-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .text-danger {
-        font-size: 1rem;
-    }
-
-    .btn-primary {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
 }

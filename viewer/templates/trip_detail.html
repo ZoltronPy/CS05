@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container my-5">
@@ -6,7 +7,7 @@
         <!-- Trip Header -->
         <div class="card-header bg-primary text-white text-center py-4">
             <h1 class="mb-2">{{ trip.tour_name }}</h1>
-            <p class="mb-0">📍 {{ trip.destination_city.name }} - {{ trip.destination_country.name }}</p>
+            <p class="mb-0">📍 {{ trip.destination_city.name }} - {{ trip.departure_city.name }}</p>
         </div>
 
         <!-- Trip Details Section -->
@@ -17,13 +18,12 @@
                     {% if trip.hotel.image %}
                         <img src="{{ trip.hotel.image.url }}" class="img-fluid rounded" alt="Hotel Image">
                     {% else %}
-                        <p>No images available for this trip.</p>
+                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded" alt="Default Hotel Image">
                     {% endif %}
                 </div>
 
                 <!-- Right Section with Key Details -->
                 <div class="col-md-6">
-                    <h3>Details</h3>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><strong>Hotel:</strong> {{ trip.hotel.name }}</li>
                         <li class="list-group-item"><strong>Meal Plan:</strong> {{ trip.get_meal_type_display }}</li>
@@ -32,6 +32,8 @@
                         <li class="list-group-item"><strong>Duration:</strong> {{ trip.stay_duration }} days</li>
                         <li class="list-group-item"><strong>Departure:</strong> {{ trip.formatted_departure_date }}</li>
                         <li class="list-group-item"><strong>Return:</strong> {{ trip.formatted_return_date }}</li>
+                        <li class="list-group-item"><strong>Available Adult Seats:</strong> {{ remaining_adult_seats }}</li>
+                        <li class="list-group-item"><strong>Available Child Seats:</strong> {{ remaining_child_seats }}</li>
                     </ul>
                 </div>
             </div>
@@ -41,47 +43,50 @@
                 <h4>Description</h4>
                 <p>{{ trip.description|default:"No description available." }}</p>
             </div>
-
-            <!-- Available Seats Section -->
-            <div class="row my-4">
-                <div class="col-md-6">
-                    <p><strong>Available Adult Seats:</strong>
-                        <span class="badge bg-success">{{ remaining_adult_seats }}</span>
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Available Child Seats:</strong>
-                        <span class="badge bg-success">{{ remaining_child_seats }}</span>
-                    </p>
-                </div>
-            </div>
         </div>
 
-        <!-- Booking Section -->
+        <!-- Footer with Three Boxes -->
         <div class="card-footer bg-light">
-            <h4 class="text-center mb-4">Book Your Trip</h4>
-            <form action="{% url 'purchase_trip' trip.id %}" method="post">
-                {% csrf_token %}
+            <div class="row">
+                <!-- Booking Section -->
+                <div class="col-md-4">
+                    <h4 class="text-center">Book Your Trip</h4>
+                    <form action="{% url 'purchase_trip' trip.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="adults" class="form-label">Adults:</label>
+                            <input type="number" name="adults" id="adults" class="form-control" min="0" max="{{ remaining_adult_seats }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kids" class="form-label">Children:</label>
+                            <input type="number" name="kids" id="kids" class="form-control" min="0" max="{{ remaining_child_seats }}" required>
+                        </div>
+                        <div class="text-center my-3">
+                            <h5>Total Price: <span id="total-price">0</span> CZK</h5>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="adults" class="form-label">Number of Adults:</label>
-                        <input type="number" name="adults" id="adults" class="form-control" min="0" max="{{ remaining_adult_seats }}" required>
+                <!-- Text Box -->
+                <div class="col-md-4">
+                    <div class="bg-light p-3 rounded">
+                        <h5 class="text-center">Why Choose Us?</h5>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet facilisis urna. Praesent consectetur elit at sapien euismod, eu facilisis justo dapibus.</p>
                     </div>
-                    <div class="col-md-6">
-                        <label for="kids" class="form-label">Number of Children:</label>
-                        <input type="number" name="kids" id="kids" class="form-control" min="0" max="{{ remaining_child_seats }}" required>
-                    </div>
                 </div>
 
-                <div class="bg-light p-3 text-center rounded">
-                    <h5>Total Price: <span id="total-price">0</span> CZK</h5>
+                <!-- Image Box -->
+                <div class="col-md-4">
+                    {% if trip.hotel.image %}
+                        <img src="{{ trip.hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
+                    {% else %}
+                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
+                    {% endif %}
                 </div>
-
-                <div class="d-grid gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-lg">Confirm Booking</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

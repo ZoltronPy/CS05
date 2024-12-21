@@ -350,3 +350,8 @@ footer .info-box p {
 section .row { /* Cílíme na mřížku s kartami v sekci */
     margin-top: 1rem; /* Upravte hodnotu dle potřeby */
 }
+
+.offers-section .row {
+    justify-content: center; /* Flexbox centrování */
+    text-align: center;      /* Zarovnání textu na střed */
+}
