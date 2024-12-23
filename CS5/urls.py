@@ -13,7 +13,7 @@ from viewer.views import hotel_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('custom-admin/', custom_admin_site.urls),
+    path('custom-admin/', custom_admin_site.urls,),
     # Správná cesta pro Django admin panel
     path('', views.homepage, name='homepage'),  # Domovská stránka
     path('trips/', views.trip_list, name='trip_list'),  # Seznam zájezdů
