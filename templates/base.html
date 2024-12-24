@@ -14,24 +14,25 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css.css' %}">
 
-    <!-- FontAwesome for icons -->
+    <!-- Font awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <!-- Favicon -->
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon" alt="Favicon">
+    <!-- Fav icon -->
+    <link rel="icon" href="{% static 'icons8-favicon-16.png' %}" type="image/x-icon" alt="Favicon">
 
 </head>
 <body class="bg-light">
-    <!-- Navbar Section -->
+
+    <!-- Navbar -->
     {% include "navbar.html" %}
 
-    <!-- Breadcrumb Section -->
+    <!-- second nav.bar under travel - Section -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             {% block breadcrumb %}
             <li class="breadcrumb-item"><a href="{% url 'homepage' %}">🏠Home</a></li>
             {% if user.is_authenticated %}
-                <li class="breadcrumb-item"><a href="{% url 'trip_list' %}">Trips</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'trip_list' %}">Tours</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'all_offers' %}">Offers</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotels</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'contact' %}">Contact</a></li>
@@ -46,12 +47,14 @@
 
     <<div class="search-container">
     <form action="{% url 'search_results' %}" method="get" class="search-form">
-        <input
-            type="text"
-            name="q"
-            placeholder="Vyhledat zájezd, město nebo hotel..."
-            class="search-input"
-            required>
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Vyhledat zájezd, město nebo hotel..."
+                class="search-input"
+                required>
+
         <button type="submit" class="search-button">Hledat</button>
     </form>
 </div>

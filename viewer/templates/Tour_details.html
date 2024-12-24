@@ -1,53 +1,67 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block content %}
+
+
 <div class="container my-5">
     <div class="card shadow-lg border-0">
-        <!-- Trip Header -->
-        <div class="card-header bg-primary text-white text-center py-4">
+
+        <!-- TOP BOX  -->
+        <div class="card bg-white text blue text-center py-4">
             <h1 class="mb-2">{{ trip.tour_name }}</h1>
-            <h1 class="mb-2">📍{{ trip.destination_city.name }}</h1>
-            <p  class="mb-0">✈️{{ trip.departure_city.name }} - {{ trip.destination_city.name }}</p>
+            <h1  class="mb-0">✈️{{ trip.departure_city.name }} - {{ trip.destination_city.name }}</h1>
         </div>
+        <!--<h1 class="mb-2">📍{{ trip.destination_city.name }}</h1> -->
 
-        <!-- Trip Details Section -->
-        <div class="card-body">
-            <div class="row">
-                <!-- Left Section with Images -->
-                <div class="col-md-6">
-                    {% if hotel.image %}
-                        <img src="{{ hotel.image.url }}" class="img-fluid" alt="{{ hotel.name }}">
-                    {% else %}
-                        <img src="/media/hotels/hotel_default.jpg" class="img-fluid" alt="Default Hotel Image">
-                    {% endif %}
-                </div>
 
-                <!-- Right Section with Key Details -->
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Hotel:</strong> {{ trip.hotel.name }}</li>
+                        <!-- info box , list - Tour details  -->
+                <div class=" row">
+                    <!-- První seznam -->
+                    <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Hotel:</strong> {{ trip.Hotel }}</li>
                         <li class="list-group-item"><strong>Meal Plan:</strong> {{ trip.get_meal_type_display }}</li>
                         <li class="list-group-item"><strong>Price per Adult:</strong> {{ trip.price_per_adult|floatformat:2 }} CZK</li>
                         <li class="list-group-item"><strong>Price per Child:</strong> {{ trip.price_per_child|floatformat:2 }} CZK</li>
-                        <li class="list-group-item"><strong>Duration:</strong> {{ trip.stay_duration }} days</li>
                         <li class="list-group-item"><strong>Departure:</strong> {{ trip.formatted_departure_date }}</li>
                         <li class="list-group-item"><strong>Return:</strong> {{ trip.formatted_return_date }}</li>
-                        <li class="list-group-item"><strong>Available Adult Seats:</strong> {{ remaining_adult_seats }}</li>
-                        <li class="list-group-item"><strong>Available Child Seats:</strong> {{ remaining_child_seats }}</li>
                     </ul>
                 </div>
-            </div>
+                <!-- Druhý seznam -->
 
-            <!-- Description Section -->
-            <div class="mt-4">
+                    <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Duration:</strong> {{ trip.stay_duration }} days</li>
+                        <li class="list-group-item"><strong>Available Adult Seats:</strong> {{ remaining_adult_seats }}</li>
+                        <li class="list-group-item"><strong>Available Child Seats:</strong> {{ remaining_child_seats }}</li>
+                    </div>
+                 </div>
+        </div>
+
+
+            <!-- Section popis -->
+            <div class= "card-header bg-grey text-Black text-center py-4" >
                 <h4>Description</h4>
                 <p>{{ trip.description|default:"No description available." }}</p>
             </div>
         </div>
 
+
+        <!-- box s fotkou   -->
+       <div class="info-boxes ">
+            <div class="row">
+                <div class="col-md-5">
+                    {% if trip.image %}
+                        <img src="{{ trip.image.url }}" class="img-fluid" alt="Image for {{ trip.Hotel.name }}">
+                    {% else %}
+                        <img src="/media/trip_images/default.jpg" class="img-fluid" alt="Default Trip Image">
+                    {% endif %}
+                </div>
+    </div>
+
+    </div>
         <!-- Footer with Three Boxes -->
-        <div class="card-footer bg-light">
+        <div class="card-header bg-grey text-Black text-center py-s">
             <div class="row">
                 <!-- Booking Section -->
                 <div class="col-md-4">
@@ -81,10 +95,10 @@
 
                 <!-- Image Box -->
                 <div class="col-md-4">
-                    {% if trip.hotel.image %}
-                        <img src="{{ trip.hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
+                    {% if trip.image %}
+                        <img src="{{ trip.image.url }}" class="img-fluid" alt="{{ trip.hotel.name }}">
                     {% else %}
-                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
+                         <img src="/media/hotels/hotel_default.jpg" class="img-fluid" alt="Default Hotel Image">>
                     {% endif %}
                 </div>
             </div>
