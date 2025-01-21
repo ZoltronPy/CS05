@@ -76,8 +76,9 @@ class Hotel(Model):
     Stars = IntegerField(null=True, blank=True, default=3)
     Description = TextField(null=True, blank=True)
 
-    City = ForeignKey(City, on_delete=CASCADE, related_name="city_hotels",
-                      null=False, blank=False, )
+    City = ForeignKey(City, on_delete=CASCADE, related_name="hotels",
+                      null=False, blank=False, verbose_name="City"
+                      )
     image = models.ImageField(upload_to="hotels", blank=True, null=True, verbose_name="Hotel Image")
 
     def clean(self):

@@ -91,6 +91,7 @@ class TravelInfoAdmin(admin.ModelAdmin):
     list_filter = ("departure_date", "return_date", "meal_type", "is_promoted")
 
 
+
 # Admin pro TourPurchase
 class TourPurchaseAdmin(admin.ModelAdmin):
     list_display = (
