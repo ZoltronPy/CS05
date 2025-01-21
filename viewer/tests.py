@@ -115,3 +115,4 @@ class TourPurchaseModelTest(TestCase):
         self.assertEqual(tour_purchase.child_count, 1)
         self.assertTrue(tour_purchase.created_at)
         self.assertTrue(tour_purchase.updated_at)
+

@@ -56,7 +56,7 @@ def trip_detail(request, trip_id):
     remaining_adult_seats = max(trip.adult_seats - reserved_adults, 0)
     remaining_child_seats = max(trip.child_seats - reserved_kids, 0)
 
-    return render(request, 'Tour_details.html', {
+    return render(request, 'Trip_detail.html', {
         'trip': trip,
         'remaining_adult_seats': remaining_adult_seats,
         'remaining_child_seats': remaining_child_seats,
@@ -240,7 +240,7 @@ def all_offers(request):
 
 def offer_detail(request, pk):
     offer = get_object_or_404(TravelInfo, pk=pk)
-    return render(request, 'Tour_details.html', {'offer': offer})
+    return render(request, 'Trip_detail.html', {'offer': offer})
 
 
 def search_results(request):

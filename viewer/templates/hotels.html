@@ -46,6 +46,8 @@
         <div class="col-md-8">
             <div class="row">
                 {% for hotel in hotels %}
+                    {{ hotel.City.name }}
+
                 <div class="col-12 col-sm-6 mb-4">
                     <a href="{% url 'hotel_detail' hotel.id %}" class="text-decoration-none text-dark">
                         <div class="card h-100">

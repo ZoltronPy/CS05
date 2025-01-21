@@ -16,8 +16,8 @@
             <div class="row">
                 <!-- Left Section with Images -->
                 <div class="col-md-6">
-                    {% if hotel.image %}
-                        <img src="{{ hotel.image.url }}" class="img-fluid" alt="{{ hotel.name }}">
+                    {% if Hotel.image %}
+                        <img src="{{ Hotel.image.url }}" class="img-fluid" alt="{{ Hotel.name }}">
                     {% else %}
                         <img src="/media/hotels/hotel_default.jpg" class="img-fluid" alt="Default Hotel Image">
                     {% endif %}
@@ -26,7 +26,7 @@
                 <!-- Right Section with Key Details -->
                 <div class="col-md-6">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Hotel:</strong> {{ trip.hotel.name }}</li>
+                        <li class="list-group-item"><strong>Hotel:</strong> {{ trip.Hotel.name }}</li>
                         <li class="list-group-item"><strong>Meal Plan:</strong> {{ trip.get_meal_type_display }}</li>
                         <li class="list-group-item"><strong>Price per Adult:</strong> {{ trip.price_per_adult|floatformat:2 }} CZK</li>
                         <li class="list-group-item"><strong>Price per Child:</strong> {{ trip.price_per_child|floatformat:2 }} CZK</li>
