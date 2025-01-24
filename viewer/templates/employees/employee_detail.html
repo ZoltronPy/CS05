@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ employee.first_name }} {{ employee.last_name }}</h1>
+<p><strong>Role:</strong> {{ employee.get_role_display }}</p>
+<p><strong>Email:</strong> {{ employee.email }}</p>
+<p><strong>Phone:</strong> {{ employee.phone }}</p>
+
+<a href="{% url 'order_list_by_employee' employee.id %}" class="btn btn-primary">Manage Orders</a>
+
+<h3>Assigned Trips</h3>
+<ul>
+    {% for trip in assigned_trips %}
+    <li>
+        <strong>{{ trip.tour_name }}</strong> ({{ trip.formatted_departure_date }} - {{ trip.formatted_return_date }})
+        <br>
+        <small>Destination: {{ trip.destination_city.name }} ({{ trip.destination_city.country.name }})</small>
+    </li>
+    {% empty %}
+    <li>No trips assigned.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'employee_list' %}" class="btn btn-secondary">Back to List</a>
+{% endblock %}

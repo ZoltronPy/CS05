@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
-from viewer.models import Continent, Country, City, Hotel, Airport, TravelInfo, TourPurchase, ContactMessage, Payment
+from viewer.models import Continent, Country, City, Hotel, Airport, TravelInfo, TourPurchase, ContactMessage, Payment, \
+    Employee
 
 # Custom Admin Site
 from django.contrib import admin
@@ -79,7 +80,6 @@ class AirportAdmin(admin.ModelAdmin):
     search_fields = ('name', 'city__name')
 
 
-
 # Admin pro TravelInfo
 class TravelInfoAdmin(admin.ModelAdmin):
     list_display = (
@@ -89,7 +89,6 @@ class TravelInfoAdmin(admin.ModelAdmin):
     )
     search_fields = ("tour_name", "departure_city__name", "destination_city__name")
     list_filter = ("departure_date", "return_date", "meal_type", "is_promoted")
-
 
 
 # Admin pro TourPurchase
@@ -134,6 +133,14 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('tour_purchase', 'payment_amount', 'payment_status', 'payment_method')
     list_filter = ('payment_status', 'payment_method')
     search_fields = ('tour_purchase__customer_name',)
+
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'role', 'email', 'phone')
+    list_filter = ('role',)
+    search_fields = ('first_name', 'last_name', 'email')
+    ordering = ('last_name', 'first_name')
 
 
 # Registrace adminů pro modely

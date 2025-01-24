@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Orders</h1>
+<a href="{% url 'order_create' %}" class="btn btn-primary mb-3">Add Order</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Trip</th>
+            <th>Adults</th>
+            <th>Kids</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if orders %}
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.customer_name }}</td>
+            <td>{{ order.travel_info.tour_name }}</td>
+            <td>{{ order.adult_count }}</td>
+            <td>{{ order.child_count }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>
+                <a href="{% url 'order_detail' order.id %}" class="btn btn-info btn-sm">Edit</a>
+                <a href="{% url 'order_delete' order.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="6" class="text-center">No orders available.</td>
+        </tr>
+    {% endif %}
+</tbody>
+</table>
+{% endblock %}

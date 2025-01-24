@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.forms import forms
 from django.utils import timezone
@@ -12,6 +13,23 @@ from django.db import models
 from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, IntegerField, DateField
 
 
+class Employee(models.Model):
+    ROLE_CHOICES = [
+        ('manager', 'Manager'),
+        ('senior', 'Senior'),
+        ('customer_service', 'Customer Service'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee_profile')
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    assigned_trips = models.ManyToManyField('viewer.TravelInfo', related_name='assigned_employees', blank=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.get_role_display()})"
 #'vytvoření kontinetu'
 class Continent(Model):
     name = CharField(max_length=32,
@@ -199,6 +217,14 @@ class TravelInfo(Model):
         max_digits=10,
         decimal_places=2,
         verbose_name="Price per Kid (czk)"
+    )
+    assigned_to = models.ForeignKey(
+        Employee,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="travel_infos",  # Změna na jiné jedinečné jméno
+        verbose_name="Assigned Employee"
     )
 
     class Meta:
@@ -424,3 +450,5 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} at {self.created_at}"
+
+

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
@@ -6,6 +7,10 @@ from django import forms
 from django.utils.timezone import now
 from datetime import timedelta
 import logging
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Employee
+from .forms import EmployeeForm, OrderForm
 
 from viewer.models import TravelInfo, Country, TourPurchase, ContactMessage, Hotel, City
 
@@ -255,3 +260,120 @@ def search_results(request):
         )
 
     return render(request, 'search_results.html', {'results': results, 'query': query})
+
+
+# Kontrola, jestli je uživatel Manager
+def is_manager(user):
+    return user.is_authenticated and hasattr(user, 'employee_profile') and user.employee_profile.role == 'manager'
+
+
+@login_required
+def employee_list(request):
+    employees = Employee.objects.all()
+    return render(request, 'employees/employee_list.html', {'employees': employees})
+
+
+@login_required
+def employee_detail(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    assigned_trips = employee.assigned_trips.all()  # Přidělené zájezdy
+    orders = TourPurchase.objects.filter(travel_info__in=assigned_trips)  # Objednávky spojené se zájezdy
+
+    return render(request, 'employees/employee_detail.html', {
+        'employee': employee,
+        'assigned_trips': assigned_trips,
+        'orders': orders,
+    })
+
+
+@login_required
+@user_passes_test(is_manager)
+def employee_create(request):
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect('employee_list')
+            except Exception as e:
+                form.add_error(None, f"Error saving employee: {e}")
+    else:
+        form = EmployeeForm()
+    return render(request, 'employees/employee_form.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def employee_update(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST, instance=employee)
+        if form.is_valid():
+            form.save()
+            return redirect('employee_list')
+    else:
+        form = EmployeeForm(instance=employee)
+    return render(request, 'employees/employee_form.html', {'form': form, 'action': 'Edit'})
+
+
+@login_required
+@user_passes_test(is_manager)
+def employee_delete(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    if request.method == 'POST':
+        employee.delete()
+        return redirect('employee_list')
+    return render(request, 'employees/employee_confirm_delete.html', {'employee': employee})
+
+
+@login_required
+def order_list(request, employee_id=None):
+    if employee_id:
+        employee = get_object_or_404(Employee, id=employee_id)
+        assigned_trips = TravelInfo.objects.filter(assigned_to=employee)
+        print(f"Assigned Trips: {assigned_trips}")  # Ladicí výstup
+        orders = TourPurchase.objects.filter(travel_info__in=assigned_trips)
+        print(f"Orders: {orders}")  # Ladicí výstup
+    else:
+        orders = TourPurchase.objects.all()
+
+    return render(request, 'orders/order_list.html', {
+        'orders': orders
+    })
+
+
+@login_required
+def order_detail(request, order_id):
+    # Detail objednávky s možností úpravy
+    order = get_object_or_404(TourPurchase, id=order_id)
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('order_list')
+    else:
+        form = OrderForm(instance=order)
+    return render(request, 'orders/order_detail.html', {'form': form, 'order': order})
+
+
+@login_required
+def order_create(request):
+    # Přidání nové objednávky
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('order_list')
+    else:
+        form = OrderForm()
+    return render(request, 'orders/order_form.html', {'form': form})
+
+
+@login_required
+def order_delete(request, order_id):
+    # Smazání objednávky
+    order = get_object_or_404(TourPurchase, id=order_id)
+    if request.method == 'POST':
+        order.delete()
+        return redirect('order_list')
+    return render(request, 'orders/order_confirm_delete.html', {'order': order})

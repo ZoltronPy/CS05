@@ -30,7 +30,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="search" class="form-label">Search:</label>
-                            <input type="text" name="search" id="search" class="form-control" value="{{ search_query }}">
+                            <input type="text" name="search" id="search" class="form-control" value="{{ search_query|default:'' }}">
                         </div>
                         <button type="submit" class="btn btn-primary">Filter</button>
                         <a href="{% url 'homepage' %}" class="btn btn-secondary">Reset</a>
