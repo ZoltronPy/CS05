@@ -8,6 +8,7 @@
         <div class="card-header bg-primary text-white text-center py-4">
             <h1 class="mb-2">{{ trip.tour_name }}</h1>
             <h1 class="mb-2">📍{{ trip.destination_city.name }}</h1>
+
             <p  class="mb-0">✈️{{ trip.departure_city.name }} - {{ trip.destination_city.name }}</p>
         </div>
 
@@ -16,10 +17,10 @@
             <div class="row">
                 <!-- Left Section with Images -->
                 <div class="col-md-6">
-                    {% if Hotel.image %}
-                        <img src="{{ Hotel.image.url }}" class="img-fluid" alt="{{ Hotel.name }}">
+                    {% if trip.Hotel.image %}
+                        <img src="{{ trip.Hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
                     {% else %}
-                        <img src="/media/hotels/hotel_default.jpg" class="img-fluid" alt="Default Hotel Image">
+                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
                     {% endif %}
                 </div>
 
@@ -81,8 +82,8 @@
 
                 <!-- Image Box -->
                 <div class="col-md-4">
-                    {% if trip.hotel.image %}
-                        <img src="{{ trip.hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
+                    {% if trip.Hotel.image %}
+                        <img src="{{ trip.Hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
                     {% else %}
                         <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
                     {% endif %}
