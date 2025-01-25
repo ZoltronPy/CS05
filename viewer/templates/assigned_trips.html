@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Assigned Trips for {{ employee.first_name }} {{ employee.last_name }}</h2>
+
+    {% if assigned_trips %}
+    <ul>
+        {% for trip in assigned_trips %}
+        <li>
+            <strong>{{ trip.tour_name }}</strong>
+            ({{ trip.formatted_departure_date }} - {{ trip.formatted_return_date }})
+            <br>
+            <small>
+                Destination: {{ trip.destination_city.name }} ({{ trip.destination_city.country.name }})
+            </small>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No trips assigned to this employee.</p>
+    {% endif %}
+</div>
+
+
+<!-- Tlačítko zpět -->
+<div style="margin-top: 20px;">
+    <a href="{% url 'employee_detail' employee.id %}" class="btn btn-primary">← Back to Employee Details</a>
+</div>
+
+{% endblock %}

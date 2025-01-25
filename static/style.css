@@ -14,6 +14,15 @@ body {
 }
 
 /* Navbar Styling */
+.navbar-brand {
+    font-size: clamp(1rem, 2.5vw, 1.2rem); /* Dynamická velikost textu */
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap; /* Zabrání zalomení textu */
+    overflow: hidden; /* Skryje přetékající text */
+}
+
+
 .navbar {
     background-color: #0066cc;
     padding: 10px 20px;
@@ -52,19 +61,19 @@ footer a:hover {
 
 /* Buttons */
 .btn-primary {
-    background-color: #0066cc !important; /* Modrá barva pro tlačítka */
+    background-color: #0066cc !important;
     border: none;
     padding: 10px 20px;
     border-radius: 25px;
-    text-transform: uppercase;
     font-size: 1rem;
-    color: white; /* Bílý text */
+    color: white;
+    text-transform: uppercase;
     text-decoration: none;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #004d99 !important; /* Tmavší modrá při hoveru */
+    background-color: #004d99 !important;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -74,7 +83,7 @@ footer a:hover {
     padding: 12px 30px;
     border-radius: 25px;
     font-size: 1rem;
-    color: black; /* Text černý */
+    color: black;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -145,7 +154,6 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin: 0 auto;
 }
 
 .offers-section .offer-item {
@@ -155,18 +163,47 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: left;
 }
 
-.offer-item:last-child {
-    margin-bottom: 0;
-}
-
-.offer-item .text-danger {
+.offers-section .offer-item .text-danger {
     font-size: 1.2rem;
     font-weight: bold;
     color: #d9534f;
-    text-align: right;
+}
+
+/* Sidebar pro zaměstnance */
+
+
+.sidebar .navbar-brand {
+    font-size: 1.0rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #495057;
+}
+
+.sidebar .navbar-nav {
+    flex-direction: column;
+    padding: 10px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-link {
+    padding: 10px;
+    color: #adb5bd;
+}
+
+.sidebar .nav-link.active {
+    background-color: #495057;
+    color: white;
+}
+
+.container-fluid {
+    margin-left: 250px;
 }
 
 /* Responsive Design */
@@ -176,123 +213,6 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .btn-primary, .btn-secondary {
-        width: 100%; /* Plná šířka tlačítek na mobilních zařízeních */
+        width: 100%;
     }
-}
-.info-box {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.info-box h3 {
-    margin-top: 0;
-}
-.info-box p, .info-box ul {
-    margin-bottom: 0;
-}
-.info-box {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.info-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.info-section {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eaeaea;
-    padding-bottom: 15px;
-}
-
-.info-section:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.section-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.section-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.section-list {
-    list-style: none;
-    padding: 0;
-}
-
-.list-item {
-    margin-bottom: 10px;
-    font-size: 1rem;
-}
-
-.trip-link {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.trip-link:hover {
-    text-decoration: underline;
-}
-
-.trip-dates {
-    color: #777;
-    font-size: 0.9rem;
-    margin-left: 5px;
-}
-/* Obdélníkový blok pro zájezdy */
-.travel-box {
-    background-color: #f8f9fa; /* Světle šedá barva pozadí */
-    border: 1px solid #dee2e6; /* Světle šedý okraj */
-    border-radius: 8px; /* Zaoblené rohy */
-    padding: 20px; /* Vnitřní mezera */
-    margin-top: 20px; /* Mezera nad boxem */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Jemný stín */
-}
-
-.travel-title {
-    font-size: 1.5rem; /* Velikost písma nadpisu */
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #343a40; /* Tmavší šedá barva */
-}
-
-.travel-list {
-    list-style: none; /* Bez odrážek */
-    padding: 0; /* Odstranění výchozího odsazení */
-}
-
-.travel-item {
-    margin-bottom: 10px; /* Mezery mezi položkami */
-    font-size: 1rem;
-}
-
-.travel-link {
-    color: #007bff; /* Modrá barva odkazu */
-    text-decoration: none; /* Odstranění podtržení */
-    font-weight: 600;
-}
-
-.travel-link:hover {
-    text-decoration: underline; /* Zvýraznění při přejetí */
-}
-
-.travel-dates {
-    color: #6c757d; /* Neutrální šedá barva pro data */
-    font-size: 0.9rem;
-    margin-left: 5px;
 }

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Travel Information List</h2>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tour Name</th>
+                <th>Departure City</th>
+                <th>Destination City</th>
+                <th>Price per Adult</th>
+                <th>Assigned Employee</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for travel in travel_infos %}
+                <tr>
+                    <td>{{ travel.tour_name }}</td>
+                    <td>{{ travel.departure_city.name }}</td>
+                    <td>{{ travel.destination_city.name }}</td>
+                    <td>{{ travel.price_per_adult }}</td>
+                    <td>
+                        {% if travel.assigned_to %}
+                            {{ travel.assigned_to.first_name }} {{ travel.assigned_to.last_name }}
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'update_travel_info' travel.id %}" class="btn btn-sm btn-primary">Edit</a>
+                        <form action="{% url 'delete_travel_info' travel.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                        {% if employees %}
+                            <form method="post" action="{% url 'update_travel_info' travel.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <select name="assigned_to">
+                                    {% for employee in employees %}
+                                    <option value="{{ employee.id }}" {% if travel.assigned_to and travel.assigned_to.id == employee.id %}selected{% endif %}>
+                                        {{ employee.first_name }} {{ employee.last_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-secondary">Assign</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -18,8 +18,10 @@
     </li>
     {% empty %}
     <li>No trips assigned.</li>
+
     {% endfor %}
 </ul>
 
 <a href="{% url 'employee_list' %}" class="btn btn-secondary">Back to List</a>
+<a href="{% url 'assigned_trips' employee.id %} " class="btn btn-secondary">View Assigned Trips</a>
 {% endblock %}

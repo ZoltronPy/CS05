@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Employee, TourPurchase
+from .models import Employee, TourPurchase, TravelInfo
 from django import forms
 from viewer.models import Employee
 from django.contrib.auth.models import User
@@ -36,6 +36,7 @@ class EmployeeForm(forms.ModelForm):
             self.save_m2m()  # Save ManyToMany relationships
         return employee
 
+
 class OrderForm(forms.ModelForm):
     class Meta:
         model = TourPurchase
@@ -52,3 +53,25 @@ class OrderForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
+
+
+class TravelInfoForm(forms.ModelForm):
+    class Meta:
+        model = TravelInfo
+        fields = [
+            'tour_name',
+            'departure_city',
+            'destination_city',
+            'departure_date',
+            'return_date',
+            'price_per_adult',
+            'price_per_child',
+            'meal_type',
+            'assigned_to',
+            'description',
+            'image',
+        ]
+        widgets = {
+            'departure_date': forms.DateInput(attrs={'type': 'date'}),
+            'return_date': forms.DateInput(attrs={'type': 'date'}),
+        }

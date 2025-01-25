@@ -32,34 +32,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* Scroll-btn pro carousel sekci, nyni nepouzito */
-.scroll-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    font-size: 1.5rem;
-    transition: background-color 0.3s;
-}
-
-.scroll-btn:hover {
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.scroll-left {
-    left: 10px;
-}
-
-.scroll-right {
-    right: 10px;
-}
-
 /* Cards */
 .card,
 .trip-card {
@@ -354,4 +326,63 @@ section .row { /* Cílíme na mřížku s kartami v sekci */
 .offers-section .row {
     justify-content: center; /* Flexbox centrování */
     text-align: center;      /* Zarovnání textu na střed */
+}
+
+
+
+/* Sidebar pro zaměstnance */
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    background-color: #343a40;
+    z-index: 1030;
+    overflow-y: auto;
+}
+
+.sidebar .navbar-brand {
+    font-size: 1.0rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #495057;
+}
+
+.sidebar .navbar-nav {
+    flex-direction: column;
+    padding: 10px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-link {
+    padding: 10px;
+    color: #adb5bd;
+}
+
+.sidebar .nav-link.active {
+    background-color: #495057;
+    color: white;
+}
+
+.container-fluid {
+    margin-left: 250px;
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .offers-section .offer-item {
+        max-width: 100%;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+    }
 }

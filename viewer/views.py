@@ -1,5 +1,8 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError, PermissionDenied
+from django.contrib import messages
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.db.models import Sum, Q
@@ -10,7 +13,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Employee
-from .forms import EmployeeForm, OrderForm
+from .forms import EmployeeForm, OrderForm, TravelInfoForm
 
 from viewer.models import TravelInfo, Country, TourPurchase, ContactMessage, Hotel, City
 
@@ -24,12 +27,20 @@ def homepage(request):
     top_selling_trips = TravelInfo.get_top_selling_trips()
     upcoming_trips = TravelInfo.get_upcoming_trips()
 
+    # Zjistit roli uživatele, pokud je přihlášen
+    user_role = None
+    is_manager_or_senior = False
+    if request.user.is_authenticated and hasattr(request.user, "employee_profile"):
+        user_role = request.user.employee_profile.role
+        is_manager_or_senior = user_role in ["manager", "senior"]
+
     return render(request, 'homepage.html', {
         'promoted_trips': promoted_trips,
         'last_minute_trips': last_minute_trips,
         'trips_with_low_seats': trips_with_low_seats,
         'top_selling_trips': top_selling_trips,
         'upcoming_trips': upcoming_trips,
+        'is_manager_or_senior': is_manager_or_senior,  # Přidání této hodnoty
     })
 
 
@@ -276,7 +287,7 @@ def employee_list(request):
 @login_required
 def employee_detail(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
-    assigned_trips = employee.assigned_trips.all()  # Přidělené zájezdy
+    assigned_trips = employee.travel_infos.all()   # Přidělené zájezdy
     orders = TourPurchase.objects.filter(travel_info__in=assigned_trips)  # Objednávky spojené se zájezdy
 
     return render(request, 'employees/employee_detail.html', {
@@ -377,3 +388,100 @@ def order_delete(request, order_id):
         order.delete()
         return redirect('order_list')
     return render(request, 'orders/order_confirm_delete.html', {'order': order})
+
+
+@login_required
+@user_passes_test(
+    lambda user: hasattr(user, 'employee_profile') and user.employee_profile.role in ['manager', 'senior'])
+def contact_message_list(request):
+    messages = ContactMessage.objects.all().order_by('-created_at')
+    return render(request, 'contact_messages/message_list.html', {'messages': messages})
+
+
+@login_required
+def contact_message_detail(request, message_id):
+    message = get_object_or_404(ContactMessage, id=message_id)
+    return render(request, 'contact_messages/message_detail.html', {'message': message})
+
+
+def is_manager_or_senior(user):
+    return user.is_authenticated and user.employee_profile.role in ["manager", "senior"]
+
+
+def create_travel_info(request):
+    if request.method == 'POST':
+        form = TravelInfoForm(request.POST, request.FILES)
+        if form.is_valid():
+            travel_info = form.save(commit=False)
+            travel_info.save()  # Uloží TravelInfo včetně Assigned Employee
+            return redirect('travel_info_list')  # Přesměrování po úspěchu
+        else:
+            messages.error(request, "Formulář obsahuje chyby. Zkontrolujte vstupy.")
+    else:
+        form = TravelInfoForm()
+
+    return render(request, 'create_travel_info.html', {'form': form})
+
+
+@login_required
+@user_passes_test(lambda user: user.employee_profile.role in ['manager', 'senior'])
+def travel_info_list(request):
+    if request.method == "GET":
+        travel_infos = TravelInfo.objects.all()
+        return render(request, "travel_info_list.html", {
+            "travel_infos": travel_infos
+        })
+
+
+@login_required
+def delete_travel_info(request, travel_id):
+    if request.user.employee_profile.role not in ["manager", "senior"]:
+        messages.error(request, "You do not have permission to perform this action.")
+        return redirect("travel_info_list")
+
+    travel_info = get_object_or_404(TravelInfo, id=travel_id)
+    if request.method == "POST":
+        travel_info.delete()
+        messages.success(request, "Travel info deleted successfully!")
+        return redirect("travel_info_list")
+
+    return render(request, "confirm_delete.html", {"travel_info": travel_info})
+
+
+@login_required
+def assigned_trips(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    assigned_trips = TravelInfo.objects.filter(assigned_to=employee)
+    return render(request, 'assigned_trips.html', {
+        'employee': employee,
+        'assigned_trips': assigned_trips,
+    })
+
+
+def role_check(user):
+    if not hasattr(user, 'employee_profile'):
+        raise PermissionDenied
+    return True
+
+
+@login_required
+@user_passes_test(role_check)
+def contact_message_list(request):
+    messages1 = ContactMessage.objects.all().order_by('-created_at')
+    return render(request, 'contact_messages/message_list.html', {'messages': messages1 })
+
+
+@login_required
+@user_passes_test(lambda user: user.employee_profile.role in ['manager', 'senior'])
+def update_travel_info(request, travel_id):
+    travel_info = get_object_or_404(TravelInfo, id=travel_id)
+
+    if request.method == 'POST':
+        form = TravelInfoForm(request.POST, instance=travel_info)
+        if form.is_valid():
+            form.save()
+            return redirect('travel_info_list')  # Nebo jiná URL
+    else:
+        form = TravelInfoForm(instance=travel_info)
+
+    return render(request, 'update_travel_info.html', {'form': form})

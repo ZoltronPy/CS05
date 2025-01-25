@@ -1,79 +1,92 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Travel Agency</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark {% if user.is_authenticated and user.employee_profile %}sidebar{% endif %}">
+  <a class="navbar-brand" href="/">
+    {% if user.is_authenticated and user.employee_profile %}
+      Travel Management System
+    {% else %}
+      Travel Agency
+    {% endif %}
+  </a>
 
-  <div class="container">
+    <!-- Account Dropdown -->
+    <ul class="navbar-nav ml-8">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="userDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          {% if user.is_authenticated %}
+            🧑🏻‍💻 {{ user.username }}
+          {% else %}
+            Account
+          {% endif %}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+          {% if user.is_authenticated %}
+            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+            <a class="dropdown-item" href="{% url 'password_change' %}">Password Change</a>
+            {% if user.employee_profile and user.employee_profile.role == 'manager' %}
+              <a class="dropdown-item" href="/custom-admin/">Custom Admin</a>
+            {% endif %}
+          {% else %}
+            <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+            <a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a>
+          {% endif %}
+        </div>
+      </li>
+    </ul>
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <ul class="navbar-nav">
-        <!-- Home and Trip List -->
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <ul class="navbar-nav">
+      {% if user.is_authenticated %}
+        <!-- Links for authenticated users -->
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'homepage' %}active{% endif %}" href="{% url 'homepage' %}">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'trip_list' %}active{% endif %}" href="{% url 'trip_list' %}">Trip List</a>
         </li>
-
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'hotels' %}active{% endif %}" href="{% url 'hotels' %}">Hotels</a>
         </li>
-      <li class="nav-item">
-      <a class="nav-link" href="{% url 'employee_list' %}">Employees</a>
-      </li>
-        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'purchase_trip' trip_id=1 %}">Purchase Trip</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'all_offers' %}active{% endif %}" href="{% url 'all_offers' %}">Offers</a>
         </li>
+        {% if user.employee_profile %}
+          <!-- Additional links for employees -->
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'employee_list' %}active{% endif %}" href="{% url 'employee_list' %}">Employees</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'travel_info_list' %}active{% endif %}" href="{% url 'travel_info_list' %}">
+                    Travel Info List
+                </a>
+            </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'contact_message_list' %}active{% endif %}" href="{% url 'contact_message_list' %}">Contact Messages</a>
+            <a class="btn btn-primary" href="{% url 'create_travel_info' %}">Create New Tour</a>
+          </li>
         {% endif %}
-      </ul>
-
-      <!-- Contact and Account -->
-      <ul class="navbar-nav ml-auto">
+      {% else %}
+        <!-- Links for unauthenticated users -->
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'homepage' %}active{% endif %}" href="{% url 'homepage' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'trip_list' %}active{% endif %}" href="{% url 'trip_list' %}">Trip List</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'hotels' %}active{% endif %}" href="{% url 'hotels' %}">Hotels</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="/contact/">Contact</a>
         </li>
+      {% endif %}
 
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="userDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            {% if user.is_authenticated %}
-              🧑🏻‍💻{{  user.username }}
-            {% else %}
-              Account
-            {% endif %}
-          </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-            {% if user.is_authenticated %}
-              <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-              <a class="dropdown-item" href="{% url 'password_change' %}">Password Change</a>
-              <a class="dropdown-item" href="{% url 'password_reset' %}">Password Reset</a>
-              <a class="dropdown-item" href="/custom-admin/">Custom Admin</a>
-            {% else %}
-              <a class="dropdown-item" href="{% url 'login' %}">Login</a>
-              <a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a>
-            {% endif %}
-          </div>
-        </li>
-      </ul>
-    </div>
+
   </div>
 </nav>
-

@@ -49,7 +49,21 @@ urlpatterns = [
     path('orders/add/', views.order_create, name='order_create'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
     path('orders/<int:order_id>/delete/', views.order_delete, name='order_delete'),
+
+    path('contact_messages/', views.contact_message_list, name='contact_message_list'),
+    path('contact_messages/<int:message_id>/', views.contact_message_detail, name='contact_message_detail'),
+
+    path('travel-info/', views.travel_info_list, name='travel_info_list'),
+    path("create-tour/", views.create_travel_info, name="create_travel_info"),
+
+    path("travel-info-list/", views.travel_info_list, name="travel_info_list"),
+    path('travel-info/update/<int:travel_id>/', views.update_travel_info, name='update_travel_info'),
+    path("travel-info/delete/<int:travel_id>/", views.delete_travel_info, name="delete_travel_info"),
+
+    path('assigned-trips/<int:employee_id>/', views.assigned_trips, name='assigned_trips'),
 ]
+
+
 
 # Static and media files in debug mode
 if settings.DEBUG:
