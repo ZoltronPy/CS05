@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Employee, TourPurchase, TravelInfo
+from .models import Employee, TourPurchase, TravelInfo, ContactMessage
 from django import forms
 from viewer.models import Employee
 from django.contrib.auth.models import User
@@ -74,4 +74,13 @@ class TravelInfoForm(forms.ModelForm):
         widgets = {
             'departure_date': forms.DateInput(attrs={'type': 'date'}),
             'return_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class ContactMessageForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['status', 'assigned_to', 'comments']
+        widgets = {
+            'comments': forms.Textarea(attrs={'rows': 3}),
         }

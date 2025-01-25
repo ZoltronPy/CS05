@@ -435,20 +435,67 @@ class Payment(models.Model):
 
 
 class ContactMessage(models.Model):
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('in_process', 'In Process'),
+        ('closed', 'Closed'),
+        ('not_assigned', 'Not Assigned'),
+    ]
+
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    phone = models.CharField(max_length=20, blank=True, null=True)  # Přidáme telefonní číslo
+    phone = models.CharField(max_length=20, blank=True, null=True)
     message = models.TextField()
-    address = models.TextField(blank=True, null=True)  # Volitelná adresa
+    address = models.TextField(blank=True, null=True)
     preferred_contact = models.CharField(
         max_length=20,
         choices=[('email', 'Email'), ('phone', 'Phone')],
         default='email',
         verbose_name="Preferred Contact Method"
     )
+    assigned_to = models.ForeignKey(
+        'Employee',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_messages",
+        verbose_name="Assigned Employee"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='not_assigned',
+        verbose_name="Status"
+    )
+    comments = models.TextField(blank=True, null=True, verbose_name="Comments")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Message from {self.name} at {self.created_at}"
 
+
+class ContactMessageComment(models.Model):
+    contact_message = models.ForeignKey(
+        ContactMessage,
+        on_delete=models.CASCADE,
+        related_name="message_comments",  # Změna z implicitního 'comments' na explicitní 'message_comments'
+        verbose_name="Related Contact Message"
+    )
+    author = models.ForeignKey(
+        Employee,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Author"
+    )
+    comment = models.TextField(verbose_name="Comment")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Contact Message Comment"
+        verbose_name_plural = "Contact Message Comments"
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.created_at.strftime('%d.%m.%Y %H:%M')}"
 

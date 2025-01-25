@@ -13,9 +13,9 @@ import logging
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Employee
-from .forms import EmployeeForm, OrderForm, TravelInfoForm
+from .forms import EmployeeForm, OrderForm, TravelInfoForm, ContactMessageForm
 
-from viewer.models import TravelInfo, Country, TourPurchase, ContactMessage, Hotel, City
+from viewer.models import TravelInfo, Country, TourPurchase, ContactMessage, Hotel, City, ContactMessageComment
 
 logger = logging.getLogger(__name__)
 
@@ -287,7 +287,7 @@ def employee_list(request):
 @login_required
 def employee_detail(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
-    assigned_trips = employee.travel_infos.all()   # Přidělené zájezdy
+    assigned_trips = employee.travel_infos.all()  # Přidělené zájezdy
     orders = TourPurchase.objects.filter(travel_info__in=assigned_trips)  # Objednávky spojené se zájezdy
 
     return render(request, 'employees/employee_detail.html', {
@@ -392,18 +392,51 @@ def order_delete(request, order_id):
 
 @login_required
 @user_passes_test(
-    lambda user: hasattr(user, 'employee_profile') and user.employee_profile.role in ['manager', 'senior'])
+    lambda user: hasattr(user, 'employee_profile'))
 def contact_message_list(request):
     messages = ContactMessage.objects.all().order_by('-created_at')
     return render(request, 'contact_messages/message_list.html', {'messages': messages})
 
 
+@user_passes_test(
+    lambda user: hasattr(user, 'employee_profile'))
 @login_required
 def contact_message_detail(request, message_id):
     message = get_object_or_404(ContactMessage, id=message_id)
-    return render(request, 'contact_messages/message_detail.html', {'message': message})
+    employees = Employee.objects.all()  # Zaměstnanci pro formulář
 
+    if request.method == 'POST':
+        # Aktualizace statusu a přiřazení
+        status = request.POST.get('status')
+        assigned_to_id = request.POST.get('assigned_to')
+        new_comment = request.POST.get('new_comment')
 
+        message.status = status
+
+        if assigned_to_id:
+            message.assigned_to = get_object_or_404(Employee, id=assigned_to_id)
+        else:
+            message.assigned_to = None
+
+        message.save()
+
+        # Uložení nového komentáře
+        if new_comment:
+            ContactMessageComment.objects.create(
+                contact_message=message,
+                author=request.user.employee_profile,  # Autor je aktuální uživatel
+                comment=new_comment,
+            )
+
+        return redirect('contact_message_detail', message_id=message.id)
+
+    comments = message.message_comments.all()  # Načtení všech komentářů k dané zprávě
+
+    return render(request, 'contact_messages/message_detail.html', {
+        'message': message,
+        'employees': employees,
+        'comments': comments,
+    })
 def is_manager_or_senior(user):
     return user.is_authenticated and user.employee_profile.role in ["manager", "senior"]
 
@@ -465,10 +498,9 @@ def role_check(user):
 
 
 @login_required
-@user_passes_test(role_check)
 def contact_message_list(request):
-    messages1 = ContactMessage.objects.all().order_by('-created_at')
-    return render(request, 'contact_messages/message_list.html', {'messages': messages1 })
+    messages = ContactMessage.objects.all().order_by('-created_at')
+    return render(request, 'contact_messages/message_list.html', {'messages': messages})
 
 
 @login_required

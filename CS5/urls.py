@@ -61,6 +61,10 @@ urlpatterns = [
     path("travel-info/delete/<int:travel_id>/", views.delete_travel_info, name="delete_travel_info"),
 
     path('assigned-trips/<int:employee_id>/', views.assigned_trips, name='assigned_trips'),
+
+    path('contact_messages/', views.contact_message_list, name='contact_message_list'),
+    path('contact_messages/<int:message_id>/', views.contact_message_detail, name='contact_message_detail'),
+
 ]
 
 
