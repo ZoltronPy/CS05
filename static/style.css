@@ -41,23 +41,7 @@ body {
     text-decoration: none;
 }
 
-/* Footer Styling */
-footer {
-    background-color: #343a40;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-    font-size: 0.9rem;
-}
 
-footer a {
-    color: #ffcc00;
-    text-decoration: none;
-}
-
-footer a:hover {
-    color: #ffffff;
-}
 
 /* Buttons */
 .btn-primary {

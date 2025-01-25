@@ -168,24 +168,7 @@ form button:hover {
     transform: translateY(-2px);
 }
 
-/* Footer Section */
-footer {
-    padding: 20px 0;
-    text-align: center;
-    background-color: #f8f9fa;
-    color: #555;
-}
 
-footer h5 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-footer p {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
 
 /* Promoted Trip Card Styling -  zarovnání obsahu */
 .promoted-trips .trip-card {

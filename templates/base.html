@@ -64,48 +64,9 @@
         {% endblock %}
     </div>
 
-    <!-- Offers Section -->
-    {% block offers %}
-    <section class="container my-3 offers">
-        <h2 class="text-center mb-4">Top Travel Offers</h2>
-        <div class="row justify-content-center">
-            <!-- Last Minute Offers -->
-            <div class="col-lg-5 col-md-6 last-minute">
-                <div class="offer-box">
-                    <h4 class="text-center">Last Minute Offers</h4>
-                    <ul class="list-group">
-                        {% for offer in last_minute_offers %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ offer.formatted_departure_date }}</strong> / {{ offer.stay_duration }} nights
-                                <br>
-                                <span>{{ offer.destination_city.name }} ({{ offer.destination_city.country.name }})</span>
-                                <br>
-                                <small>Departure: {{ offer.departure_city.name }}</small>
-                            </div>
-                            <div class="text-danger fw-bold">{{ offer.price_per_adult|floatformat:2 }} CZK</div>
-                        </li>
-                        {% empty %}
-                        <li class="list-group-item text-center">No last-minute offers available.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-    {% endblock %}
+ {% include "footer.html" %}
 
-    <!-- Footer Section -->
-    <footer class="footer mt-5 py-4 bg-dark text-white text-center">
-        <div class="container">
-            <p>© 2024 Zoltan Travel Agency. All rights reserved.</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="{% url 'contact' %}">Contact Us</a></li>
-                <li class="list-inline-item"><a href="{% url 'trip_list' %}">Our Trips</a></li>
-                <li class="list-inline-item"><a href="{% url 'thank_you' %}">About Us</a></li>
-            </ul>
-        </div>
-    </footer>
+
 
     <!-- Bootstrap 4 JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
