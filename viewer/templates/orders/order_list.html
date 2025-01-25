@@ -1,39 +1,107 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
+{% load static %}
 
 {% block content %}
-<h1>Orders</h1>
-<a href="{% url 'order_create' %}" class="btn btn-primary mb-3">Add Order</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Customer</th>
-            <th>Trip</th>
-            <th>Adults</th>
-            <th>Kids</th>
-            <th>Total Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% if orders %}
-        {% for order in orders %}
-        <tr>
-            <td>{{ order.customer_name }}</td>
-            <td>{{ order.travel_info.tour_name }}</td>
-            <td>{{ order.adult_count }}</td>
-            <td>{{ order.child_count }}</td>
-            <td>{{ order.total_price }}</td>
-            <td>
-                <a href="{% url 'order_detail' order.id %}" class="btn btn-info btn-sm">Edit</a>
-                <a href="{% url 'order_delete' order.id %}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    {% else %}
-        <tr>
-            <td colspan="6" class="text-center">No orders available.</td>
-        </tr>
-    {% endif %}
-</tbody>
-</table>
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h1 class="mb-0">Orders</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-secondary">All Orders</h3>
+                <a href="{% url 'order_create' %}" class="btn btn-success">+ Add New Order</a>
+            </div>
+
+            {% if orders %}
+            <table id="ordersTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Trip</th>
+                        <th>Adults</th>
+                        <th>Kids</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <!-- Filters -->
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Customer"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Trip"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Adults"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Kids"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Price"></th>
+                        <th>
+                            <select class="form-control form-control-sm">
+                                <option value="">All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.travel_info.tour_name }}</td>
+                        <td>{{ order.adult_count }}</td>
+                        <td>{{ order.child_count }}</td>
+                        <td>{{ order.total_price|floatformat:2 }} CZK</td>
+                        <td>{{ order.get_order_status_display }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'order_detail' order.id %}" class="btn btn-info btn-sm">View</a>
+                                <a href="{% url 'order_delete' order.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-warning text-center">
+                No orders available.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery (musí být před DataTables) -->
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{% static 'jquery.dataTables.min.css' %}">
+<!-- DataTables JS -->
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+
+
+<!-- Activate DataTables with Filters -->
+<script>
+    $(document).ready(function () {
+        // Initialize DataTables
+        var table = $('#ordersTable').DataTable({
+            pageLength: 10,
+            ordering: true,
+            lengthChange: true,
+            columnDefs: [{ orderable: false, targets: -1 }] // Disable sorting for last column
+        });
+
+        // Column-specific filtering
+        $('#ordersTable thead tr:eq(1) th').each(function (i) {
+            $('input, select', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table.column(i).search(this.value).draw();
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

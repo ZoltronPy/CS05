@@ -61,7 +61,10 @@
           <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.url_name == 'employee_list' %}active{% endif %}" href="{% url 'employee_list' %}">Employees</a>
           </li>
-            <li class="nav-item">
+        <li>
+            <a href="{% url 'order_list' %}" class="btn btn-primary">Manage Orders</a>
+        </li>
+        <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'travel_info_list' %}active{% endif %}" href="{% url 'travel_info_list' %}">
                     Travel Info List
                 </a>

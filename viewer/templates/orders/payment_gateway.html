@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <!-- Payment Gateway Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary">Payment Gateway</h1>
+        <p class="lead">Enter your payment details to complete the booking.</p>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="card shadow-lg mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h3 class="mb-4 text-center text-primary">Payment Details</h3>
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Name on Card -->
+                <div class="mb-3">
+                    <label for="card-name" class="form-label fw-bold">Name on Card</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="card-name"
+                        name="card_name"
+                        placeholder="John Doe"
+                        required>
+                    <div class="invalid-feedback">Please enter the name on your card.</div>
+                </div>
+
+                <!-- Card Number -->
+                <div class="mb-3">
+                    <label for="card-number" class="form-label fw-bold">Card Number</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="card-number"
+                        name="card_number"
+                        placeholder="1234 5678 9012 3456"
+                        pattern="\d{4} \d{4} \d{4} \d{4}"
+                        required>
+                    <div class="invalid-feedback">Please enter a valid card number.</div>
+                </div>
+
+                <!-- Expiry Date -->
+                <div class="mb-3">
+                    <label for="expiry-date" class="form-label fw-bold">Expiry Date</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="expiry-date"
+                        name="expiry_date"
+                        placeholder="MM/YY"
+                        pattern="(0[1-9]|1[0-2])\/\d{2}"
+                        required>
+                    <div class="invalid-feedback">Please enter a valid expiry date (MM/YY).</div>
+                </div>
+
+                <!-- CVV -->
+                <div class="mb-3">
+                    <label for="cvv" class="form-label fw-bold">CVV</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="cvv"
+                        name="cvv"
+                        placeholder="123"
+                        pattern="\d{3}"
+                        required>
+                    <div class="invalid-feedback">Please enter a valid 3-digit CVV.</div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="mb-3">
+                    <label for="payment-method" class="form-label fw-bold">Payment Method</label>
+                    <select
+                        name="payment_method"
+                        id="payment-method"
+                        class="form-select"
+                        required>
+                        <option value="" disabled selected>-- Select Payment Method --</option>
+                        {% for value, label in payment_methods %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">Please select a payment method.</div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Total Amount:</span>
+                        <span class="text-primary fw-bold">{{ total_price|floatformat:2 }} CZK</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success btn-lg w-100">Pay Now</button>
+            </form>
+        </div>
+        <!-- Security Note -->
+        <div class="card-footer text-center bg-light">
+            <small class="text-muted">
+                <i class="fas fa-lock"></i> Your payment is secure and encrypted.
+            </small>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Validation -->
+<script>
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('form');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

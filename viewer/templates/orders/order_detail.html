@@ -1,11 +1,64 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
 {% block content %}
-<h1>Edit Order</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{% url 'order_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="container my-5">
+    <!-- Main Card -->
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h1 class="mb-0">Order Details</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            <div class="row">
+                <!-- Order Details Section -->
+                <div class="col-md-6 mb-4">
+                    <h3 class="text-primary mb-3">Order Information</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Order ID:</strong> {{ order.id }}</li>
+                        <li class="list-group-item"><strong>Tour:</strong> {{ order.travel_info.tour_name }}</li>
+                        <li class="list-group-item"><strong>Customer Name:</strong> {{ order.customer_name }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ order.customer_email }}</li>
+                        <li class="list-group-item"><strong>Adults:</strong> {{ order.adult_count }}</li>
+                        <li class="list-group-item"><strong>Children:</strong> {{ order.child_count }}</li>
+                        <li class="list-group-item"><strong>Total Price:</strong> {{ order.total_price|floatformat:2 }} CZK</li>
+                    </ul>
+                </div>
+
+                <!-- Payment Details Section -->
+                <div class="col-md-6 mb-4">
+                    {% if order.payment %}
+                    <h3 class="text-success mb-3">Payment Information</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Payment Method:</strong> {{ order.payment.get_payment_method_display }}</li>
+                        <li class="list-group-item"><strong>Payment Status:</strong> {{ order.payment.get_payment_status_display }}</li>
+                        <li class="list-group-item"><strong>Payment Date:</strong> {{ order.payment.payment_date|date:"d.m.Y H:i" }}</li>
+                        <li class="list-group-item"><strong>Amount Paid:</strong> {{ order.payment.payment_amount|floatformat:2 }} CZK</li>
+                    </ul>
+                    {% else %}
+                    <h3 class="text-danger mb-3">Payment Information</h3>
+                    <p>No payment details available for this order.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="card-footer bg-light">
+            <h3 class="text-primary mb-3 text-center">Edit Order</h3>
+            <form method="post" class="d-flex justify-content-center">
+                {% csrf_token %}
+                <div class="w-75">
+                    {{ form.as_p }}
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="{% url 'order_list' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

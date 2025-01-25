@@ -1,30 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container my-5">
-    <h2 class="mb-4">Assigned Trips for {{ employee.first_name }} {{ employee.last_name }}</h2>
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h2 class="mb-0">Assigned Trips</h2>
+            <p class="mb-0">For {{ employee.first_name }} {{ employee.last_name }}</p>
+        </div>
 
-    {% if assigned_trips %}
-    <ul>
-        {% for trip in assigned_trips %}
-        <li>
-            <strong>{{ trip.tour_name }}</strong>
-            ({{ trip.formatted_departure_date }} - {{ trip.formatted_return_date }})
-            <br>
-            <small>
-                Destination: {{ trip.destination_city.name }} ({{ trip.destination_city.country.name }})
-            </small>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No trips assigned to this employee.</p>
-    {% endif %}
+        <!-- Body -->
+        <div class="card-body">
+            {% if assigned_trips %}
+            <ul class="list-group">
+                {% for trip in assigned_trips %}
+                <li class="list-group-item">
+                    <h5 class="mb-1"><strong>{{ trip.tour_name }}</strong></h5>
+                    <p class="mb-0">
+                        <strong>Dates:</strong> {{ trip.formatted_departure_date }} - {{ trip.formatted_return_date }}
+                    </p>
+                    <p class="mb-0">
+                        <strong>Destination:</strong> {{ trip.destination_city.name }} ({{ trip.destination_city.country.name }})
+                    </p>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted text-center mb-0">No trips assigned to this employee.</p>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer text-center">
+            <a href="{% url 'employee_detail' employee.id %}" class="btn btn-primary">← Back to Employee Details</a>
+        </div>
+    </div>
 </div>
-
-
-<!-- Tlačítko zpět -->
-<div style="margin-top: 20px;">
-    <a href="{% url 'employee_detail' employee.id %}" class="btn btn-primary">← Back to Employee Details</a>
-</div>
-
 {% endblock %}

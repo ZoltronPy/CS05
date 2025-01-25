@@ -4,32 +4,25 @@
 {% block content %}
 <div class="container my-5">
     <div class="card shadow-lg border-0">
-        <!-- Header -->
         <div class="card-header bg-success text-white text-center py-4">
             <h1 class="mb-0">Order Successfully Completed!</h1>
         </div>
-
-        <!-- Body -->
         <div class="card-body py-5">
             <div class="row justify-content-center">
                 <div class="col-md-8 text-center">
                     <h3 class="mb-4">Thank you for your order!</h3>
-                    <p class="lead">Your reservation has been successfully created. Below are the details of your order:</p>
-
-                    <!-- Order Details -->
+                    <p class="lead">Your booking has been successfully created. Below are your order details:</p>
                     <div class="my-4">
                         <p><strong>🎉 Trip:</strong> {{ purchase.travel_info.tour_name }}</p>
-                        <p><strong>👨‍👩‍👧‍👦 Number of Adults:</strong> {{ purchase.adult_count }}</p>
-                        <p><strong>👶 Number of Children:</strong> {{ purchase.child_count }}</p>
+                        <p><strong>👨‍👩‍👧‍👦 Adults:</strong> {{ purchase.adult_count }}</p>
+                        <p><strong>👶 Children:</strong> {{ purchase.child_count }}</p>
                         <p><strong>💰 Total Price:</strong> {{ purchase.total_price|floatformat:2 }} CZK</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Footer -->
         <div class="card-footer text-center bg-light py-4">
-            <h5 class="mb-4">If you have any questions, please feel free to contact us.</h5>
+            <h5 class="mb-4">If you have any questions, feel free to contact us.</h5>
             <div class="d-flex justify-content-center gap-3">
                 <a href="{% url 'homepage' %}" class="btn btn-secondary btn-lg">Back to Homepage</a>
                 <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">Contact Us</a>

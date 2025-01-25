@@ -41,9 +41,16 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = TourPurchase
         fields = [
-            'travel_info', 'adult_count', 'child_count',
-            'customer_name', 'customer_email', 'customer_phone',
-            'customer_address', 'special_requests', 'order_status'
+            'adult_count',
+            'child_count',
+            'customer_name',
+            'customer_email',
+            'customer_phone',
+            'customer_address',
+            'special_requests',
+            'payment_method',
+            'order_status',  # Důležité pro úpravu stavu
+            'travel_preferences',
         ]
         widgets = {
             'special_requests': forms.Textarea(attrs={'rows': 4}),

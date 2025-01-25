@@ -65,6 +65,10 @@ urlpatterns = [
     path('contact_messages/', views.contact_message_list, name='contact_message_list'),
     path('contact_messages/<int:message_id>/', views.contact_message_detail, name='contact_message_detail'),
 
+
+    path('payment/<int:purchase_id>/', views.payment_process, name='payment_process'),
+    path('purchase/success/<int:purchase_id>/', views.purchase_success, name='purchase_success'),
+
 ]
 
 

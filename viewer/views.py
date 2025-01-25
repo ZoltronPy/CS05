@@ -12,7 +12,7 @@ from datetime import timedelta
 import logging
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Employee
+from .models import Employee, Payment
 from .forms import EmployeeForm, OrderForm, TravelInfoForm, ContactMessageForm
 
 from viewer.models import TravelInfo, Country, TourPurchase, ContactMessage, Hotel, City, ContactMessageComment
@@ -79,6 +79,9 @@ def trip_detail(request, trip_id):
     })
 
 
+from django.shortcuts import redirect
+
+
 def purchase_trip(request, trip_id):
     trip = get_object_or_404(TravelInfo, pk=trip_id)
     total_price = 0
@@ -124,11 +127,8 @@ def purchase_trip(request, trip_id):
         )
         purchase.save()
 
-        return render(request, 'purchase_success.html', {
-            'purchase': purchase,
-            'trip': trip,
-            'total_price': total_price,
-        })
+        # Přesměrování na platební bránu
+        return redirect('payment_process', purchase_id=purchase.id)
 
     return render(request, 'purchase_form.html', {
         'trip': trip,
@@ -140,6 +140,34 @@ def purchase_trip(request, trip_id):
         },
         'errors': [],
         'total_price': total_price,
+    })
+
+
+def payment_process(request, purchase_id):
+    purchase = get_object_or_404(TourPurchase, pk=purchase_id)
+    if request.method == 'POST':
+        payment_method = request.POST.get('payment_method')
+        if payment_method:
+            Payment.objects.create(
+                tour_purchase=purchase,
+                payment_amount=purchase.total_price,
+                payment_method=payment_method,
+                payment_status='completed'
+            )
+            return redirect('purchase_success', purchase_id=purchase.id)
+
+    return render(request, 'orders/payment_gateway.html', {
+        'purchase': purchase,
+        'payment_methods': TourPurchase.PAYMENT_CHOICES
+    })
+
+def purchase_success(request, purchase_id):
+    # Získání objednávky
+    purchase = get_object_or_404(TourPurchase, pk=purchase_id)
+
+    # Zobrazení stránky úspěšné platby
+    return render(request, 'orders/purchase_success.html', {
+        'purchase': purchase,
     })
 
 
@@ -355,16 +383,21 @@ def order_list(request, employee_id=None):
 
 @login_required
 def order_detail(request, order_id):
-    # Detail objednávky s možností úpravy
+    # Získání objednávky podle ID
     order = get_object_or_404(TourPurchase, id=order_id)
+
     if request.method == 'POST':
         form = OrderForm(request.POST, instance=order)
         if form.is_valid():
-            form.save()
-            return redirect('order_list')
+            form.save()  # Uloží změny do databáze
+            return redirect('order_list')  # Přesměrování na seznam objednávek
     else:
         form = OrderForm(instance=order)
-    return render(request, 'orders/order_detail.html', {'form': form, 'order': order})
+
+    return render(request, 'orders/order_detail.html', {
+        'form': form,
+        'order': order,
+    })
 
 
 @login_required
@@ -437,6 +470,8 @@ def contact_message_detail(request, message_id):
         'employees': employees,
         'comments': comments,
     })
+
+
 def is_manager_or_senior(user):
     return user.is_authenticated and user.employee_profile.role in ["manager", "senior"]
 

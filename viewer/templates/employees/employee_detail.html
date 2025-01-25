@@ -1,27 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ employee.first_name }} {{ employee.last_name }}</h1>
-<p><strong>Role:</strong> {{ employee.get_role_display }}</p>
-<p><strong>Email:</strong> {{ employee.email }}</p>
-<p><strong>Phone:</strong> {{ employee.phone }}</p>
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h1 class="mb-0">{{ employee.first_name }} {{ employee.last_name }}</h1>
+            <p class="mb-0"><strong>Role:</strong> {{ employee.get_role_display }}</p>
+        </div>
 
-<a href="{% url 'order_list_by_employee' employee.id %}" class="btn btn-primary">Manage Orders</a>
+        <!-- Body -->
+        <div class="card-body">
+            <!-- Contact Information -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h3 class="text-primary">Contact Information</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Email:</strong> {{ employee.email }}</li>
+                        <li class="list-group-item"><strong>Phone:</strong> {{ employee.phone }}</li>
+                    </ul>
+                </div>
 
-<h3>Assigned Trips</h3>
-<ul>
-    {% for trip in assigned_trips %}
-    <li>
-        <strong>{{ trip.tour_name }}</strong> ({{ trip.formatted_departure_date }} - {{ trip.formatted_return_date }})
-        <br>
-        <small>Destination: {{ trip.destination_city.name }} ({{ trip.destination_city.country.name }})</small>
-    </li>
-    {% empty %}
-    <li>No trips assigned.</li>
+                <!-- Actions -->
+                <div class="col-md-6 mb-3 text-center">
+                    <h3 class="text-primary">Actions</h3>
+                    <a href="{% url 'order_list_by_employee' employee.id %}" class="btn btn-primary mb-2 w-75">Manage Orders</a>
+                    <a href="{% url 'assigned_trips' employee.id %}" class="btn btn-secondary mb-2 w-75">View Assigned Trips</a>
+                    <a href="{% url 'employee_list' %}" class="btn btn-secondary w-75">Back to Employee List</a>
+                </div>
+            </div>
 
-    {% endfor %}
-</ul>
-
-<a href="{% url 'employee_list' %}" class="btn btn-secondary">Back to List</a>
-<a href="{% url 'assigned_trips' employee.id %} " class="btn btn-secondary">View Assigned Trips</a>
+            <!-- Assigned Trips -->
+            <div class="mt-4">
+                <h3 class="text-primary">Assigned Trips</h3>
+                {% if assigned_trips %}
+                <ul class="list-group">
+                    {% for trip in assigned_trips %}
+                    <li class="list-group-item">
+                        <strong>{{ trip.tour_name }}</strong>
+                        <span>({{ trip.formatted_departure_date }} - {{ trip.formatted_return_date }})</span>
+                        <br>
+                        <small>Destination: {{ trip.destination_city.name }} ({{ trip.destination_city.country.name }})</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No trips assigned.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
