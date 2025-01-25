@@ -3,97 +3,82 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="card shadow-lg border-0">
-        <!-- Trip Header -->
-        <div class="card-header bg-primary text-white text-center py-4">
-            <h1 class="mb-2">{{ trip.tour_name }}</h1>
-            <h1 class="mb-2">📍{{ trip.destination_city.name }}</h1>
+    <!-- Hlavička zájezdu -->
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <div>
+            <h1 class="display-6 text-primary mb-1">{{ trip.tour_name }}</h1>
+            <p class="text-muted">
+                {{ trip.destination_city.name }} / {{ trip.destination_city.country.name }} /
+                {{ trip.Hotel.name }}
+            </p>
 
-            <p  class="mb-0">✈️{{ trip.departure_city.name }} - {{ trip.destination_city.name }}</p>
+            </div>
         </div>
+    </div>
 
-        <!-- Trip Details Section -->
-        <div class="card-body">
-            <div class="row">
-                <!-- Left Section with Images -->
-                <div class="col-md-6">
-                    {% if trip.Hotel.image %}
-                        <img src="{{ trip.Hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
-                    {% else %}
-                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
-                    {% endif %}
-                </div>
+    <!-- Layout hlavního obsahu -->
+    <div class="row">
+        <!-- Levý obsah: Obrázek a detaily -->
+        <div class="col-lg-9">
+            <!-- Obrázek zájezdu -->
+            <div class="mb-4">
+                {% if trip.Hotel.image %}
+                    <img src="{{ trip.Hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
+                {% else %}
+                    <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
+                {% endif %}
+            </div>
 
-                <!-- Right Section with Key Details -->
-                <div class="col-md-6">
+            <!-- Detaily zájezdu -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="text-primary mb-3">Trip Details</h4>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Hotel:</strong> {{ trip.Hotel.name }}</li>
-                        <li class="list-group-item"><strong>Meal Plan:</strong> {{ trip.get_meal_type_display }}</li>
-                        <li class="list-group-item"><strong>Price per Adult:</strong> {{ trip.price_per_adult|floatformat:2 }} CZK</li>
-                        <li class="list-group-item"><strong>Price per Child:</strong> {{ trip.price_per_child|floatformat:2 }} CZK</li>
                         <li class="list-group-item"><strong>Duration:</strong> {{ trip.stay_duration }} days</li>
                         <li class="list-group-item"><strong>Departure:</strong> {{ trip.formatted_departure_date }}</li>
                         <li class="list-group-item"><strong>Return:</strong> {{ trip.formatted_return_date }}</li>
-                        <li class="list-group-item"><strong>Available Adult Seats:</strong> {{ remaining_adult_seats }}</li>
-                        <li class="list-group-item"><strong>Available Child Seats:</strong> {{ remaining_child_seats }}</li>
+                        <li class="list-group-item"><strong>Meal Plan:</strong> {{ trip.get_meal_type_display }}</li>
+                        <li class="list-group-item"><strong>Price per Adult:</strong> {{ trip.price_per_adult|floatformat:2 }} CZK</li>
+                        <li class="list-group-item"><strong>Price per Child:</strong> {{ trip.price_per_child|floatformat:2 }} CZK</li>
+                        <li class="list-group-item"><strong>Available Seats:</strong> Adults: {{ remaining_adult_seats }}, Children: {{ remaining_child_seats }}</li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Description Section -->
-            <div class="mt-4">
-                <h4>Description</h4>
-                <p>{{ trip.description|default:"No description available." }}</p>
+            <!-- Popis zájezdu -->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-primary mb-3">Trip Description</h4>
+                    <p class="text-muted">{{ trip.description|default:"No description available." }}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Footer with Three Boxes -->
-        <div class="card-footer bg-light">
-            <div class="row">
-                <!-- Booking Section -->
-                <div class="col-md-4">
-                    <h4 class="text-center">Book Your Trip</h4>
-                    <form action="{% url 'purchase_trip' trip.id %}" method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="adults" class="form-label">Adults:</label>
-                            <input type="number" name="adults" id="adults" class="form-control" min="0" max="{{ remaining_adult_seats }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kids" class="form-label">Children:</label>
-                            <input type="number" name="kids" id="kids" class="form-control" min="0" max="{{ remaining_child_seats }}" required>
-                        </div>
-                        <div class="text-center my-3">
-                            <h5>Total Price: <span id="total-price">0</span> CZK</h5>
-                        </div>
-                        <div class="d-grid text-center my-3">
-                            <button type="submit" class="btn btn-primary">Confirm Booking</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Text Box -->
-                <div class="col-md-4">
-                    <div class="bg-light p-3 rounded">
-                        <h5 class="text-center">Why Choose Us?</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet facilisis urna. Praesent consectetur elit at sapien euismod, eu facilisis justo dapibus.</p>
+        <!-- Pravý banner: Book Your Trip -->
+        <div class="col-lg-3">
+            <div class="bg-light p-4 rounded shadow-sm sticky-top">
+                <h5 class="text-primary mb-3">Book Your Trip</h5>
+                <form action="{% url 'purchase_trip' trip.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="adults" class="form-label">Adults:</label>
+                        <input type="number" name="adults" id="adults" class="form-control" min="0" max="{{ remaining_adult_seats }}" required>
                     </div>
-                </div>
-
-                <!-- Image Box -->
-                <div class="col-md-4">
-                    {% if trip.Hotel.image %}
-                        <img src="{{ trip.Hotel.image.url }}" class="img-fluid rounded shadow-sm" alt="Hotel Image">
-                    {% else %}
-                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm" alt="Default Hotel Image">
-                    {% endif %}
-                </div>
+                    <div class="mb-3">
+                        <label for="kids" class="form-label">Children:</label>
+                        <input type="number" name="kids" id="kids" class="form-control" min="0" max="{{ remaining_child_seats }}" required>
+                    </div>
+                    <div class="text-center my-3">
+                        <h5>Total Price: <span id="total-price">0</span> CZK</h5>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Confirm Booking</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript for Price Calculation -->
+<!-- JavaScript pro výpočet ceny -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const adultsInput = document.getElementById('adults');

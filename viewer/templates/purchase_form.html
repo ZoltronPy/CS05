@@ -1,67 +1,94 @@
-{% extends "form.html" %}
+{% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 56px);">
-    <div class="card shadow-sm p-4" style="width: 100%; max-width: 600px;">
-        <h2 class="mb-4 text-center">Rezervace zájezdu</h2>
+<div class="container my-5">
+    <!-- Hlavička zájezdu -->
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <div>
+            <h1 class="display-6 text-primary mb-1">{{ trip.tour_name }}</h1>
+            <p class="text-muted">
+                {{ trip.destination_city.name }} / {{ trip.destination_city.country.name }} /
+                {{ trip.Hotel.name }}
+            </p>
 
-        <!-- Nadpis s názvem zájezdu -->
-        <h3 class="text-center">{{ trip.tour_name }}</h3>
-
-        <form method="post" novalidate>
-            {% csrf_token %}
-
-            <!-- Chybová hlášení -->
-            {% if errors %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for error in errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
             </div>
-            {% endif %}
+        </div>
+    </div>
 
-            <!-- Jméno -->
-            <div class="mb-3">
-                <label for="name" class="form-label">Jméno</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ form_data.name }}" required>
-            </div>
+         <!-- Main Content -->
+        <div class="card-body">
+            <div class="row">
+                <!-- Left Section: Image and Trip Details -->
+                <div class="col-lg-6">
+                    {% if trip.Hotel.image %}
+                        <img src="{{ trip.Hotel.image.url }}" class="img-fluid rounded shadow-sm mb-4" alt="Hotel Image">
+                    {% else %}
+                        <img src="{% static 'media/hotels/hotel_default.jpg' %}" class="img-fluid rounded shadow-sm mb-4" alt="Default Hotel Image">
+                    {% endif %}
+                    <h5>Trip Details:</h5>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item"><strong>Destination:</strong> {{ trip.destination_city.name }}</li>
+                        <li class="list-group-item"><strong>Price per Adult:</strong> {{ trip.price_per_adult|floatformat:2 }} CZK</li>
+                        <li class="list-group-item"><strong>Price per Child:</strong> {{ trip.price_per_child|floatformat:2 }} CZK</li>
+                        <li class="list-group-item"><strong>Departure:</strong> {{ trip.formatted_departure_date }}</li>
+                        <li class="list-group-item"><strong>Return:</strong> {{ trip.formatted_return_date }}</li>
+                        <li class="list-group-item"><strong>Duration:</strong> {{ trip.stay_duration }} days</li>
+                    </ul>
+                </div>
 
-            <!-- E-mail -->
-            <div class="mb-3">
-                <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ form_data.email }}" required>
-            </div>
+                <!-- Right Section: Form -->
+                <div class="col-lg-6">
+                    <h5 class="text-primary mb-3">Reservation Form</h5>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
 
-            <!-- Počet dospělých -->
-            <div class="mb-3">
-                <label for="adults" class="form-label">Počet dospělých</label>
-                <input type="number" class="form-control" id="adults" name="adults" value="{{ form_data.adults }}" min="0">
-            </div>
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label"><strong>Name</strong></label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ form_data.name }}" placeholder="Enter your name" required>
+                        </div>
 
-            <!-- Počet dětí -->
-            <div class="mb-3">
-                <label for="kids" class="form-label">Počet dětí</label>
-                <input type="number" class="form-control" id="kids" name="kids" value="{{ form_data.kids }}" min="0">
-            </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label"><strong>Email</strong></label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ form_data.email }}" placeholder="Enter your email" required>
+                        </div>
 
-            <!-- Souhrn rezervace -->
-            <div class="mb-4 text-center">
-                <h4>Souhrn zájezdu</h4>
-                <div class="d-flex flex-column align-items-center">
-                <p><strong>Destinace:</strong> {{ trip.tour_name }}</p>
-                <p><strong>Cena za dospělého:</strong> {{ trip.price_per_adult }} Kč</p>
-                <p><strong>Cena za dítě:</strong> {{ trip.price_per_child }} Kč</p>
-                <p><strong>Celková cena:</strong> <span id="total-price">0</span> Kč</p>
-            </div>
-</div>
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label for="phone" class="form-label"><strong>Phone</strong></label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ form_data.phone }}" placeholder="Enter your phone number" required>
+                        </div>
 
-            <!-- Tlačítko pro odeslání -->
-            <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary">Potvrdit rezervaci</button>
+                        <!-- Number of Adults -->
+                        <div class="mb-3">
+                            <label for="adults" class="form-label"><strong>Number of Adults</strong></label>
+                            <input type="number" class="form-control" id="adults" name="adults" value="{{ form_data.adults }}" min="0" max="{{ trip.remaining_adult_seats }}" placeholder="Number of adults">
+                        </div>
+
+                        <!-- Number of Children -->
+                        <div class="mb-3">
+                            <label for="kids" class="form-label"><strong>Number of Children</strong></label>
+                            <input type="number" class="form-control" id="kids" name="kids" value="{{ form_data.kids }}" min="0" max="{{ trip.remaining_child_seats }}" placeholder="Number of children">
+                        </div>
+
+                        <!-- Price Summary -->
+                        <div class="bg-light p-3 rounded mb-4">
+                            <h5 class="text-primary">Price Summary</h5>
+                            <p><strong>Price per Adult:</strong> {{ trip.price_per_adult }} CZK</p>
+                            <p><strong>Price per Child:</strong> {{ trip.price_per_child }} CZK</p>
+                            <h5 class="text-primary"><strong>Total Price:</strong> <span id="total-price">0</span> CZK</h5>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -75,20 +102,15 @@
         const pricePerAdult = parseFloat("{{ trip.price_per_adult }}") || 0;
         const pricePerChild = parseFloat("{{ trip.price_per_child }}") || 0;
 
-        // Funkce pro výpočet celkové ceny
         function calculatePrice() {
             const adults = parseInt(adultsInput.value) || 0;
             const kids = parseInt(kidsInput.value) || 0;
-
             const totalPrice = (adults * pricePerAdult) + (kids * pricePerChild);
-            totalPriceDisplay.textContent = totalPrice.toLocaleString('cs-CZ'); // Formát CZK
+            totalPriceDisplay.textContent = totalPrice.toLocaleString('en-US');
         }
 
-        // Eventy na vstupních polích
         adultsInput.addEventListener('input', calculatePrice);
         kidsInput.addEventListener('input', calculatePrice);
-
-        // Počáteční výpočet
         calculatePrice();
     });
 </script>

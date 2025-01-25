@@ -1,40 +1,38 @@
 {% extends "base.html" %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css.css' %}">
-
-    <div class="container mt-4">
-        <div class="row info-boxes">
-            <!-- Sekce All Trips -->
-            <div class="col-md-4">
-                <div class="info-box">
-                    <h2 class="info-box-title"><a href="#" class="text-dark">All Trips</a></h2>
-                    <ul class="trip-list">
-                        {% for trip in trips %}
-                        <li>
-                            <a href="{% url 'trip_detail' trip.id %}" class="trip-link">{{ trip.tour_name }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Sekce All Trips -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Travel Tours list </h3>
                 </div>
-            </div>
-
-            <!-- Sekce Sales -->
-            <div class="col-md-4">
-                <div class="info-box">
-                    <h3 class="info-box-title"><a href="#" class="text-dark">SALES</a></h3>
-                    <p class="info-box-text">{{ sales_text }}</p>
+                <div class="card-body">
+                    {% if trips %}
+                        <ul class="list-group list-group-flush">
+                            {% for trip in trips %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="{% url 'trip_detail' trip.id %}" class="text-decoration-none text-dark">
+                                    {{ trip.tour_name }}
+                                </a>
+                                <span class="badge bg-primary text-white">{{ trip.destination_city.name }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted text-center">No trips available at the moment.</p>
+                    {% endif %}
                 </div>
-            </div>
-
-            <!-- Sekce Last Minute -->
-            <div class="col-md-4">
-                <div class="info-box">
-                    <h3 class="info-box-title"><a href="#" class="text-dark">LAST MINUTE</a></h3>
-                    <p class="info-box-text">{{ last_minute_text }}</p>
+                <div class="card-footer text-center">
+                    <a href="{% url 'homepage' %}" class="btn btn-secondary btn-sm">Back to Homepage</a>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
