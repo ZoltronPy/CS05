@@ -10,7 +10,7 @@
     <!-- Account Dropdown -->
     <ul class="navbar-nav ml-8">
       <li class="nav-item dropdown">
-        <a
+        <a23
           class="nav-link dropdown-toggle"
           href="#"
           id="userDropdown"
@@ -24,7 +24,7 @@
           {% else %}
             🧑🏻‍💻 Account
           {% endif %}
-        </a>
+        </a23>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
           {% if user.is_authenticated %}
             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>

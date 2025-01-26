@@ -310,62 +310,62 @@ section .row { /* Cílíme na mřížku s kartami v sekci */
     justify-content: center; /* Flexbox centrování */
     text-align: center;      /* Zarovnání textu na střed */
 }
-
-
-
-/* Sidebar pro zaměstnance */
+/* Sidebar Styling */
 .sidebar {
-    height: 100vh;
-    position: fixed;
-    left: 0;
+    position: fixed; /* Fixní pozice pro sidebar */
     top: 0;
-    width: 250px;
+    left: 0;
+    width: 250px; /* Šířka sidebaru */
+    height: 100vh; /* Výška sidebaru pokryje celé okno */
+    background-color: #343a40; /* Tmavé pozadí */
+    color: white; /* Bílý text */
     display: flex;
-    flex-direction: column;
-    background-color: #343a40;
+    flex-direction: column; /* Uspořádání obsahu ve sloupci */
     z-index: 1030;
-    overflow-y: auto;
+    padding: 15px;
 }
 
 .sidebar .navbar-brand {
-    font-size: 1.0rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: white;
     text-align: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #495057;
+    margin-bottom: 20px;
 }
 
 .sidebar .navbar-nav {
-    flex-direction: column;
-    padding: 10px;
-}
-
-.sidebar .nav-item {
-    width: 100%;
+    flex-direction: column; /* Odkazy jeden pod druhým */
+    gap: 10px; /* Mezera mezi odkazy */
 }
 
 .sidebar .nav-link {
-    padding: 10px;
+    padding: 10px 15px;
     color: #adb5bd;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
+.sidebar .nav-link:hover,
 .sidebar .nav-link.active {
     background-color: #495057;
     color: white;
 }
 
-.container-fluid {
-    margin-left: 250px;
+/* Hlavní obsah */
+.content {
+    margin-left: 250px; /* Posun hlavního obsahu vedle sidebaru */
+    padding: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 767px) {
-    .offers-section .offer-item {
-        max-width: 100%;
+/* Responsivita */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Sidebar zabere celou šířku na menších obrazovkách */
+        height: auto; /* Výška sidebaru se přizpůsobí obsahu */
+        position: relative; /* Už není fixní */
     }
 
-    .btn-primary, .btn-secondary {
-        width: 100%;
+    .content {
+        margin-left: 0; /* Obsah začne přímo pod sidebarem */
     }
 }

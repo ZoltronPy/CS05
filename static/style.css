@@ -1,10 +1,117 @@
+/* Reset basic margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* General Button Styling */
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.card,
+.trip-card {
+    background-color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover,
+.trip-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card img,
+.trip-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Card content */
+.card .card-title,
+.trip-card .trip-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    color: #222;
+}
+
+.card p,
+.trip-info p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Scroll Container */
+.scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+}
+
+.scroll-container::-webkit-scrollbar,
+.scroll-container {
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* General Styles */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f8f9fa;
     color: #333;
-    margin: 0;
+    margin: -10px;
     padding: 0;
+    line-height: 1.6;
 }
 
 .container {
@@ -14,19 +121,10 @@ body {
 }
 
 /* Navbar Styling */
-.navbar-brand {
-    font-size: clamp(1rem, 2.5vw, 1.2rem); /* Dynamická velikost textu */
-    font-weight: bold;
-    text-align: center;
-    white-space: nowrap; /* Zabrání zalomení textu */
-    overflow: hidden; /* Skryje přetékající text */
-}
-
-
 .navbar {
-    background-color: #0066cc;
+    background-color: #007bff;
     padding: 10px 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .navbar a {
@@ -34,31 +132,30 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     margin: 0 10px;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .navbar a:hover {
     color: #ffcc00 !important;
-    text-decoration: none;
 }
-
-
 
 /* Buttons */
 .btn-primary {
-    background-color: #0066cc !important;
-    border: none;
+    background-color: #007bff !important;
+    color: #fff;
     padding: 10px 20px;
-    border-radius: 25px;
     font-size: 1rem;
-    color: white;
+    border-radius: 8px;
     text-transform: uppercase;
-    text-decoration: none;
+    border: none;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #004d99 !important;
+    background-color: #0056b3 !important;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: fixed;
 }
 
 .btn-secondary {
@@ -76,54 +173,24 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Form Styling */
-.form-group label {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #333;
-}
-
-.form-control {
-    border-radius: 10px;
-    padding: 12px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.form-control:focus {
-    border-color: #0066cc;
-    box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
-    outline: none;
-}
-
 /* Promoted Trips */
-.promoted-trips .trips-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-
 .promoted-trips .trip-card {
     width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .promoted-trips .trip-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.03);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Highlighted Headers */
-h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #333;
+.promoted-trips .trip-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 2px solid #ddd;
 }
 
 /* Offers Section */
@@ -131,13 +198,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.offers-section .row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .offers-section .offer-item {
@@ -146,57 +207,152 @@ h1, h2, h3, h4, h5, h6 {
     padding: 15px;
     border-radius: 10px;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.offers-section .offer-item .text-danger {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #d9534f;
+.offers-section .offer-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}
+
+
 
 /* Sidebar pro zaměstnance */
 
+/* Sidebar Styling */
+.sidebar {
+    position: fixed; /* Fixní pozice pro sidebar */
+    top: 0;
+    left: 0;
+    width: 250px; /* Šířka sidebaru */
+    height: 100vh; /* Výška sidebaru pokryje celé okno */
+    background-color: #343a40; /* Tmavé pozadí */
+    color: white; /* Bílý text */
+    display: flex;
+    flex-direction: column; /* Uspořádání obsahu ve sloupci */
+    z-index: 1030;
+    padding: 15px;
+}
 
 .sidebar .navbar-brand {
-    font-size: 1.0rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: white;
     text-align: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #495057;
+    margin-bottom: 20px;
 }
 
 .sidebar .navbar-nav {
-    flex-direction: column;
-    padding: 10px;
-}
-
-.sidebar .nav-item {
-    width: 100%;
+    flex-direction: column; /* Odkazy jeden pod druhým */
+    gap: 10px; /* Mezera mezi odkazy */
 }
 
 .sidebar .nav-link {
-    padding: 10px;
+    padding: 10px 15px;
     color: #adb5bd;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
+.sidebar .nav-link:hover,
 .sidebar .nav-link.active {
     background-color: #495057;
     color: white;
 }
 
-.container-fluid {
-    margin-left: 250px;
+/* Hlavní obsah */
+.content {
+    margin-left: 250px; /* Posun hlavního obsahu vedle sidebaru */
+    padding: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 767px) {
-    .offers-section .offer-item {
-        max-width: 100%;
+/* Responsivita */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Sidebar zabere celou šířku na menších obrazovkách */
+        height: auto; /* Výška sidebaru se přizpůsobí obsahu */
+        position: relative; /* Už není fixní */
     }
 
-    .btn-primary, .btn-secondary {
-        width: 100%;
+    .content {
+        margin-left: 0; /* Obsah začne přímo pod sidebarem */
     }
+}
+
+/* Reset basic margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* General Button Styling */
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.card,
+.trip-card {
+    background-color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover,
+.trip-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card img,
+.trip-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Card content */
+.card .card-title,
+.trip-card .trip-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    color: #222;
 }

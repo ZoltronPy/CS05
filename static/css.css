@@ -1,448 +1,50 @@
-/* Base styles */
-
+/* Base Styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* Odpovídá barvě z base.html */
-    color: #333; /* Přidání konzistence s textem */
-    height: 100%;
+    background-color: #f8f9fa;
+    color: #333;
     margin: 0;
     padding: 0;
-
+    line-height: 1.6;
 }
 
-/* Purchase form header */
-.purchase-header {
-    font-size: 2.5rem;
-    color: #708090; /* Nahrazeno novým odstínem */
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* Form container */
-.purchase-form-container {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    max-width: 650px;
-    margin: 50px auto; /* Centrování */
-}
-
-/* Form styling */
-.purchase-form {
-    width: 100%;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-label {
-    font-size: 1.1rem;
-    color: #555; /* Jemnější barva pro popisky */
-}
-
-input[type="number"], input[type="date"], select {
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 100%;
-}
-
-input[type="number"]:focus, input[type="date"]:focus, select:focus {
-    border-color: #708090; /* Barva focus odpovídá novému odstínu */
-    box-shadow: 0 0 5px rgba(112, 128, 144, 0.3);
-    outline: none;
-}
-
-/* Total price section */
-.total-price {
-    background-color: #e9f5ff; /* Jemná světle šedá */
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 20px;
-    text-align: center;
-    font-size: 1.5rem; /* Zvýrazněná cena */
-    font-weight: bold;
-    color: #708090; /* Nahrazeno novým odstínem */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Button styling */
-.btn {
-    padding: 10px 15px;
-    font-size: 1rem;
-    border-radius: 25px; /* Zakulacení pro konzistentní vzhled */
-    text-align: center;
-}
-
+/* Buttons */
 .btn-primary {
-    background-color: #708090 !important; /* Modrá barva pro tlačítka */
-    border: none;
-    color: white;
+    display: inline-block;
     padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
     text-decoration: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-primary:hover {
-    background-color: #5a6a77 !important; /* Tmavší odstín */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-.submit-btn {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.submit-btn:hover {
-    background-color: #218838;
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.5);
-}
-
-.reset-btn {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.reset-btn:hover {
-    background-color: #c82333;
-    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.5);
-}
-
-/* Responsive design */
-@media (max-width: 200px) {
-    .purchase-form-container {
-        padding: 15px;
-        width: 90%;
-    }
-
-    .purchase-header {
-        font-size: 2rem;
-    }
-
-    .btn-primary, .btn-secondary {
-        width: 100%; /* Plná šířka tlačítek na mobilních zařízeních */
-    }
-}
-
-/* Offers section */
-.offers-section {
-    padding: 20px;
-    background-color: #f9f9f9;
+/* Cards */
+.card {
+    background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.offer-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.offer-item:last-child {
-    border-bottom: none;
-}
-
-.text-danger {
-    color: #d9534f !important;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.switch input {
-    display: none;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #708090; /* Nahrazeno novým odstínem */
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-/* Responsive improvements for offers section */
-@media (max-width: 200px) {
-    .offer-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .text-danger {
-        font-size: 1rem;
-    }
-
-    .btn-primary {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
-}
-
-.offers-section .row {
-    justify-content: center; /* Flexbox centrování */
-    text-align: center;      /* Zarovnání textu na střed */
-}
-.offers-section {
-    padding: 20px 20px;
-    background-color: #f9f9f9;
-    border-radius: 2px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.offer-box {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.offer-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.offer-box h4 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.list-group-item {
-    border: none;
-    padding: 15px 20px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-}
-
-.list-group-item:hover {
-    background-color: #f0f0f0;
-}
-
-.btn-primary {
-    background-color: #0066cc;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 25px;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn-primary:hover {
-    background-color: #004d99;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.switch input {
-    display: none;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #0066cc;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-.search-container {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.search-form {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-.search-input {
-    width: 50%;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 25px;
-    font-size: 1rem;
-}
-
-.search-button {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-    background-color: #004d99;
-}
-
-/* Sidebar pro zaměstnance */
-.sidebar {
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    background-color: #343a40;
-    z-index: 1030;
-    overflow-y: auto;
-}
-
-.sidebar .navbar-brand {
-    font-size: 1.0rem;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #495057;
-}
-
-.sidebar .navbar-nav {
-    flex-direction: column;
-    padding: 10px;
-}
-
-.sidebar .nav-item {
-    width: 100%;
-}
-
-.sidebar .nav-link {
-    padding: 10px;
-    color: #adb5bd;
-}
-
-.sidebar .nav-link.active {
-    background-color: #495057;
-    color: white;
-}
-
-.container-fluid {
-    margin-left: 250px;
-}
-
-/* Responsive Design */
-@media (max-width: 767px) {
-    .offers-section .offer-item {
-        max-width: 100%;
-    }
-
-    .btn-primary, .btn-secondary {
-        width: 100%;
-    }
-}
-
-
-/* Wrapper pro celou stránku */
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Zajištění, že wrapper zabírá celou výšku okna */
-}
-
-/* Obsah stránky */
-.content {
-    flex: 1; /* Flexibilní obsah, který vyplní prostor mezi hlavou a footerem */
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Footer */
 footer {
-    background-color: #343a40; /* Barva pozadí */
-    color: white; /* Barva textu */
-    text-align: center; /* Zarovnání textu */
-    padding: 10px 0; /* Vnitřní odsazení */
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-
-/* Footer Styling */
-footer {
     background-color: #343a40;
-    color: #fff;
+    color: white;
     padding: 20px 0;
     text-align: center;
     font-size: 0.9rem;
@@ -455,4 +57,134 @@ footer a {
 
 footer a:hover {
     color: #ffffff;
+}
+
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed; /* Fixní pozice pro sidebar */
+    top: 0;
+    left: 0;
+    width: 250px; /* Šířka sidebaru */
+    height: 100vh; /* Výška sidebaru pokryje celé okno */
+    background-color: #343a40; /* Tmavé pozadí */
+    color: white; /* Bílý text */
+    display: flex;
+    flex-direction: column; /* Uspořádání obsahu ve sloupci */
+    z-index: 1030;
+    padding: 15px;
+}
+
+.sidebar .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar .navbar-nav {
+    flex-direction: column; /* Odkazy jeden pod druhým */
+    gap: 10px; /* Mezera mezi odkazy */
+}
+
+.sidebar .nav-link {
+    padding: 10px 15px;
+    color: #adb5bd;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #495057;
+    color: white;
+}
+
+/* Hlavní obsah */
+.content {
+    margin-left: 250px; /* Posun hlavního obsahu vedle sidebaru */
+    padding: 20px;
+}
+
+/* Responsivita */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Sidebar zabere celou šířku na menších obrazovkách */
+        height: auto; /* Výška sidebaru se přizpůsobí obsahu */
+        position: relative; /* Už není fixní */
+    }
+
+    .content {
+        margin-left: 0; /* Obsah začne přímo pod sidebarem */
+    }
+}
+
+/* Reset basic margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* General Button Styling */
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.card,
+.trip-card {
+    background-color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover,
+.trip-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card img,
+.trip-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Card content */
+.card .card-title,
+.trip-card .trip-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    color: #222;
 }
