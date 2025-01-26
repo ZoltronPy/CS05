@@ -1,10 +1,14 @@
 /* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f8f9fa;
     color: #333;
-    margin: 0;
-    padding: 0;
     line-height: 1.6;
 }
 
@@ -30,6 +34,7 @@ body {
 /* Cards */
 .card {
     background-color: #fff;
+    border: none;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -39,6 +44,68 @@ body {
 .card:hover {
     transform: scale(1.03);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ddd;
+}
+
+.card .card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    color: #222;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #343a40;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    z-index: 1030;
+    padding: 15px;
+}
+
+.sidebar .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar .navbar-nav {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar .nav-link {
+    padding: 10px 15px;
+    color: #adb5bd;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #495057;
+    color: white;
+}
+
+/* Main Content */
+.content {
+    margin-left: 250px;
+    padding: 20px;
 }
 
 /* Footer */
@@ -59,132 +126,15 @@ footer a:hover {
     color: #ffffff;
 }
 
-
-/* Sidebar Styling */
-.sidebar {
-    position: fixed; /* Fixní pozice pro sidebar */
-    top: 0;
-    left: 0;
-    width: 250px; /* Šířka sidebaru */
-    height: 100vh; /* Výška sidebaru pokryje celé okno */
-    background-color: #343a40; /* Tmavé pozadí */
-    color: white; /* Bílý text */
-    display: flex;
-    flex-direction: column; /* Uspořádání obsahu ve sloupci */
-    z-index: 1030;
-    padding: 15px;
-}
-
-.sidebar .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.sidebar .navbar-nav {
-    flex-direction: column; /* Odkazy jeden pod druhým */
-    gap: 10px; /* Mezera mezi odkazy */
-}
-
-.sidebar .nav-link {
-    padding: 10px 15px;
-    color: #adb5bd;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.sidebar .nav-link:hover,
-.sidebar .nav-link.active {
-    background-color: #495057;
-    color: white;
-}
-
-/* Hlavní obsah */
-.content {
-    margin-left: 250px; /* Posun hlavního obsahu vedle sidebaru */
-    padding: 20px;
-}
-
-/* Responsivita */
+/* Responsiveness */
 @media (max-width: 768px) {
     .sidebar {
-        width: 100%; /* Sidebar zabere celou šířku na menších obrazovkách */
-        height: auto; /* Výška sidebaru se přizpůsobí obsahu */
-        position: relative; /* Už není fixní */
+        width: 100%;
+        height: auto;
+        position: relative;
     }
 
     .content {
-        margin-left: 0; /* Obsah začne přímo pod sidebarem */
+        margin-left: 0;
     }
-}
-
-/* Reset basic margins and paddings */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body styling */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* Light background */
-    color: #333;
-    line-height: 1.6;
-}
-
-/* General Button Styling */
-.btn-primary {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-/* Cards */
-.card,
-.trip-card {
-    background-color: #fff;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover,
-.trip-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-}
-
-.card img,
-.trip-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 2px solid #ddd;
-}
-
-/* Card content */
-.card .card-title,
-.trip-card .trip-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 10px 0;
-    text-align: center;
-    color: #222;
 }

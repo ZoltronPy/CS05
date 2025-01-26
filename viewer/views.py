@@ -481,15 +481,19 @@ def create_travel_info(request):
         form = TravelInfoForm(request.POST, request.FILES)
         if form.is_valid():
             travel_info = form.save(commit=False)
-            travel_info.save()  # Uloží TravelInfo včetně Assigned Employee
-            return redirect('travel_info_list')  # Přesměrování po úspěchu
+
+            # Pokud není city nastaveno, ale je vybrán hotel, nastav city podle hotelu
+            if not travel_info.city and travel_info.Hotel:
+                travel_info.city = travel_info.Hotel.city
+
+            travel_info.save()
+            return redirect('travel_info_list')
         else:
             messages.error(request, "Formulář obsahuje chyby. Zkontrolujte vstupy.")
     else:
         form = TravelInfoForm()
 
     return render(request, 'create_travel_info.html', {'form': form})
-
 
 @login_required
 @user_passes_test(lambda user: user.employee_profile.role in ['manager', 'senior', 'customer_service'])

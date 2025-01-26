@@ -139,8 +139,13 @@ class TravelInfo(Model):
                           default='Tour name ')
     city = ForeignKey(City, on_delete=CASCADE,
                       related_name="city_travel_info")
-    Hotel = ForeignKey(Hotel, on_delete=CASCADE,
-                       related_name="hotels")
+    Hotel = ForeignKey(
+        Hotel,
+        on_delete=CASCADE,
+        related_name="hotels",
+        null=True,  # Umožňuje hodnotu None
+        blank=True,  # Umožňuje ponechat pole prázdné ve formuláři
+    )
 
     departure_city = ForeignKey(City, on_delete=CASCADE,
                                 related_name="departures",

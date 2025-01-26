@@ -1,35 +1,102 @@
 {% extends "base2.html" %}
+{% load static %}
 {% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h1 class="mb-0">Contact Messages</h1>
+        </div>
 
-<h2>Contact Messages</h2>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Assigned To</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for message in messages %}
-        <tr>
-            <td>{{ message.name }}</td>
-            <td>{{ message.email }}</td>
-            <td>{{ message.get_status_display }}</td>
-            <td>
-                {% if message.assigned_to %}
-                    {{ message.assigned_to.first_name }} {{ message.assigned_to.last_name }}
-                {% else %}
-                    Not Assigned
-                {% endif %}
-            </td>
-            <td>
-                <a href="{% url 'contact_message_detail' message.id %}" class="btn btn-primary btn-sm">View/Edit</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <!-- Body -->
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-secondary">All Contact Messages</h3>
+            </div>
+
+            {% if messages %}
+            <table id="contactMessagesTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <!-- Filters -->
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Name"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Email"></th>
+                        <th>
+                            <select class="form-control form-control-sm">
+                                <option value="">All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Assigned To"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr>
+                        <td>{{ message.name }}</td>
+                        <td>{{ message.email }}</td>
+                        <td>{{ message.get_status_display }}</td>
+                        <td>
+                            {% if message.assigned_to %}
+                                {{ message.assigned_to.first_name }} {{ message.assigned_to.last_name }}
+                            {% else %}
+                                Not Assigned
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'contact_message_detail' message.id %}" class="btn btn-info btn-sm">View/Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-warning text-center">
+                No contact messages available.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (musí být před DataTables) -->
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{% static 'jquery.dataTables.min.css' %}">
+<!-- DataTables JS -->
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+
+<!-- Activate DataTables with Filters -->
+<script>
+    $(document).ready(function () {
+        // Initialize DataTables
+        var table = $('#contactMessagesTable').DataTable({
+            pageLength: 10,
+            ordering: true,
+            lengthChange: true,
+            columnDefs: [{ orderable: false, targets: -1 }] // Disable sorting for last column
+        });
+
+        // Column-specific filtering
+        $('#contactMessagesTable thead tr:eq(1) th').each(function (i) {
+            $('input, select', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table.column(i).search(this.value).draw();
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

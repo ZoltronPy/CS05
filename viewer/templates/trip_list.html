@@ -1,38 +1,89 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
+
 
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <!-- Sekce All Trips -->
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3 class="mb-0">Travel Tours list </h3>
-                </div>
-                <div class="card-body">
-                    {% if trips %}
-                        <ul class="list-group list-group-flush">
-                            {% for trip in trips %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <a href="{% url 'trip_detail' trip.id %}" class="text-decoration-none text-dark">
-                                    {{ trip.tour_name }}
-                                </a>
-                                <span class="badge bg-primary text-white">{{ trip.destination_city.name }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted text-center">No trips available at the moment.</p>
-                    {% endif %}
-                </div>
-                <div class="card-footer text-center">
-                    <a href="{% url 'homepage' %}" class="btn btn-secondary btn-sm">Back to Homepage</a>
-                </div>
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h1 class="mb-0">Travel Tours List</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-secondary">All Travel Tours</h3>
             </div>
+
+            {% if trips %}
+            <table id="travelToursTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Tour Name</th>
+                        <th>Destination City</th>
+                        <th>Price Per Adult</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <!-- Filters -->
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Tour Name"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Destination City"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Price"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in trips %}
+                    <tr>
+                        <td>{{ trip.tour_name }}</td>
+                        <td>{{ trip.destination_city.name }}</td>
+                        <td>{{ trip.price_per_adult|floatformat:2 }} CZK</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'trip_detail' trip.id %}" class="btn btn-info btn-sm">View</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-warning text-center">
+                No travel tours available.
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
+
+<!-- jQuery (musí být před DataTables) -->
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{% static 'jquery.dataTables.min.css' %}">
+<!-- DataTables JS -->
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+
+<!-- Activate DataTables with Filters -->
+<script>
+    $(document).ready(function () {
+        // Initialize DataTables
+        var table = $('#travelToursTable').DataTable({
+            pageLength: 10,
+            ordering: true,
+            lengthChange: true,
+            columnDefs: [{ orderable: false, targets: -1 }] // Disable sorting for Actions column
+        });
+
+        // Column-specific filtering
+        $('#travelToursTable thead tr:eq(1) th').each(function (i) {
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table.column(i).search(this.value).draw();
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

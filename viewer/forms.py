@@ -67,22 +67,29 @@ class TravelInfoForm(forms.ModelForm):
         model = TravelInfo
         fields = [
             'tour_name',
+            'city',
             'departure_city',
             'destination_city',
+            'departure_airport',
+            'destination_airport',
             'departure_date',
             'return_date',
+            'stay_duration',
+            'adult_seats',
+            'child_seats',
             'price_per_adult',
             'price_per_child',
             'meal_type',
             'assigned_to',
             'description',
             'image',
+            'Hotel',
+            'is_promoted',
         ]
         widgets = {
             'departure_date': forms.DateInput(attrs={'type': 'date'}),
             'return_date': forms.DateInput(attrs={'type': 'date'}),
         }
-
 
 class ContactMessageForm(forms.ModelForm):
     class Meta:

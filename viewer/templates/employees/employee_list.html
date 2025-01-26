@@ -1,32 +1,104 @@
 {% extends "base2.html" %}
+{% load static %}
 
 {% block content %}
-<h1>Employees</h1>
-<a href="{% url 'employee_create' %}" class="btn btn-primary mb-3">Add Employee</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for employee in employees %}
-        <tr>
-            <td>{{ employee.first_name }} {{ employee.last_name }}</td>
-            <td>{{ employee.get_role_display }}</td>
-            <td>{{ employee.email }}</td>
-            <td>{{ employee.phone }}</td>
-            <td>
-                <a href="{% url 'employee_detail' employee.id %}" class="btn btn-info btn-sm">View</a>
-                <a href="{% url 'employee_update' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'employee_delete' employee.id %}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+            <h1 class="mb-0">Employees</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            {% if request.user.employee_profile.role == 'manager' or request.user.employee_profile.role == 'senior' %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-secondary">All Employees</h3>
+                <a href="{% url 'employee_create' %}" class="btn btn-success">+ Add Employee</a>
+            </div>
+            {% endif %}
+
+            {% if employees %}
+            <table id="employeesTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <!-- Filters -->
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Name"></th>
+                        <th>
+                            <select class="form-control form-control-sm">
+                                <option value="">All Roles</option>
+                                <option value="manager">Manager</option>
+                                <option value="senior">Senior</option>
+                                <option value="customer_service">Customer Service</option>
+                            </select>
+                        </th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Email"></th>
+                        <th><input type="text" class="form-control form-control-sm" placeholder="Search Phone"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+                        <td>{{ employee.get_role_display }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>{{ employee.phone }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'employee_detail' employee.id %}" class="btn btn-info btn-sm">View</a>
+                                {% if request.user.employee_profile.role == 'manager'%}
+                                <a href="{% url 'employee_update' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'employee_delete' employee.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-warning text-center">
+                No employees found.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (musí být před DataTables) -->
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{% static 'jquery.dataTables.min.css' %}">
+<!-- DataTables JS -->
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+
+<!-- Activate DataTables with Filters -->
+<script>
+    $(document).ready(function () {
+        // Initialize DataTables
+        var table = $('#employeesTable').DataTable({
+            pageLength: 10,
+            ordering: true,
+            lengthChange: true,
+            columnDefs: [{ orderable: false, targets: -1 }] // Disable sorting for last column
+        });
+
+        // Column-specific filtering
+        $('#employeesTable thead tr:eq(1) th').each(function (i) {
+            $('input, select', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table.column(i).search(this.value).draw();
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

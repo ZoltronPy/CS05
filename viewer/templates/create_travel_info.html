@@ -1,14 +1,138 @@
-{% extends 'base.html' %}
+{{% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Create New Tour</h1>
+<div class="container my-4">
+    <h1 class="mb-4 text-center">Create New Tour</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{% url 'homepage' %}" class="btn btn-secondary">Cancel</a>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">General Information</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.tour_name.label_tag }}
+                            {{ form.tour_name }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.departure_city.label_tag }}
+                            {{ form.departure_city }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.destination_city.label_tag }}
+                            {{ form.destination_city }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.departure_airport.label_tag }}
+                            {{ form.departure_airport }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.destination_airport.label_tag }}
+                            {{ form.destination_airport }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">Time Details</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.departure_date.label_tag }}
+                            {{ form.departure_date }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.return_date.label_tag }}
+                            {{ form.return_date }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.stay_duration.label_tag }}
+                            {{ form.stay_duration }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-warning text-white">Seats and Pricing</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.adult_seats.label_tag }}
+                            {{ form.adult_seats }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.child_seats.label_tag }}
+                            {{ form.child_seats }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.price_per_adult.label_tag }}
+                            {{ form.price_per_adult }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.price_per_child.label_tag }}
+                            {{ form.price_per_child }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">Other Details</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.meal_type.label_tag }}
+                            {{ form.meal_type }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.assigned_to.label_tag }}
+                            {{ form.assigned_to }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.is_promoted.label_tag }}
+                            {{ form.is_promoted }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">Accommodation</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.Hotel.label_tag }}
+                            {{ form.Hotel }}
+                        </div>
+                         <div class="mb-3">
+                            {{ form.city.label_tag }}
+                            {{ form.city }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white">Description and Image</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.image.label_tag }}
+                            {{ form.image }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'homepage' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
     </form>
 </div>
 {% endblock %}
-
