@@ -29,10 +29,10 @@ def homepage(request):
 
     # Zjistit roli uživatele, pokud je přihlášen
     user_role = None
-    is_manager_or_senior = False
+    is_manager_or_senior_or_costumer_service = False
     if request.user.is_authenticated and hasattr(request.user, "employee_profile"):
         user_role = request.user.employee_profile.role
-        is_manager_or_senior = user_role in ["manager", "senior"]
+        is_manager_or_senior_or_costumer_service = user_role in ["manager", "senior", 'customer_service']
 
     return render(request, 'homepage.html', {
         'promoted_trips': promoted_trips,
@@ -492,7 +492,7 @@ def create_travel_info(request):
 
 
 @login_required
-@user_passes_test(lambda user: user.employee_profile.role in ['manager', 'senior'])
+@user_passes_test(lambda user: user.employee_profile.role in ['manager', 'senior', 'customer_service'])
 def travel_info_list(request):
     if request.method == "GET":
         travel_infos = TravelInfo.objects.all()
